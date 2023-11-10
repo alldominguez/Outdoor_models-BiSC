@@ -115,7 +115,7 @@ LUR models for NO\textsubscript{2}  were developed using only data from the loca
 
 For the development of the LUR models, spatial variables that better represent the pollutant concentration distribution across the study area were created. Following the ESCAPE guidelines \cite{eeftens2012, beelen2013},  predictor variables were selected from three broad categories: traffic, land use, and urban configuration. A wide variety of buffer sizes were created, i.e, 25m, 50m, 100m, 300m, 500m, and 1000m to capture the area-specific predictor variable at every single location.
 
-We applied a supervised stepwise process in which we sequentially add a predictor variable to a linear regression model using pollutant concentrations as the independent variable to obtain the best possible model. This procedure was followed to built all the specific pollutant models. Previously to model development, we specified the direction expected of the effect that each predictor have in the model. For all predictor variables, univariate regression models with annual average air pollution concentration (NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC) were conducted, models with the highest adjusted explained variance (R\textsuperscript{2}) were selected. We then repeated the process using the previous model and all the remaining predictor variables. Details of the LUR modelling and variables used could be found in the \textbf{Supplementary material X}.
+We applied a supervised stepwise process in which we sequentially add a predictor variable to a linear regression model using pollutant concentrations as the independent variable to obtain the best possible model. This procedure was followed to built all the specific pollutant models. Previously to model development, we specified the direction expected of the effect that each predictor have in the model. For all predictor variables, univariate regression models with annual average air pollution concentration (NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC) were conducted, models with the highest adjusted explained variance (R\textsuperscript{2}) were selected. We then repeated the process using the previous model and all the remaining predictor variables. Details of the LUR modelling and variables used can be found in the \textbf{Supplementary material X}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Dispersion model --- %%%
@@ -160,10 +160,11 @@ We evaluated model performance using various statistical approaches and on diffe
 
 \subsubsection{LUR model evaluation}
 Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on k-1 folds and then validated using the leftover fold \cite{ziegel2003}.For every fold, we computed metrics such as \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicators of the model validity. 
-\vspace{0.5cm}
+\vspace{0.5cm} 
+
+Details from the metrics used for model validation can be found in the \textbf{Supplementary material X}.
 
 These metrics are defined as follows:
-
 % --- R2 --- %
 \begin{equation}
 R^2 = \left( \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2} \right)
@@ -187,11 +188,8 @@ r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \sum
 
 We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For LUR models BC, PM\textsubscript{2.5}, and its constituents (Cu, Fe, Sb, and Zn), internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of external data.
 
-\subsection{Hybrid model evaluation}
-We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and the \textit{out-of-bag (oob) score}. While both methods vary in the sample size designated for training and testing, their core difference lies in the data splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one. In contrast, the oob approach trains the model on two-thirds of the data and uses the residual third for external validation. We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}
-
 \subsection{Dispersion model evaluation}
-Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality stations (XVPCA), including: Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others.\vspace{0.5cm}
+Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality stations (XVPCA), including: Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. Details from the metrics used for dispersion model validation can be found in the \textbf{Supplementary material X}.\vspace{0.5cm} 
 
 The metrics used for the dispersion models we:
 
@@ -232,10 +230,10 @@ r = \frac{\sum_{i=1}^{n} (O_i - \bar{O})(M_i - \bar{M})}{\sqrt{\sum_{i=1}^{n} (O
 \end{equation}
 \vspace{0.5cm}
 
-%%% --- Statistical Methods --- %%% 
+\subsection{Hybrid model evaluation}
+We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and the \textit{out-of-bag (oob) score}. While both methods vary in the sample size designated for training and testing, their core difference lies in the data splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one. In contrast, the oob approach trains the model on two-thirds of the data and uses the residual third for external validation. We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}
+
 All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS predictor variables were computed using X software. 
-
-
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -244,7 +242,6 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 \section{Results}
 
 \textbf{\cref{fig2}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5} and BC concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants, after averaging weekly estimates for all the study period (2019 - 2021).   
-
 
 %%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
 % Put the figure text closer to the Figure 3
@@ -266,7 +263,15 @@ As we expected, hybrid models outperformed the LUR and DM models for the air pol
 
 \subsection{Comparison between LUR, DM, and Hybrid model}
 
+
+
+
+
+
 \subsection{Comparison with Previous studies}
+
+
+
 
 \subsection{Strengths and Limitations}
 One of the main strengths of this study is the extensive exposure assessment 
