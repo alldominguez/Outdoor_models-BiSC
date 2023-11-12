@@ -5,9 +5,9 @@ pacman::p_load(tidyverse)
 ### --- Load the data --- ###
 ############################
 
-#################################################
+#############################################
 ### --- Air pollutants measurements data --- #####################################################################
-################################################
+############################################
 no2_measures <- read.csv("01.Data/BiSC_comparison_data/measures/no2_final_model_data.csv")
 pm25_measures <- read.csv("01.Data/BiSC_comparison_data/measures/pm25_final_model_data.csv")
 bc_measures <- read.csv("01.Data/BiSC_comparison_data/measures/bc_final_model_data.csv")
@@ -72,8 +72,11 @@ no2_hybrid <- no2_hybrid %>%
               dplyr::rename(no2_hm = no2.total_hybridmodel)
 
 pm25_hybrid <- pm25_hybrid %>% 
-               dplyr::rename()
+               dplyr::rename(pm25_hm = pm25.total_hybridmodel)
                 
+bc_hybrid <- bc_hybrid %>%  
+             dplyr::rename(bc_hm = bc.total_hybridmodel)
+
 
 
 
