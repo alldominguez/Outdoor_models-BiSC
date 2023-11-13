@@ -67,7 +67,6 @@ dplyr::glimpse(bc_hybrid)
 dplyr::glimpse(pm25_constituents_hybrid)
 
 # --- rename variables --- # 
-
 no2_hybrid <- no2_hybrid %>% 
               dplyr::rename(no2_hm = no2.total_hybridmodel)
 
@@ -77,13 +76,23 @@ pm25_hybrid <- pm25_hybrid %>%
 bc_hybrid <- bc_hybrid %>%  
              dplyr::rename(bc_hm = bc.total_hybridmodel)
 
+pm25_constituents_hybrid <- pm25_constituents_hybrid %>% 
+                            dplyr::rename(fe_hm = fe.total_hybridmodel,
+                                          cu_hm = cu.total_hybridmodel,
+                                          zn_hm = zn.total_hybridmodel)
+
+# --- long-format --- # 
+
+
+
+
+
 
 ##################################
 ### --- Dispersion models --- ###
 #################################
 
-
-
+# Here list of files and process all the data 
 
 
 
@@ -100,23 +109,3 @@ bc_hybrid <- bc_hybrid %>%
 
 
 
-#######################################
-### --- Model predictions data --- ###
-######################################
-
-
-
-
-
-
-
-
-
-
-#####################################################################################
-
-# have a quick look to the data 
-no2_measures %>% dplyr::glimpse()
-pm25_measures %>% dplyr::glimpse()
-bc_measures %>% dplyr::glimpse()
-pm25_constituents_measures %>% dplyr::glimpse()
