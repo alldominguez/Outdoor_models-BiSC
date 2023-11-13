@@ -1,5 +1,6 @@
 # Install packages
-pacman::p_load(tidyverse)
+pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate,  mice, ggmice, plyr, data.table)
+
 
 ##############################
 ### --- Load the data --- ###
@@ -85,14 +86,18 @@ pm25_constituents_hybrid <- pm25_constituents_hybrid %>%
 
 
 
-
-
-
 ##################################
 ### --- Dispersion models --- ###
 #################################
+weekly_home_dm <- read.csv("01.Data/BiSC_dispersion_models/imputed/weekly_estimate_DM_home_imputed.csv")
 
-# Here list of files and process all the data 
+# quick check of the data
+dplyr::glimpse(weekly_home_dm)
+skimr::skim(weekly_home_dm)
+
+# dates in proper format
+weekly_home_dm$date_start <- as.Date(weekly_home_dm$date_start)
+weekly_home_dm$date_end <- as.Date(weekly_home_dm$date_end)
 
 
 
