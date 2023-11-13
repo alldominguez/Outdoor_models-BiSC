@@ -14,6 +14,8 @@
 \usepackage{authblk} % this is for multiple authors 
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{multirow}
 
 % Configure for "Fig.":
 \crefname{figure}{Fig.}{Figs.}
@@ -240,6 +242,63 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 %%% --- Results --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
+
+% --- Performance --- %
+The performance of the models varied substantially by pollutant. In table x. performance metrics for the LUR and HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE in all models. The performance of the PM25 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{llllll}
+\toprule
+\textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R2 (10-CV)} & \textbf{RMSE (10-CV)} \\
+\midrule
+\multirow{6}{*}{LUR} & NO2 & BiSC-home & ... & ... & ... \\
+& PM2.5 & BiSCAPE & ... & ... & ... \\
+& BC & BiSCAPE & ... & ... & ... \\
+& Fe & BiSCAPE & ... & ... & ... \\
+& Cu & BiSCAPE & ... & ... & ... \\
+& Zn & BiSCAPE & ... & ... & ... \\
+\midrule
+\multirow{6}{*}{HM} & NO2 & BiSC-home & 1232 & 0.64 & 7.5 \\
+& PM2.5 & BiSCAPE & ... & ... & ... \\
+& BC & BiSCAPE & ... & ... & ... \\
+& Fe & BiSCAPE & ... & ... & ... \\
+& Cu & BiSCAPE & ... & ... & ... \\
+& Zn & BiSCAPE & ... & ... & ... \\
+\bottomrule
+\end{tabular}
+\caption{Descriptive caption for the table.}
+\label{tab:my_label}
+\end{table}
+
+
+
+
+% --- Exposure concentrations --- %
+Outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model are shown in FIGURE X. The exposure range was larger for the LUR model
+
+% --- Correlation between measures and model estimates --- %
+Spearman correlation of air pollution exposure during the entire pregnancy between measurements, LUR, DM and HM at the residential addresses ranged from r = x to x (figure X). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \textbf{\cref{fig2}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5} and BC concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants, after averaging weekly estimates for all the study period (2019 - 2021).   
 
