@@ -14,7 +14,6 @@ pm25_measures <- read.csv("01.Data/BiSC_comparison_data/measures/pm25_final_mode
 bc_measures <- read.csv("01.Data/BiSC_comparison_data/measures/bc_final_model_data.csv")
 pm25_constituents_measures <- read.csv("01.Data/BiSC_comparison_data/measures/pm25_constituents_model_data.csv")
 
-
 # Have a quick look to the data 
 dplyr::glimpse(no2_measures)
 dplyr::glimpse(pm25_measures)
@@ -23,17 +22,17 @@ dplyr::glimpse(pm25_constituents_measures)
 
 ### --- selection of specific variables --- ###
 no2_measures <- no2_measures %>%
-  dplyr::select(gid, id, year, week, NO2.DirectMeasurements, lon, lat) 
+                dplyr::select(gid, id, year, week, NO2.DirectMeasurements, lon, lat) 
 
 pm25_measures <- pm25_measures %>% 
-  dplyr::select(gid, site_id, sid, c_biscape, lon, lat)
+                 dplyr::select(gid, site_id, sid, c_biscape, lon, lat)
 
 bc_measures <- bc_measures %>% 
-  dplyr::select(gid, site_id, sid, c_biscape, lon, lat)
+               dplyr::select(gid, site_id, sid, c_biscape, lon, lat)
 
 pm25_constituents_measures <- pm25_constituents_measures %>% 
-  dplyr::select(gid, site_id, sid, 
-                biscape_Fe2O3,biscape_Cu, biscape_Zn, lon, lat)
+                              dplyr::select(gid, site_id, sid, 
+                                            biscape_Fe2O3,biscape_Cu, biscape_Zn, lon, lat)
 
 ### --- rename some variables --- ###
 no2_measures <- no2_measures %>% 
@@ -82,35 +81,63 @@ pm25_constituents_hybrid <- pm25_constituents_hybrid %>%
                                           cu_hm = cu.total_hybridmodel,
                                           zn_hm = zn.total_hybridmodel)
 
-# --- long-format --- # 
-
-
 
 ##################################
 ### --- Dispersion models --- ###
 #################################
-weekly_home_dm <- read.csv("01.Data/BiSC_dispersion_models/imputed/weekly_estimate_DM_home_imputed.csv")
+dm_home_weekly <- read.csv("01.Data/BiSC_dispersion_models/imputed/weekly_estimate_DM_home_imputed.csv")
 
 # quick check of the data
-dplyr::glimpse(weekly_home_dm)
-skimr::skim(weekly_home_dm)
+dplyr::glimpse(dm_home_weekly)
+skimr::skim(dm_home_weekly)
 
 # dates in proper format
-weekly_home_dm$date_start <- as.Date(weekly_home_dm$date_start)
-weekly_home_dm$date_end <- as.Date(weekly_home_dm$date_end)
+dm_home_weekly$date_start <- as.Date(dm_home_weekly$date_start)
+dm_home_weekly$date_end <- as.Date(dm_home_weekly$date_end)
 
+# --- generate separete files --- #
+no2_dm <- dm_home_weekly %>% 
+          dplyr::select(subject_id, weeks, date_start, date_end, no2.total) %>% 
+          dplyr::rename(no2_dm = no2.total)
 
+pm25_dm <- dm_home_weekly %>% 
+           dplyr::select(subject_id, weeks, date_start, date_end, pm2.5.total) %>% 
+           dplyr::rename(pm25_dm = pm2.5.total)
 
+bc_dm <- dm_home_weekly %>%  
+         dplyr::select(subject_id, weeks, date_start, date_end, BC.total) %>% 
+         dplyr::rename(bc_dm = BC.total) 
+
+dplyr::glimpse(no2_dm)
+dplyr::glimpse(pm25_dm)
+dplyr::glimpse(bc_dm)
 
 ###########################
 ### --- LUR models --- ###
 #########################
 
+no2_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/no2_weekly_preg_29092023.rds")
+pm25_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/pm25_weekly_preg_29092023.rds")
+bc_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/bc_weekly_preg_29092023.rds")
+fe_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/fe_weekly_preg_29092023.rds")
+cu_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/cu_weekly_preg_29092023.rds")
+zn_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/zn_weekly_preg_29092023.rds")
 
+# have a quick check to the data 
+dplyr::glimpse(no2_lur)
+dplyr::glimpse(pm25_lur)
+dplyr::glimpse(bc_lur)
+dplyr::glimpse(fe_lur)
+dplyr::glimpse(cu_lur)
+dplyr::glimpse(zn_lur)
 
+# re-arrenge the data 
+no2_lur <- no2_lur %>% 
+           dplyr::select(subject_id, weeks, date_start, date_end, no2_week_ratio) %>% 
+           dplyr::rename(no2_lur = no2_week_ratio)
 
+pm25_lur <- pm25_lur %>% 
+            dplyr::select(subject_id, weeks, date_start, date_end)
 
-
-
-
-
+bc_lur <- bc_lur %>% 
+          dplyr::select(subject_id, weeks, date_start, date_end)
