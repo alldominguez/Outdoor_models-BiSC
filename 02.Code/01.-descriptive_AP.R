@@ -78,8 +78,6 @@ bc_hybrid <- bc_hybrid %>%
              dplyr::rename(bc_hm = bc.total_hybridmodel)
 
 
-
-
 ##################################
 ### --- Dispersion models --- ###
 #################################
