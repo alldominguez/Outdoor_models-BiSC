@@ -83,7 +83,7 @@ Urban areas add a layer of complexity to air pollution modelling due to complex 
 
 Furthermore, the COVID-19 pandemic has introduced unprecedented challenges for air pollution modelling and exposure assessment. These challenges encompass changes in air pollution patterns, constraints on data collection due to health and safety restrictions (lockdowns), and the complexity of data integration due to changes in traffic, mobility, and land use dynamics in cities \cite{gonzalez2022, querol2021}. 
  
-In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed and compared LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional state-of-the-art techniques, while HM was innovatively designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
+In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional state-of-the-art techniques, while HM was innovatively designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Material and methods--- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -244,24 +244,26 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 \section{Results}
 
 % --- Performance --- %
-The performance of the models varied substantially by pollutant. In table x. performance metrics for the LUR and HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE in all models. The performance of the PM25 
+Since models were built based on different approaches there where not directly comparable due to differences on a temporal basis
+
+Since different approaches were to built outdoor air pollution models were not directly comparable due to differences on temporal 
+
+
+
+
+The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. The performance of the PM25 
+
+Performance metrics for LUR and DM are shown in the supplementary materials. 
 
 \begin{table}[ht]
 \centering
 \begin{tabular}{llllll}
 \toprule
-\textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R2 (10-CV)} & \textbf{RMSE (10-CV)} \\
+\textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R\textsuperscript{2} (10-CV)} & \textbf{RMSE (10-CV)} \\
 \midrule
-\multirow{6}{*}{LUR} & NO2 & BiSC-home & ... & ... & ... \\
-& PM2.5 & BiSCAPE & ... & ... & ... \\
-& BC & BiSCAPE & ... & ... & ... \\
-& Fe & BiSCAPE & ... & ... & ... \\
-& Cu & BiSCAPE & ... & ... & ... \\
-& Zn & BiSCAPE & ... & ... & ... \\
-\midrule
-\multirow{6}{*}{HM} & NO2 & BiSC-home & 1232 & 0.64 & 7.5 \\
-& PM2.5 & BiSCAPE & ... & ... & ... \\
-& BC & BiSCAPE & ... & ... & ... \\
+\multirow{6}{*}{HM} & NO\textsubscript{2} & BiSC-home & 1232 & 0.64 & 7.48 \\
+& PM\textsubscript{2.5} & BiSCAPE & 161 & 0.66 & 3.45 \\
+& BC & BiSCAPE & 74 & 0.86 &  0.23 \\
 & Fe & BiSCAPE & ... & ... & ... \\
 & Cu & BiSCAPE & ... & ... & ... \\
 & Zn & BiSCAPE & ... & ... & ... \\
