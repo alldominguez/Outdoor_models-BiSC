@@ -162,75 +162,13 @@ We evaluated model performance using various statistical approaches and on diffe
 
 \subsubsection{LUR model evaluation}
 Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on k-1 folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. 
-\vspace{0.5cm} 
+\vspace{0.5cm} Details from the metrics used for model validation can be found in the \textbf{Supplementary material X}.
 
-Details from the metrics used for model validation can be found in the \textbf{Supplementary material X}.
-
-These metrics are defined as follows:
-% --- R2 --- %
-\begin{equation}
-R^2 = \left( \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2} \right)
-\end{equation}
-
-% --- root mean squared error (RMSE) --- % 
-\begin{equation}
-\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
-\end{equation}
-
-% --- mean bias (MB) --- % 
-\begin{equation}
-\text{Mean Bias} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)
-\end{equation}
-
-% --- correlation coefficient (r) --- %
-\begin{equation}
-r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \sum (y_i - \bar{y})^2}}
-\end{equation}
-\vspace{0.5 cm}
 
 We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For LUR models BC, PM\textsubscript{2.5}, and its constituents (Cu, Fe, Sb, and Zn), internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of external data.
 
 \subsection{Dispersion model evaluation}
 Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. Details from the metrics used for dispersion model validation can be found in the \textbf{Supplementary material X}.\vspace{0.5cm} 
-
-The metrics used for the dispersion models we:
-
-% --- Percentage of observed-modelled pairs (n) --- %
-\begin{equation}
-n = \frac{N_{\text{pairs used}}}{N_{\text{total pairs}}} \times 100
-\end{equation}
-
-% --- Factor of Two (FAC2) --- % 
-\begin{equation}
-\text{FAC2} = \frac{1}{n} \sum_{i=1}^{n} U,
-\end{equation}
-%Where \( U \) is 1 if \( 0.5 \leq \frac{M_i}{O_i} \leq 2 \) and 0 otherwise.
-
-% --- Mean Bias (MB) --- % 
-\begin{equation}
-\text{MB} = \frac{1}{n} \sum_{i=1}^{n} (O_i - M_i)
-\end{equation}
-
-% --- Mean Gross Error (MGE) --- % 
-\begin{equation}
-\text{MGE} = \frac{1}{n} \sum_{i=1}^{n} |O_i - M_i|
-\end{equation}
-
-% --- Normalized Mean Bias (NMB) --- % 
-\begin{equation}
-\text{NMB} = \frac{\sum_{i=1}^{n} (M_i - O_i)}{\sum_{i=1}^{n} O_i}
-\end{equation}
-
-% --- Root Mean Square Error (RMSE) --- % 
-\begin{equation}
-\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (O_i - M_i)^2}
-\end{equation}
-
-% --- Correlation Coefficient (r) --- % 
-\begin{equation}
-r = \frac{\sum_{i=1}^{n} (O_i - \bar{O})(M_i - \bar{M})}{\sqrt{\sum_{i=1}^{n} (O_i - \bar{O})^2 \sum_{i=1}^{n} (M_i - \bar{M})^2}}
-\end{equation}
-\vspace{0.5cm}
 
 \subsection{Hybrid model evaluation}
 We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and the \textit{out-of-bag (OBB) score}. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one. In contrast, the OOB approach trains the model on two-thirds of the data and uses the residual third for external validation. We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}
