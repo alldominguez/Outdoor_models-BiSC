@@ -83,7 +83,7 @@ Urban areas add a layer of complexity to air pollution modelling due to complex 
 
 Furthermore, the COVID-19 pandemic has introduced unprecedented challenges for air pollution modelling and exposure assessment. These challenges encompass changes in air pollution patterns, constraints on data collection due to health and safety restrictions (lockdowns), and the complexity of data integration due to changes in traffic, mobility, and land use dynamics in cities \cite{gonzalez2022, querol2021}. 
  
-In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed and compared LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional state-of-the-art techniques, while HM was innovatively designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
+In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional state-of-the-art techniques, while HM was innovatively designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Material and methods--- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,75 +162,12 @@ We evaluated model performance using various statistical approaches and on diffe
 
 \subsubsection{LUR model evaluation}
 Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on k-1 folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. 
-\vspace{0.5cm} 
-
-Details from the metrics used for model validation can be found in the \textbf{Supplementary material X}.
-
-These metrics are defined as follows:
-% --- R2 --- %
-\begin{equation}
-R^2 = \left( \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2} \right)
-\end{equation}
-
-% --- root mean squared error (RMSE) --- % 
-\begin{equation}
-\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
-\end{equation}
-
-% --- mean bias (MB) --- % 
-\begin{equation}
-\text{Mean Bias} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)
-\end{equation}
-
-% --- correlation coefficient (r) --- %
-\begin{equation}
-r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \sum (y_i - \bar{y})^2}}
-\end{equation}
-\vspace{0.5 cm}
+\vspace{0.5cm} Details from the metrics used for model validation can be found in the \textbf{Supplementary material X}.
 
 We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For LUR models BC, PM\textsubscript{2.5}, and its constituents (Cu, Fe, Sb, and Zn), internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of external data.
 
 \subsection{Dispersion model evaluation}
 Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. Details from the metrics used for dispersion model validation can be found in the \textbf{Supplementary material X}.\vspace{0.5cm} 
-
-The metrics used for the dispersion models we:
-
-% --- Percentage of observed-modelled pairs (n) --- %
-\begin{equation}
-n = \frac{N_{\text{pairs used}}}{N_{\text{total pairs}}} \times 100
-\end{equation}
-
-% --- Factor of Two (FAC2) --- % 
-\begin{equation}
-\text{FAC2} = \frac{1}{n} \sum_{i=1}^{n} U,
-\end{equation}
-%Where \( U \) is 1 if \( 0.5 \leq \frac{M_i}{O_i} \leq 2 \) and 0 otherwise.
-
-% --- Mean Bias (MB) --- % 
-\begin{equation}
-\text{MB} = \frac{1}{n} \sum_{i=1}^{n} (O_i - M_i)
-\end{equation}
-
-% --- Mean Gross Error (MGE) --- % 
-\begin{equation}
-\text{MGE} = \frac{1}{n} \sum_{i=1}^{n} |O_i - M_i|
-\end{equation}
-
-% --- Normalized Mean Bias (NMB) --- % 
-\begin{equation}
-\text{NMB} = \frac{\sum_{i=1}^{n} (M_i - O_i)}{\sum_{i=1}^{n} O_i}
-\end{equation}
-
-% --- Root Mean Square Error (RMSE) --- % 
-\begin{equation}
-\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (O_i - M_i)^2}
-\end{equation}
-
-% --- Correlation Coefficient (r) --- % 
-\begin{equation}
-r = \frac{\sum_{i=1}^{n} (O_i - \bar{O})(M_i - \bar{M})}{\sqrt{\sum_{i=1}^{n} (O_i - \bar{O})^2 \sum_{i=1}^{n} (M_i - \bar{M})^2}}
-\end{equation}
-\vspace{0.5cm}
 
 \subsection{Hybrid model evaluation}
 We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and the \textit{out-of-bag (OBB) score}. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one. In contrast, the OOB approach trains the model on two-thirds of the data and uses the residual third for external validation. We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}
@@ -244,24 +181,26 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 \section{Results}
 
 % --- Performance --- %
-The performance of the models varied substantially by pollutant. In table x. performance metrics for the LUR and HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE in all models. The performance of the PM25 
+Since models were built based on different approaches there where not directly comparable due to differences on a temporal basis
+
+Since different approaches were to built outdoor air pollution models were not directly comparable due to differences on temporal 
+
+
+
+
+The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. The performance of the PM25 
+
+Performance metrics for LUR and DM are shown in the supplementary materials. 
 
 \begin{table}[ht]
 \centering
 \begin{tabular}{llllll}
 \toprule
-\textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R2 (10-CV)} & \textbf{RMSE (10-CV)} \\
+\textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R\textsuperscript{2} (10-CV)} & \textbf{RMSE (10-CV)} \\
 \midrule
-\multirow{6}{*}{LUR} & NO2 & BiSC-home & ... & ... & ... \\
-& PM2.5 & BiSCAPE & ... & ... & ... \\
-& BC & BiSCAPE & ... & ... & ... \\
-& Fe & BiSCAPE & ... & ... & ... \\
-& Cu & BiSCAPE & ... & ... & ... \\
-& Zn & BiSCAPE & ... & ... & ... \\
-\midrule
-\multirow{6}{*}{HM} & NO2 & BiSC-home & 1232 & 0.64 & 7.5 \\
-& PM2.5 & BiSCAPE & ... & ... & ... \\
-& BC & BiSCAPE & ... & ... & ... \\
+\multirow{6}{*}{HM} & NO\textsubscript{2} & BiSC-home & 1232 & 0.64 & 7.48 \\
+& PM\textsubscript{2.5} & BiSCAPE & 161 & 0.66 & 3.45 \\
+& BC & BiSCAPE & 74 & 0.86 &  0.23 \\
 & Fe & BiSCAPE & ... & ... & ... \\
 & Cu & BiSCAPE & ... & ... & ... \\
 & Zn & BiSCAPE & ... & ... & ... \\
@@ -275,7 +214,7 @@ The performance of the models varied substantially by pollutant. In table x. per
 
 
 % --- Exposure concentrations --- %
-Outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model are shown in FIGURE X. The exposure range was larger for the LUR model
+Outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model is shown in FIGURE X. The exposure range was larger for the LUR model
 
 % --- Correlation between measures and model estimates --- %
 Spearman correlation of air pollution exposure during the entire pregnancy between measurements, LUR, DM and HM at the residential addresses ranged from r = x to x (figure X). 
@@ -316,7 +255,7 @@ Spearman correlation of air pollution exposure during the entire pregnancy betwe
 %%% --- Discussion --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-We successfully developed spatiotemporal models using three different approaches (LUR, dispersion and hybrid models). All models had moderate to good performance evaluated by the defined metrics in the \textbf{methods section}.
+We successfully developed spatiotemporal models using three different approaches (LUR, dispersion and hybrid models). All models had moderate to good performance evaluated by the defined metrics in the \textbf{methods section} and displayed in more detail in the \textbf{Supplementary materials}
 
 As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
 
