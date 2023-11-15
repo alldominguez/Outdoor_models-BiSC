@@ -137,7 +137,18 @@ no2_lur <- no2_lur %>%
            dplyr::rename(no2_lur = no2_week_ratio)
 
 pm25_lur <- pm25_lur %>% 
-            dplyr::select(subject_id, weeks, date_start, date_end)
+            dplyr::select(subject_id, weeks, date_start, date_end) %>% 
+            dplyr::rename(pm25_lur  = pm25_week_lur_ratio)
 
 bc_lur <- bc_lur %>% 
           dplyr::select(subject_id, weeks, date_start, date_end)
+
+fe_lur <- fe_lur %>% 
+          dplyr::select(subject_id, weeks, date_start, date_end)
+
+
+
+
+
+
+
