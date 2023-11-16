@@ -1,10 +1,15 @@
 # Install packages
 pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate,  mice, ggmice, plyr, data.table)
 
-
 ##############################
 ### --- Load the data --- ###
 ############################
+
+###############################
+### --- Home addresses --- ###
+#############################
+bisc_home_coords <- read.csv() # wee need assign to dm and lur data the lon/lat to then plot the predictions (entire pregnancy)
+
 
 #############################################
 ### --- Air pollutants measurements data --- #####################################################################
@@ -115,7 +120,6 @@ dplyr::glimpse(bc_dm)
 ###########################
 ### --- LUR models --- ###
 #########################
-
 no2_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/no2_weekly_preg_29092023.rds")
 pm25_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/pm25_weekly_preg_29092023.rds")
 bc_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/bc_weekly_preg_29092023.rds")
@@ -131,7 +135,7 @@ dplyr::glimpse(fe_lur)
 dplyr::glimpse(cu_lur)
 dplyr::glimpse(zn_lur)
 
-# re-arrenge the data 
+# re-arrange the data 
 no2_lur <- no2_lur %>% 
            dplyr::select(subject_id, weeks, date_start, date_end, no2_week_ratio) %>% 
            dplyr::rename(no2_lur = no2_week_ratio)
@@ -145,8 +149,16 @@ bc_lur <- bc_lur %>%
           dplyr::rename(bc_lur = bc_week_ratio)
 
 fe_lur <- fe_lur %>% 
-          dplyr::select(subject_id, weeks, date_start, date_end)
+          dplyr::select(subject_id, weeks, date_start, date_end, fe_week_ratio) %>% 
+          dplyr::rename(fe_lur = fe_week_ratio)
 
+cu_lur <- cu_lur %>% 
+          dplyr::select(subject_id, weeks, date_start, date_end, cu_week_ratio) %>% 
+          dplyr::rename(cu_lur = cu_week_ratio)
+
+zn_lur <- zn_lur %>% 
+          dplyr::select(subject_id, weeks, date_start, date_end, zn_week_ratio) %>% 
+          dplyr::rename(zn_lue = zn_week_ratio)
 
 
 
