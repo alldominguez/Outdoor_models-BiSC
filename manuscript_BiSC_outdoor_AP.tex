@@ -30,14 +30,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Tittle of the paper --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Development of outdoor air pollution models for estimating exposure in the Barcelona Life Study Cohort (BiSC)}
+\title{\textbf{Development of outdoor air pollution models for estimating exposure in the Barcelona Life Study Cohort (BiSC)}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Authors and affiliations --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% --- Authors --- %%%
-\author[1, 2]{Alan Domínguez}
+\author[1, 2, 3]{Alan Domínguez}
 \author[1, 3, 4]{Payam Dadvand}
 \author[1]{Marta Cirach}
 \author[1]{Bruno Raimbault}
@@ -50,7 +50,7 @@
 
 %%% --- Affiliations --- %%%
 \affil[1]{Barcelona Institute for Global Health (ISGlobal), Barcelona, Spain.}
-\affil[2]{Universitat Popmpeu Fabra (UPF), Barcelona, Spain.}
+\affil[2]{Universitat Pompeu Fabra (UPF), Barcelona, Spain.}
 \affil[3]{CIBER Epidemiología y Salud Pública (CIBERESP), Madrid, Spain.}
 \affil[4]{London School of Hygiene and Tropical Medicine (LSHTM), London, UK.}
 
@@ -194,6 +194,7 @@ Performance metrics for LUR and DM are shown in the supplementary materials.
 
 \begin{table}[ht]
 \centering
+\caption{Performance metric for hybrid models.}
 \begin{tabular}{llllll}
 \toprule
 \textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R\textsuperscript{2} (10-CV)} & \textbf{RMSE (10-CV)} \\
@@ -201,12 +202,11 @@ Performance metrics for LUR and DM are shown in the supplementary materials.
 \multirow{6}{*}{HM} & NO\textsubscript{2} & BiSC-home & 1232 & 0.64 & 7.48 \\
 & PM\textsubscript{2.5} & BiSCAPE & 161 & 0.66 & 3.45 \\
 & BC & BiSCAPE & 74 & 0.86 &  0.23 \\
-& Fe & BiSCAPE & ... & ... & ... \\
-& Cu & BiSCAPE & ... & ... & ... \\
-& Zn & BiSCAPE & ... & ... & ... \\
+& Fe & BiSCAPE & ... & 0.54 & ... \\
+& Cu & BiSCAPE & ... & 0.70 & ... \\
+& Zn & BiSCAPE & ... & 0.42 & ... \\
 \bottomrule
 \end{tabular}
-\caption{Descriptive caption for the table.}
 \label{tab:my_label}
 \end{table}
 
