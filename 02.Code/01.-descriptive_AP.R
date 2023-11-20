@@ -135,30 +135,136 @@ dplyr::glimpse(fe_lur)
 dplyr::glimpse(cu_lur)
 dplyr::glimpse(zn_lur)
 
-# re-arrange the data 
+##################################
+### --- Re-ordering weeks --- ###
+#################################
+
+# --- NO2 --- #
+no2_lur$weeks <-  dplyr::recode_factor(no2_lur$weeks, 
+                                       w1 = 'w01', w2 = 'w02', w3 = 'w03', w4 = 'w04', w5 = 'w05',
+                                       w6 = 'w06', w7 = 'w07', w8 = 'w08', w9 = 'w09', w10 = 'w10',
+                                       w11 = 'w11', w12 = 'w12', w13 = 'w13', w14 = 'w14', w15 = 'w15',
+                                       w16 = 'w16', w17 = 'w17', w18 = 'w18', w19 = 'w19', w20 = 'w20',
+                                       w21 = 'w21', w22 = 'w22', w23 = 'w23', w24 = 'w24', w25 = 'w25',
+                                       w26 = 'w26', w27 = 'w27', w28 = 'w28', w29 = 'w29', w30 = 'w30',
+                                       w31 = 'w31', w32 = 'w32', w33 = 'w33', w34 = 'w34', w35 = 'w35',
+                                       w36 = 'w36', w37 = 'w37', w38 = 'w38', w39 = 'w39', w40 = 'w40',
+                                       w41 = 'w41', w42 = 'w42', w43 = 'w43', w44 = 'w44')
+
+# --- PM25 --- #  
+pm25_lur$weeks <- dplyr::recode_factor(pm25_lur$weeks, 
+                                       w1 = 'w01', w2 = 'w02', w3 = 'w03', w4 = 'w04', w5 = 'w05',
+                                       w6 = 'w06', w7 = 'w07', w8 = 'w08', w9 = 'w09', w10 = 'w10',
+                                       w11 = 'w11', w12 = 'w12', w13 = 'w13', w14 = 'w14', w15 = 'w15',
+                                       w16 = 'w16', w17 = 'w17', w18 = 'w18', w19 = 'w19', w20 = 'w20',
+                                       w21 = 'w21', w22 = 'w22', w23 = 'w23', w24 = 'w24', w25 = 'w25',
+                                       w26 = 'w26', w27 = 'w27', w28 = 'w28', w29 = 'w29', w30 = 'w30',
+                                       w31 = 'w31', w32 = 'w32', w33 = 'w33', w34 = 'w34', w35 = 'w35',
+                                       w36 = 'w36', w37 = 'w37', w38 = 'w38', w39 = 'w39', w40 = 'w40',
+                                       w41 = 'w41', w42 = 'w42', w43 = 'w43', w44 = 'w44')
+
+
+# --- BC --- #
+bc_lur$weeks <- dplyr::recode_factor(bc_lur$weeks, 
+                                     w1 = 'w01', w2 = 'w02', w3 = 'w03', w4 = 'w04', w5 = 'w05',
+                                     w6 = 'w06', w7 = 'w07', w8 = 'w08', w9 = 'w09', w10 = 'w10',
+                                     w11 = 'w11', w12 = 'w12', w13 = 'w13', w14 = 'w14', w15 = 'w15',
+                                     w16 = 'w16', w17 = 'w17', w18 = 'w18', w19 = 'w19', w20 = 'w20',
+                                     w21 = 'w21', w22 = 'w22', w23 = 'w23', w24 = 'w24', w25 = 'w25',
+                                     w26 = 'w26', w27 = 'w27', w28 = 'w28', w29 = 'w29', w30 = 'w30',
+                                     w31 = 'w31', w32 = 'w32', w33 = 'w33', w34 = 'w34', w35 = 'w35',
+                                     w36 = 'w36', w37 = 'w37', w38 = 'w38', w39 = 'w39', w40 = 'w40',
+                                     w41 = 'w41', w42 = 'w42', w43 = 'w43', w44 = 'w44')
+
+# --- Fe --- #
+fe_lur$weeks <- dplyr::recode_factor(fe_lur$weeks, 
+                                     w1 = 'w01', w2 = 'w02', w3 = 'w03', w4 = 'w04', w5 = 'w05',
+                                     w6 = 'w06', w7 = 'w07', w8 = 'w08', w9 = 'w09', w10 = 'w10',
+                                     w11 = 'w11', w12 = 'w12', w13 = 'w13', w14 = 'w14', w15 = 'w15',
+                                     w16 = 'w16', w17 = 'w17', w18 = 'w18', w19 = 'w19', w20 = 'w20',
+                                     w21 = 'w21', w22 = 'w22', w23 = 'w23', w24 = 'w24', w25 = 'w25',
+                                     w26 = 'w26', w27 = 'w27', w28 = 'w28', w29 = 'w29', w30 = 'w30',
+                                     w31 = 'w31', w32 = 'w32', w33 = 'w33', w34 = 'w34', w35 = 'w35',
+                                     w36 = 'w36', w37 = 'w37', w38 = 'w38', w39 = 'w39', w40 = 'w40',
+                                     w41 = 'w41', w42 = 'w42', w43 = 'w43', w44 = 'w44')
+
+
+
+# --- Cu --- #
+cu_lur$weeks <- dplyr::recode_factor(cu_lur$weeks, 
+                                     w1 = 'w01', w2 = 'w02', w3 = 'w03', w4 = 'w04', w5 = 'w05',
+                                     w6 = 'w06', w7 = 'w07', w8 = 'w08', w9 = 'w09', w10 = 'w10',
+                                     w11 = 'w11', w12 = 'w12', w13 = 'w13', w14 = 'w14', w15 = 'w15',
+                                     w16 = 'w16', w17 = 'w17', w18 = 'w18', w19 = 'w19', w20 = 'w20',
+                                     w21 = 'w21', w22 = 'w22', w23 = 'w23', w24 = 'w24', w25 = 'w25',
+                                     w26 = 'w26', w27 = 'w27', w28 = 'w28', w29 = 'w29', w30 = 'w30',
+                                     w31 = 'w31', w32 = 'w32', w33 = 'w33', w34 = 'w34', w35 = 'w35',
+                                     w36 = 'w36', w37 = 'w37', w38 = 'w38', w39 = 'w39', w40 = 'w40',
+                                     w41 = 'w41', w42 = 'w42', w43 = 'w43', w44 = 'w44')
+
+
+# --- Zn --- #
+zn_lur$weeks <- dplyr::recode_factor(zn_lur$weeks, 
+                                     w1 = 'w01', w2 = 'w02', w3 = 'w03', w4 = 'w04', w5 = 'w05',
+                                     w6 = 'w06', w7 = 'w07', w8 = 'w08', w9 = 'w09', w10 = 'w10',
+                                     w11 = 'w11', w12 = 'w12', w13 = 'w13', w14 = 'w14', w15 = 'w15',
+                                     w16 = 'w16', w17 = 'w17', w18 = 'w18', w19 = 'w19', w20 = 'w20',
+                                     w21 = 'w21', w22 = 'w22', w23 = 'w23', w24 = 'w24', w25 = 'w25',
+                                     w26 = 'w26', w27 = 'w27', w28 = 'w28', w29 = 'w29', w30 = 'w30',
+                                     w31 = 'w31', w32 = 'w32', w33 = 'w33', w34 = 'w34', w35 = 'w35',
+                                     w36 = 'w36', w37 = 'w37', w38 = 'w38', w39 = 'w39', w40 = 'w40',
+                                     w41 = 'w41', w42 = 'w42', w43 = 'w43', w44 = 'w44')
+
+
 no2_lur <- no2_lur %>% 
-           dplyr::select(subject_id, weeks, date_start, date_end, no2_week_ratio) %>% 
-           dplyr::rename(no2_lur = no2_week_ratio)
+  dplyr::select(subject_id, weeks, date_start, date_end, no2_week_ratio) %>% 
+  dplyr::rename(no2_lur = no2_week_ratio)
 
 pm25_lur <- pm25_lur %>% 
-            dplyr::select(subject_id, weeks, date_start, date_end, pm25_week_lur_ratio) %>% 
-            dplyr::rename(pm25_lur= pm25_week_lur_ratio)
+  dplyr::select(subject_id, weeks, pm25_week_lur_ratio) %>% 
+  dplyr::rename(pm25_lur= pm25_week_lur_ratio)
 
 bc_lur <- bc_lur %>% 
-          dplyr::select(subject_id, weeks, date_start, date_end, bc_week_ratio) %>% 
-          dplyr::rename(bc_lur = bc_week_ratio)
+  dplyr::select(subject_id, weeks, bc_week_ratio) %>% 
+  dplyr::rename(bc_lur = bc_week_ratio)
 
 fe_lur <- fe_lur %>% 
-          dplyr::select(subject_id, weeks, date_start, date_end, fe_week_ratio) %>% 
-          dplyr::rename(fe_lur = fe_week_ratio)
+  dplyr::select(subject_id, weeks, fe_week_ratio) %>% 
+  dplyr::rename(fe_lur = fe_week_ratio)
 
 cu_lur <- cu_lur %>% 
-          dplyr::select(subject_id, weeks, date_start, date_end, cu_week_ratio) %>% 
-          dplyr::rename(cu_lur = cu_week_ratio)
+  dplyr::select(subject_id, weeks, cu_week_ratio) %>% 
+  dplyr::rename(cu_lur = cu_week_ratio)
 
 zn_lur <- zn_lur %>% 
-          dplyr::select(subject_id, weeks, date_start, date_end, zn_week_ratio) %>% 
-          dplyr::rename(zn_lue = zn_week_ratio)
+  dplyr::select(subject_id, weeks, zn_week_ratio) %>% 
+  dplyr::rename(zn_lur = zn_week_ratio) 
+
+
+# We use lur data to arrange(sort the data)
+no2_lur <- no2_lur %>% dplyr::arrange(subject_id, weeks)
+
+#######################################
+### --- Join all LUR estimates --- ### 
+#####################################
+lur_estimates <- no2_lur %>% 
+                 dplyr::inner_join(pm25_lur, by = c("subject_id", "weeks")) %>% 
+                 dplyr::inner_join(bc_lur, by = c("subject_id", "weeks")) %>% 
+                 dplyr::inner_join(fe_lur, by = c("subject_id", "weeks")) %>% 
+                 dplyr::inner_join(cu_lur, by = c("subject_id", "weeks")) %>% 
+                 dplyr::inner_join(zn_lur, by = c("subject_id", "weeks"))
+        
+
+dplyr::glimpse(lur_estimates)
+lur_estimates %>% ungroup() %>% skimr::skim() # we need to ungroup first 
+
+
+
+
+
+
+
+
 
 
 
