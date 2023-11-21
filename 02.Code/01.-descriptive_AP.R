@@ -1,10 +1,16 @@
 # Install packages
 pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate, 
-               mice, ggmice, plyr, data.table, mapview, ggmap, omsdata)
+               mice, ggmice, plyr, data.table, mapview, ggmap, omsdata, sf, sp, patchwork)
 
 ##############################
 ### --- Load the data --- ###
 ############################
+
+#######################################################
+### --- Load shapefile  Barcelona metropolitan --- ###
+#####################################################
+bcn_shp <- sf::read_sf("01.Data/BCN_GIS_data/bcn/bcn.shp")
+amb_shp <- sf::st_read("01.Data/amb.gpkg")
 
 ###############################
 ### --- Home addresses --- ###
@@ -297,30 +303,148 @@ rio::export(lur_estimates, "01.Data/lur_estimates.csv")
 ##################################
 
 ### -- LUR estimates --- ### 
-lur_estimates_plot <- lur_estimates %>% 
-                      dplyr::group_by(gid) # we have 1.235 home address
+dplyr::glimpse(lur_estimates)
 
+lur_estimates_plot <- lur_estimates %>% 
+                      dplyr::ungroup()
+
+# summarise all the pollutants 
+lur_estimates_plot <- lur_estimates_plot %>% dplyr::group_by(gid) %>%  dplyr::summarise_all(funs(mean))
 dplyr::glimpse(lur_estimates_plot)
+lur_estimates_plot <- lur_estimates_plot %>% dplyr::select(gid, subject_id, no2_lur:lat) %>% tidyr::drop_na()
 
 ### --- Load shapefile  Barcelona metropolitan --- ###b
 bcn_shp <- sf::read_sf("01.Data/BCN_GIS_data/bcn/bcn.shp")
 amb_shp <- sf::st_read("01.Data/amb.gpkg")
 plot(amb_shp[1])
 
+#####################################
+# --- Entire pregnancy LUR --- # 
+###################################
 
-dplyr::glimpse(amb_shp)
-
-
-##################################################
-# --- Here we plot entire pregnancy LUR NO2 --- # 
-##################################################
-
-ggplot() + 
-geom_sf(data = amb_shp, fill = "grey80")+ 
-theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
-facet_grid(. ~ "NO2 LUR model") + theme_bw()
-
-# Calculate average NO2 using aggregate
-average_no2 <- aggregate(no2_lur ~ subject_id, data = lur_estimates_plot, FUN = mean)
+library(sf)
+lur_data <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 32632)  # replace with your actual CRS
 
 
+amb_plot <- ggplot() + 
+  geom_sf(data = amb_shp, fill = "grey", color = "white")+ 
+  theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
+  facet_grid(. ~ "NO2 LUR model") + theme_bw()
+
+# Check CRS of shapefile
+print(sf::st_crs(amb_shp))
+
+print(sf::st_crs(lur_estimates_plot))
+
+
+
+library(sf)
+library(dplyr)
+library(ggplot2)
+
+# Assuming lur_estimates_plot is already loaded and as shown in your output
+
+# Convert lur_estimates_plot to an sf object
+lur_estimates_plot_sf <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 25831)
+
+# Now, lur_estimates_plot_sf should have the CRS set to ETRS89 / UTM zone 31N
+# You can check it again
+print(st_crs(lur_estimates_plot_sf))
+
+# Then you can proceed to plot
+# Assuming your shapefile is already loaded and named as 'shapefile' and in the same CRS
+
+ggplot() +
+  geom_sf(data = amb_shp) +
+  geom_sf(data = lur_estimates_plot_sf, color = "red", size = 0.5)
+#####################################################################################
+
+
+# First, convert your points to an sf object
+lur_estimates_sf <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 25831)
+
+lur_estimates_wgs84 <- st_transform(lur_estimates_sf, 4326)
+
+# Plotting with ggplot2
+
+amb_shp %>% dplyr::select()
+
+
+ggplot() +
+  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_wgs84, aes(color = no2_lur), size = 0.1) +
+  theme_minimal() +
+  labs(title = "Barcelona LUR Estimates")
+
+library(sf)
+library(ggplot2)
+
+# Lets check the extent of the shapefile
+print(st_bbox(amb_shp))
+
+# LUR estimates NO2 
+no2_plot_lur <- ggplot() +
+  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "", 
+       color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(amb_shp)[1], st_bbox(amb_shp)[3])) +
+  ylim(c(st_bbox(amb_shp)[2], st_bbox(amb_shp)[4])) +
+  #facet_grid(. ~ "NO2 LUR model") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank())
+
+# LUR estimates PM25 
+pm25_plot_lur <- ggplot() +
+  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "",
+       color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(amb_shp)[1], st_bbox(amb_shp)[3])) +
+  ylim(c(st_bbox(amb_shp)[2], st_bbox(amb_shp)[4])) +
+  #facet_grid(. ~ "PM25 LUR model") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank())
+
+# LUR estimates BC
+bc_plot_lur <- ggplot() +
+  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "", 
+       color =expression(paste("BC", " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(amb_shp)[1], st_bbox(amb_shp)[3])) +
+  ylim(c(st_bbox(amb_shp)[2], st_bbox(amb_shp)[4])) +
+  #facet_grid(. ~ "BC LUR model") + 
+  theme_bw() + 
+  theme(legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank())
+
+
+# Combine all the plots 
+(no2_plot_lur + pm25_plot_lur + bc_plot_lur)  / (no2_plot_lur + pm25_plot_lur + bc_plot_lur) / (no2_plot_lur + pm25_plot_lur + bc_plot_lur)
