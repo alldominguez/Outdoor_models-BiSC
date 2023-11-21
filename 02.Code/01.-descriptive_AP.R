@@ -140,6 +140,9 @@ pm25_dm$date_end <- as.Date(pm25_dm$date_end)
 bc_dm$date_start <- as.Date(bc_dm$date_start)
 bc_dm$date_end <- as.Date(bc_dm$date_end)
 
+# arrange the no2 data 
+no2_dm <- no2_dm %>% dplyr::arrange(subject_id, weeks)
+
 # --- select some variables per each dataset --- # 
 no2_dm <- no2_dm %>% 
           dplyr::select(gid, subject_id, weeks, date_start, date_end,
@@ -147,19 +150,27 @@ no2_dm <- no2_dm %>%
           dplyr::rename(no2_dm = NO2.total_DispersionModels)
 
 pm25_dm <- pm25_dm %>%
-           dplyr::select(gid, subject_id, weeks, date_start, date_end, 
-                         pm2.5.total, lon, lat) %>% 
+           dplyr::select(subject_id, weeks, pm2.5.total) %>% 
            dplyr::rename(pm25_dm = pm2.5.total)
 
 bc_dm <- bc_dm %>% 
-         dplyr::select(gid, subject_id, weeks, date_start, date_end,
-                       BC.total, lon, lat) %>% 
+         dplyr::select(subject_id, weeks, BC.total) %>% 
          dplyr::rename(bc_dm = BC.total)
 
 
 dplyr::glimpse(no2_dm)
 dplyr::glimpse(pm25_dm)
 dplyr::glimpse(bc_dm)
+
+### --- Join all DM estimates --- ### 
+dm_estimates <- no2_dm %>% 
+                dplyr::inner_join(pm25_dm, by = c("subject_id", "weeks")) %>% 
+                dplyr::inner_join(bc_dm, by = c("subject_id", "weeks"))
+
+dplyr::glimpse(dm_estimates)
+
+### --- Export data --- ###
+rio::export(dm_estimates, "01.Data/dm_estimates.csv")
 
 
 ###########################
@@ -289,9 +300,7 @@ zn_lur <- zn_lur %>%
 # We use lur data to arrange(sort the data)
 no2_lur <- no2_lur %>% dplyr::arrange(subject_id, weeks)
 
-#######################################
 ### --- Join all LUR estimates --- ### 
-#####################################
 lur_estimates <- no2_lur %>% 
                  dplyr::inner_join(pm25_lur, by = c("subject_id", "weeks")) %>% 
                  dplyr::inner_join(bc_lur, by = c("subject_id", "weeks")) %>% 
@@ -310,9 +319,7 @@ lur_estimates <- lur_estimates %>%
 
 dplyr::glimpse(lur_estimates)
 
-############################
 ### --- Export data --- ###
-##########################
 rio::export(lur_estimates, "01.Data/lur_estimates.csv")
 
 ##############################################################################################
@@ -493,9 +500,7 @@ bc_plot_lur <- ggplot() +
 lur_map_plot <- (no2_plot_lur +  pm25_plot_lur + bc_plot_lur)
 lur_map_plot
 
-####################################
 ### --- Saving the LUR plot --- ###
-##################################
 ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png", 
        dpi = 600, width = 10, height = 5, units = "in")
 
@@ -505,7 +510,116 @@ ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png",
 ### --- Dispersion exposure estimate plots --- ###
 ##################################################
 
+# summarise all the pollutants 
+dm_estimates_plot <- dm_estimates %>% 
+                     dplyr::ungroup()
 
+dm_estimates_plot <- dm_estimates_plot %>% dplyr::group_by(gid) %>%  dplyr::summarise_all(funs(mean))
+dplyr::glimpse(dm_estimates_plot)
+
+dm_estimates_plot <- dm_estimates_plot %>% 
+                     dplyr::select(gid, subject_id, no2_dm, pm25_dm, bc_dm, lon, lat) %>% 
+                     tidyr::drop_na()
+
+
+dm_estimates_sf <- st_as_sf(dm_estimates_plot, coords = c("lon", "lat"), crs = 25831)
+dm_estimates_wgs84 <- st_transform(dm_estimates_sf, 4326)
+
+library(sf)
+library(ggplot2)
+
+# Lets check the extent of the shapefile
+print(st_bbox(amb_shp))
+
+# LUR estimates NO2 
+no2_plot_dm <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = no2_dm), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "(B) DM model",  
+       color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  #facet_grid(. ~ "NO2 LUR model") +
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)
+
+# LUR estimates PM25 
+pm25_plot_dm <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = pm25_dm), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "",
+       color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  #facet_grid(. ~ "PM25 LUR model") +
+  theme_bw() + 
+  theme(legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)
+
+# LUR estimates BC
+bc_plot_dm <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = bc_dm), size = 1, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "", 
+       color =expression(paste("BC", " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  #facet_grid(. ~ "BC LUR model") + 
+  theme_bw() + 
+  theme(legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)  # Decrease the size of the legend keys)
+
+
+# Combine all the plots 
+dm_map_plot <- (no2_plot_dm +  pm25_plot_dm + bc_plot_dm)
+dm_map_plot
+
+####################################
+### --- Saving the LUR plot --- ###
+##################################
+ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot.png", 
+       dpi = 600, width = 10, height = 5, units = "in")
 
 
 
