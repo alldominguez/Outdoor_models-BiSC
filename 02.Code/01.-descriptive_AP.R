@@ -115,26 +115,47 @@ pm25_constituents_hybrid <- pm25_constituents_hybrid %>%
 #################################
 dm_home_weekly <- read.csv("01.Data/BiSC_dispersion_models/imputed/weekly_estimate_DM_home_imputed.csv")
 
-# quick check of the data
-dplyr::glimpse(dm_home_weekly)
-skimr::skim(dm_home_weekly)
+no2_dm <- read.csv("01.Data/BiSC_comparison_data/predictions/DM/no2_dm.csv")
+pm25_dm <- read.csv("01.Data/BiSC_comparison_data/predictions/DM/pm25_dm.csv") 
+bc_dm <- read.csv("01.Data/BiSC_comparison_data/predictions/DM/bc_dm.csv") 
 
-# dates in proper format
-dm_home_weekly$date_start <- as.Date(dm_home_weekly$date_start)
-dm_home_weekly$date_end <- as.Date(dm_home_weekly$date_end)
+# quick check of the data 
+dplyr::glimpse(no2_dm)
+dplyr::glimpse(pm25_dm)
+dplyr::glimpse(bc_dm)
 
-# --- generate separete files --- #
-no2_dm <- dm_home_weekly %>% 
-          dplyr::select(subject_id, weeks, date_start, date_end, no2.total) %>% 
-          dplyr::rename(no2_dm = no2.total)
+#######################################
+### --- dates in proper format --- ###
+#####################################
 
-pm25_dm <- dm_home_weekly %>% 
-           dplyr::select(subject_id, weeks, date_start, date_end, pm2.5.total) %>% 
+### --- NO2 --- ###
+no2_dm$date_start <- as.Date(no2_dm$date_start)
+no2_dm$date_end <- as.Date(no2_dm$date_end)
+
+### --- PM25 --- ###
+pm25_dm$date_start <- as.Date(pm25_dm$date_start)
+pm25_dm$date_end <- as.Date(pm25_dm$date_end)
+
+### --- BC --- ###
+bc_dm$date_start <- as.Date(bc_dm$date_start)
+bc_dm$date_end <- as.Date(bc_dm$date_end)
+
+# --- select some variables per each dataset --- # 
+no2_dm <- no2_dm %>% 
+          dplyr::select(gid, subject_id, weeks, date_start, date_end,
+                        NO2.total_DispersionModels, lon, lat) %>% 
+          dplyr::rename(no2_dm = NO2.total_DispersionModels)
+
+pm25_dm <- pm25_dm %>%
+           dplyr::select(gid, subject_id, weeks, date_start, date_end, 
+                         pm2.5.total, lon, lat) %>% 
            dplyr::rename(pm25_dm = pm2.5.total)
 
-bc_dm <- dm_home_weekly %>%  
-         dplyr::select(subject_id, weeks, date_start, date_end, BC.total) %>% 
-         dplyr::rename(bc_dm = BC.total) 
+bc_dm <- bc_dm %>% 
+         dplyr::select(gid, subject_id, weeks, date_start, date_end,
+                       BC.total, lon, lat) %>% 
+         dplyr::rename(bc_dm = BC.total)
+
 
 dplyr::glimpse(no2_dm)
 dplyr::glimpse(pm25_dm)
@@ -375,7 +396,6 @@ lur_estimates_wgs84 <- st_transform(lur_estimates_sf, 4326)
 
 dplyr::glimpse(amb_shp)
 
-
 ggplot() +
   geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_wgs84, aes(color = no2_lur), size = 0.1) +
@@ -477,6 +497,12 @@ lur_map_plot
 ##################################
 ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png", 
        dpi = 600, width = 10, height = 5, units = "in")
+
+#############################################################################################
+
+###################################################
+### --- Dispersion exposure estimate plots --- ###
+##################################################
 
 
 
