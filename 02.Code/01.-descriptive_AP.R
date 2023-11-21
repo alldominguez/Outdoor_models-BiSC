@@ -322,25 +322,31 @@ plot(amb_shp[1])
 # --- Entire pregnancy LUR --- # 
 ###################################
 
-library(sf)
 lur_data <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 32632)  # replace with your actual CRS
-
 
 amb_plot <- ggplot() + 
   geom_sf(data = amb_shp, fill = "grey", color = "white")+ 
   theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
   facet_grid(. ~ "NO2 LUR model") + theme_bw()
 
+filter_amb_shp <- amb_shp %>% 
+                  dplyr::filter(NOMMUNI %in% c("Badalona", "Barcelona", "Esplugues de Llobregat",
+                                             "l'Hospitalet de Llobregat", "Sant Joan Despí", "Sant Just Desvern",
+                                             "Sant Feliu de Llobregat", "Sant Adrià de Besòs", 
+                                             "Santa Coloma de Gramenet", "Ripollet", "Cerdanyola del Vallès",
+                                             "Sant Cugat del Vallès", "Sant Boi de Llobregat","Cornellà de Llobregat"))
+
+
+amb_plot_filtered <- ggplot() + 
+  geom_sf(data = filter_amb_shp, fill = "grey", color = "white")+ 
+  theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
+  facet_grid(. ~ "NO2 LUR model") + theme_bw() +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) 
+
 # Check CRS of shapefile
 print(sf::st_crs(amb_shp))
-
 print(sf::st_crs(lur_estimates_plot))
-
-
-
-library(sf)
-library(dplyr)
-library(ggplot2)
 
 # Assuming lur_estimates_plot is already loaded and as shown in your output
 
@@ -367,7 +373,7 @@ lur_estimates_wgs84 <- st_transform(lur_estimates_sf, 4326)
 
 # Plotting with ggplot2
 
-amb_shp %>% dplyr::select()
+dplyr::glimpse(amb_shp)
 
 
 ggplot() +
@@ -384,56 +390,67 @@ print(st_bbox(amb_shp))
 
 # LUR estimates NO2 
 no2_plot_lur <- ggplot() +
-  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0) +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0, alpha = 0.7) +
   theme_minimal() +
   scale_color_viridis_c(option = "viridis") + # Using viridis green palette
-  labs(title = "", 
+  labs(title = "(A) LUR model",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(amb_shp)[1], st_bbox(amb_shp)[3])) +
-  ylim(c(st_bbox(amb_shp)[2], st_bbox(amb_shp)[4])) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
   #facet_grid(. ~ "NO2 LUR model") +
-  theme_bw() +
-  theme(legend.position = "bottom",
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
         panel.grid.major = element_blank(),  
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)
 
 # LUR estimates PM25 
 pm25_plot_lur <- ggplot() +
-  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0) +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0, alpha = 0.7) +
   theme_minimal() +
   scale_color_viridis_c(option = "viridis") + # Using viridis green palette
   labs(title = "",
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(amb_shp)[1], st_bbox(amb_shp)[3])) +
-  ylim(c(st_bbox(amb_shp)[2], st_bbox(amb_shp)[4])) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
   #facet_grid(. ~ "PM25 LUR model") +
-  theme_bw() +
-  theme(legend.position = "bottom",
+  theme_bw() + 
+  theme(legend.position = "bottom", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
         panel.grid.major = element_blank(),  
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)
 
 # LUR estimates BC
 bc_plot_lur <- ggplot() +
-  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1.0) +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1, alpha = 0.7) +
   theme_minimal() +
   scale_color_viridis_c(option = "viridis") + # Using viridis green palette
   labs(title = "", 
        color =expression(paste("BC", " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(amb_shp)[1], st_bbox(amb_shp)[3])) +
-  ylim(c(st_bbox(amb_shp)[2], st_bbox(amb_shp)[4])) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
   #facet_grid(. ~ "BC LUR model") + 
   theme_bw() + 
   theme(legend.position = "bottom", 
@@ -443,8 +460,25 @@ bc_plot_lur <- ggplot() +
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
         panel.grid.major = element_blank(),  
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)  # Decrease the size of the legend keys)
 
 
 # Combine all the plots 
-(no2_plot_lur + pm25_plot_lur + bc_plot_lur)  / (no2_plot_lur + pm25_plot_lur + bc_plot_lur) / (no2_plot_lur + pm25_plot_lur + bc_plot_lur)
+lur_map_plot <- (no2_plot_lur +  pm25_plot_lur + bc_plot_lur)
+lur_map_plot
+
+####################################
+### --- Saving the LUR plot --- ###
+##################################
+ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png", 
+       dpi = 600, width = 10, height = 5, units = "in")
+
+
+
+
+
