@@ -199,7 +199,7 @@ Performance metrics for LUR and DM are shown in the supplementary materials.
 \toprule
 \textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R\textsuperscript{2} (10-CV)} & \textbf{RMSE (10-CV)} \\
 \midrule
-\multirow{6}{*}{HM} & NO\textsubscript{2} & BiSC-home & 1232 & 0.64 & 7.48 \\
+\multirow{6}{*}{HM} & NO\textsubscript{2} & BiSC-hchatome & 1232 & 0.64 & 7.48 \\
 & PM\textsubscript{2.5} & BiSCAPE & 161 & 0.66 & 3.45 \\
 & BC & BiSCAPE & 74 & 0.86 &  0.23 \\
 & Fe & BiSCAPE & ... & 0.54 & ... \\
@@ -250,6 +250,17 @@ Spearman correlation of air pollution exposure during the entire pregnancy betwe
 \caption{Comparison between measurements and prediction values for the hybrid models for \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu} and \textit{Zn}.}
 \label{fig2}
 \end{figure}
+
+%%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/lur_map_plot.png}
+\caption{Pregnancy exposure for the entire pregnancy period \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
+\label{fig2}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Discussion --- %%%
