@@ -1,6 +1,7 @@
 # Install packages
 pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate, 
-               mice, ggmice, plyr, data.table, mapview, ggmap, omsdata, sf, sp, patchwork)
+               mice, ggmice, plyr, data.table, mapview, ggmap, omsdata, sf, sp, patchwork,
+               ggpattern)
 
 ##############################
 ### --- Load the data --- ###
@@ -787,8 +788,6 @@ hm_map_plot
 ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot.png", 
        dpi = 600, width = 10, height = 5, units = "in")
 
-
-
 ###################################################################################################
 
 ########################
@@ -799,7 +798,125 @@ dplyr::glimpse(dm_estimates)
 dplyr::glimpse(hm_estimates)
 
 
+# create a label and renaming variables 
+lur_estimates <- lur_estimates %>% 
+                  dplyr::mutate(model = "LUR") %>% 
+                  dplyr::ungroup() %>% 
+                  dplyr::rename(no2 = no2_lur,
+                                pm25 = pm25_lur,
+                                bc = bc_lur,
+                                fe = fe_lur, 
+                                cu = cu_lur,
+                                zn = zn_lur)
 
 
+dm_estimates <- dm_estimates %>% 
+                dplyr::mutate(model = "DM") %>% 
+                dplyr::rename(no2 = no2_dm, 
+                              pm25 = pm25_dm, 
+                              bc = bc_dm)
+
+
+hm_estimates <- hm_estimates %>% 
+                dplyr::mutate(model = "HM") %>% 
+                dplyr::rename(no2 = no2_hm, 
+                              pm25 = pm25_hm, 
+                              bc = bc_hm,
+                              fe = fe_hm, 
+                              cu = cu_hm,
+                              zn = zn_hm)
+
+
+lur_estimates <- lur_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
+                                                 no2, pm25, bc, model)
+
+
+dm_estimates <- dm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
+                                                 no2, pm25, bc, model)
+
+
+hm_estimates <- hm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
+                                               no2, pm25, bc, model)
+
+
+dplyr::glimpse(lur_estimates)
+dplyr::glimpse(dm_estimates)
+dplyr::glimpse(hm_estimates)
+
+# putting all the estimates together
+models_estimates <- rbind(lur_estimates, dm_estimates, hm_estimates)
+
+# levels of model variable
+models_estimates$model <- as.factor(models_estimates$model)
+levels(models_estimates$model)
+
+models_estimates$model <- factor(models_estimates$model,
+                                levels = c("LUR", "DM", "HM"),
+                                ordered = TRUE)
+
+
+
+library(ggplot2)
+pacman
+library(ggpattern)
+
+
+### --- NO2 model boxplot --- ###
+ggplot2::ggplot(data = models_estimates, 
+                mapping = aes(x = model, y = no2, color = model, fill = model)) + 
+  geom_boxplot(alpha = 0.7, color = "black") + 
+ #scale_color_manual(values = c('LUR' = '#440154', 
+ #                               'DM' = '#3b528b', 
+  #                              'HM' = '#21918c')) +
+  scale_fill_manual(values = c('LUR' = '#440154', 
+                               'DM' = '#3b528b', 
+                               'HM' = '#21918c')) +
+  ylab(bquote(NO[2] ~ (mu*g/m^3))) +
+  theme_bw() + theme(legend.position = 'none')
+
+
+### --- PM25 model boxplot --- ### 
+ggplot2::ggplot(data = models_estimates, 
+                mapping = aes(x = model, y = pm25, color = model, fill = model)) + 
+  geom_boxplot(alpha = 0.7, color = "black") + 
+  #scale_color_manual(values = c('LUR' = '#440154', 
+  #                               'DM' = '#3b528b', 
+  #                              'HM' = '#21918c')) +
+  scale_fill_manual(values = c('LUR' = '#440154', 
+                               'DM' = '#3b528b', 
+                               'HM' = '#21918c')) +
+  ylab(bquote(PM[25] ~ (mu*g/m^3))) +
+  theme_bw() + theme(legend.position = 'none')
+
+### --- BC model boxplot --- ### 
+ggplot2::ggplot(data = models_estimates, 
+                mapping = aes(x = model, y = bc, color = model, fill = model)) + 
+  geom_boxplot(alpha = 0.7, color = "black") + 
+  #scale_color_manual(values = c('LUR' = '#440154', 
+  #                               'DM' = '#3b528b', 
+  #                              'HM' = '#21918c')) +
+  scale_fill_manual(values = c('LUR' = '#440154', 
+                               'DM' = '#3b528b', 
+                               'HM' = '#21918c')) +
+  ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9))
+  theme_bw() + theme(legend.position = 'none')
+
+  
+##################################
+### --- Correlation plots --- ###
+#################################
+  
+### --- correlation long-term (entire pregnancy exposure period) --- ###
+  
+  
+  
+  
+### --- correlation short-term (weekly exposure period) --- ### 
+  
+  
+
+
+  
+  
 
 
