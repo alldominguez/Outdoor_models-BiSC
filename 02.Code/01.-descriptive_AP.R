@@ -110,6 +110,37 @@ pm25_constituents_hybrid <- pm25_constituents_hybrid %>%
                                           zn_hm = zn.total_hybridmodel)
 
 
+# --- select variables --- #
+no2_hybrid <- no2_hybrid %>% 
+              dplyr::select(gid, subject_id, weeks, date_start, date_end, no2_hm)
+
+
+pm25_hybrid <- pm25_hybrid %>% 
+               dplyr::select(subject_id, weeks, pm25_hm)
+
+bc_hybrid <- bc_hybrid %>% 
+             dplyr::select(subject_id, weeks, bc_hm)
+
+lon_lat <- no2_dm %>% 
+  dplyr::select(subject_id, weeks, lon, lat)
+
+# --- join estimates --- # 
+hm_estimates <- no2_hybrid %>%  
+                dplyr::inner_join(pm25_hybrid, by = c("subject_id", "weeks")) %>% 
+                dplyr::inner_join(bc_hybrid, by = c("subject_id", "weeks")) %>% 
+                dplyr::inner_join(lon_lat, by = c("subject_id", "weeks"))
+                
+dplyr::glimpse(hm_estimates)            
+
+
+
+
+
+
+
+
+
+
 ##################################
 ### --- Dispersion models --- ###
 #################################
@@ -531,7 +562,7 @@ library(ggplot2)
 # Lets check the extent of the shapefile
 print(st_bbox(amb_shp))
 
-# LUR estimates NO2 
+# DM estimates NO2 
 no2_plot_dm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = no2_dm), size = 1.0, alpha = 0.7) +
@@ -541,7 +572,7 @@ no2_plot_dm <- ggplot() +
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
   ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
-  #facet_grid(. ~ "NO2 LUR model") +
+  #facet_grid(. ~ "NO2 DM model") +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold"),
         legend.position = "bottom", 
@@ -558,7 +589,7 @@ no2_plot_dm <- ggplot() +
         panel.border = element_blank(),  # Remove the panel border
         panel.background = element_blank())  # Optionally, make the panel background transparent)
 
-# LUR estimates PM25 
+# DM estimates PM25 
 pm25_plot_dm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = pm25_dm), size = 1.0, alpha = 0.7) +
@@ -568,7 +599,7 @@ pm25_plot_dm <- ggplot() +
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
   ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
-  #facet_grid(. ~ "PM25 LUR model") +
+  #facet_grid(. ~ "PM25 LDM model") +
   theme_bw() + 
   theme(legend.position = "bottom", 
         axis.title.x = element_blank(),
@@ -584,10 +615,139 @@ pm25_plot_dm <- ggplot() +
         panel.border = element_blank(),  # Remove the panel border
         panel.background = element_blank())  # Optionally, make the panel background transparent)
 
-# LUR estimates BC
+# DM estimates BC
 bc_plot_dm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = bc_dm), size = 1, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "", 
+       color =expression(paste("BC", " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  #facet_grid(. ~ "BC DM model") + 
+  theme_bw() + 
+  theme(legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)  # Decrease the size of the legend keys)
+
+
+# Combine all the plots 
+dm_map_plot <- (no2_plot_dm +  pm25_plot_dm + bc_plot_dm)
+dm_map_plot
+
+####################################
+### --- Saving the DM plot --- ###
+##################################
+ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot.png", 
+       dpi = 600, width = 10, height = 5, units = "in")
+
+#############################################################################################
+
+###############################################
+### --- Hybrid exposure estimate plots --- ###
+#############################################
+
+
+###################################################
+### --- Dispersion exposure estimate plots --- ###
+##################################################
+
+# summarise all the pollutants 
+hm_estimates_plot <- hm_estimates %>% 
+                     dplyr::ungroup()
+
+hm_estimates_plot <- hm_estimates_plot %>% 
+                     dplyr::group_by(gid) %>%  
+                     dplyr::summarise_all(funs(mean))
+
+dplyr::glimpse(hm_estimates_plot)
+
+hm_estimates_plot <- hm_estimates_plot %>% 
+                     dplyr::select(gid, subject_id, no2_hm, pm25_hm, bc_hm, lon, lat) %>% 
+                     tidyr::drop_na()
+
+
+hm_estimates_sf <- st_as_sf(hm_estimates_plot, coords = c("lon", "lat"), crs = 25831)
+hm_estimates_wgs84 <- st_transform(hm_estimates_sf, 4326)
+
+library(sf)
+library(ggplot2)
+
+# Lets check the extent of the shapefile
+print(st_bbox(amb_shp))
+
+# HM estimates NO2 
+no2_plot_hm <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = no2_hm), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "(C) HM model",  
+       color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  #facet_grid(. ~ "NO2 HM model") +
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)
+
+no2_plot_hm
+
+# HM estimates PM25 
+pm25_plot_hm <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = pm25_hm), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  labs(title = "",
+       color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  #facet_grid(. ~ "PM25 HM model") +
+  theme_bw() + 
+  theme(legend.position = "bottom", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8),  # Decrease the size of the legend text
+        legend.title = element_text(size = 9),  # Decrease the size of the legend title
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),  # Remove the panel border
+        panel.background = element_blank())  # Optionally, make the panel background transparent)
+
+pm25_plot_hm
+
+# HM estimates BC
+bc_plot_hm <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = bc_hm), size = 1, alpha = 0.7) +
   theme_minimal() +
   scale_color_viridis_c(option = "viridis") + # Using viridis green palette
   labs(title = "", 
@@ -610,16 +770,21 @@ bc_plot_dm <- ggplot() +
         panel.border = element_blank(),  # Remove the panel border
         panel.background = element_blank())  # Optionally, make the panel background transparent)  # Decrease the size of the legend keys)
 
+bc_plot_hm
+
 
 # Combine all the plots 
-dm_map_plot <- (no2_plot_dm +  pm25_plot_dm + bc_plot_dm)
-dm_map_plot
+hm_map_plot <- (no2_plot_hm +  pm25_plot_hm + bc_plot_hm)
+hm_map_plot
 
 ####################################
-### --- Saving the LUR plot --- ###
+### --- Saving the DM plot --- ###
 ##################################
-ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot.png", 
+ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot.png", 
        dpi = 600, width = 10, height = 5, units = "in")
+
+
+
 
 
 
