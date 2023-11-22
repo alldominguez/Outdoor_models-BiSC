@@ -121,14 +121,18 @@ pm25_hybrid <- pm25_hybrid %>%
 bc_hybrid <- bc_hybrid %>% 
              dplyr::select(subject_id, weeks, bc_hm)
 
+pm25_constituents_hybrid <- pm25_constituents_hybrid %>% 
+                            dplyr::select(subject_id, weeks, fe_hm, cu_hm, zn_hm)
+
 lon_lat <- no2_dm %>% 
   dplyr::select(subject_id, weeks, lon, lat)
 
 # --- join estimates --- # 
 hm_estimates <- no2_hybrid %>%  
                 dplyr::inner_join(pm25_hybrid, by = c("subject_id", "weeks")) %>% 
-                dplyr::inner_join(bc_hybrid, by = c("subject_id", "weeks")) %>% 
-                dplyr::inner_join(lon_lat, by = c("subject_id", "weeks"))
+                dplyr::inner_join(bc_hybrid, by = c("subject_id", "weeks")) %>%
+                dplyr::inner_join(pm25_constituents_hybrid, by = c("subject_id", "weeks")) %>% 
+                dplyr::inner_join(lon_lat, by = c("subject_id", "weeks")) 
                 
 dplyr::glimpse(hm_estimates)            
 
@@ -782,6 +786,17 @@ hm_map_plot
 ##################################
 ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot.png", 
        dpi = 600, width = 10, height = 5, units = "in")
+
+
+
+###################################################################################################
+
+########################
+### --- Boxplot --- ###
+######################
+dplyr::glimpse(lur_estimates)
+dplyr::glimpse(dm_estimates)
+dplyr::glimpse(hm_estimates)
 
 
 
