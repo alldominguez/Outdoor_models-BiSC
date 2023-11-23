@@ -7,6 +7,17 @@ pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate,
 ### --- Load the data --- ###
 ############################
 
+meteo_variables <- readxl::read_xlsx("03.Outputs/predictions/hybrid_data_final_130923.xlsx")
+dplyr::glimpse(meteo_variables)
+
+bisc_meteo_weekly <- meteo_variables %>% 
+                     dplyr::select(gid, subject_id, weeks, date_start, date_end, 
+                                   lon, lat, avg_temperature, avg_relative_humidity, avg_precipitation) 
+
+
+rio::export(bisc_meteo_weekly, "03.Outputs/predictions/bisc_meteo_weekly.csv")
+
+
 #######################################################
 ### --- Load shapefile  Barcelona metropolitan --- ###
 #####################################################
@@ -126,7 +137,7 @@ pm25_constituents_hybrid <- pm25_constituents_hybrid %>%
                             dplyr::select(subject_id, weeks, fe_hm, cu_hm, zn_hm)
 
 lon_lat <- no2_dm %>% 
-  dplyr::select(subject_id, weeks, lon, lat)
+           dplyr::select(subject_id, weeks, lon, lat)
 
 # --- join estimates --- # 
 hm_estimates <- no2_hybrid %>%  
@@ -135,16 +146,10 @@ hm_estimates <- no2_hybrid %>%
                 dplyr::inner_join(pm25_constituents_hybrid, by = c("subject_id", "weeks")) %>% 
                 dplyr::inner_join(lon_lat, by = c("subject_id", "weeks")) 
                 
-dplyr::glimpse(hm_estimates)            
+dplyr::glimpse(hm_estimates)  # 42,894   
 
-
-
-
-
-
-
-
-
+### --- Export the data --- ###
+rio::export(hm_estimates, "01.Data/hm_estimates.csv")
 
 ##################################
 ### --- Dispersion models --- ###
@@ -220,6 +225,7 @@ cu_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/cu_weekly_preg_2
 zn_lur <- readRDS("01.Data/BiSC_comparison_data/predictions/LUR/zn_weekly_preg_29092023.rds")
 
 # have a quick check to the data 
+view(no2_lur)
 dplyr::glimpse(no2_lur)
 dplyr::glimpse(pm25_lur)
 dplyr::glimpse(bc_lur)
@@ -793,10 +799,16 @@ ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot.png",
 ########################
 ### --- Boxplot --- ###
 ######################
+
+# --- Read data --- ###
+lur_estimates <- read.csv("01.Data/lur_estimates.csv")
+dm_estimates <- read.csv("01.Data/dm_estimates.csv")
+hm_estimates <- read.csv("01.Data/hm_estimates.csv")
+
+# --- Check the data --- #
 dplyr::glimpse(lur_estimates)
 dplyr::glimpse(dm_estimates)
 dplyr::glimpse(hm_estimates)
-
 
 # create a label and renaming variables 
 lur_estimates <- lur_estimates %>% 
@@ -860,8 +872,9 @@ library(ggplot2)
 pacman
 library(ggpattern)
 
-
+##################################
 ### --- NO2 model boxplot --- ###
+################################
 ggplot2::ggplot(data = models_estimates, 
                 mapping = aes(x = model, y = no2, color = model, fill = model)) + 
   geom_boxplot(alpha = 0.7, color = "black") + 
@@ -901,22 +914,62 @@ ggplot2::ggplot(data = models_estimates,
   ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9))
   theme_bw() + theme(legend.position = 'none')
 
-  
+
 ##################################
 ### --- Correlation plots --- ###
 #################################
   
 ### --- correlation long-term (entire pregnancy exposure period) --- ###
+
+# --- Read data --- ###
+lur_estimates <- read.csv("01.Data/lur_estimates.csv")
+dm_estimates <- read.csv("01.Data/dm_estimates.csv")
+hm_estimates <- read.csv("01.Data/hm_estimates.csv")
   
-  
-  
-  
-### --- correlation short-term (weekly exposure period) --- ### 
-  
-  
+# --- Check the data --- #
+dplyr::glimpse(lur_estimates)
+dplyr::glimpse(dm_estimates)
+dplyr::glimpse(hm_estimates)
+
+view(lur_estimates_filtered)
+view(lur_estimates)
+view(dm_estimates)
+view(hm_estimates)
+
+# have a quick look 
+lur_estimates %>% dplyr::group_by(subject_id)
+dm_estimates %>% dplyr::group_by(subject_id)
+hm_estimates %>% dplyr::group_by(subject_id)
+
+# check the difference between ids 
+unique_ids <- setdiff(lur_estimates$subject_id, union(dm_estimates$subject_id, hm_estimates$subject_id))
+unique_ids # 12012911 12024211 12041011
+unique_ids  <- c("12012911", "12024211", "12041011", "12015611",
+                  "10002711", "10039411", "12003611", "12015611", "12035911")
+
+# now we use unique_ids vector to filter lur_estimates
+lur_estimates_filtered <- lur_estimates %>% dplyr::filter(!subject_id %in% unique_ids)
+dplyr::glimpse(lur_estimates_filtered) %>% dplyr::group_by(subject_id)
+
+dm_estimates_filtered <- dm_estimates %>% dplyr::filter(!subject_id %in% unique_ids)
+dplyr::glimpse(dm_estimates_filtered) %>% dplyr::group_by(subject_id)
+
+hm_estimates_filtered <- hm_estimates %>% dplyr::filter(!subject_id %in% unique_ids)
+dplyr::glimpse(hm_estimates_filtered) %>% dplyr::group_by(subject_id)
+
+# select variables 
+lur_estimates_filtered 
+dm_estimates_filtered <- dm_estimates_filtered %>% 
+                         dplyr::select(subject_id, weeks, no2_dm, pm25_dm, bc_dm)
+
+hm_estimates_filtered <- hm_estimates_filtered %>% 
+                         dplyr::select(subject_id, weeks, no2_hm, pm25_hm, bc_hm)
 
 
-  
-  
+estimates_correlation_data <- lur_estimates_filtered %>% 
+                              dplyr::inner_join(dm_estimates_filtered, by = c("subject_id", "weeks")) %>% 
+                              dplyr::inner_join(hm_estimates_filtered, by = c("subject_id", "weeks"))
+
+dplyr::glimpse(estimates_correlation_data)
 
 
