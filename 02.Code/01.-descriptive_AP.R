@@ -1012,7 +1012,7 @@ names(estimates_correlation_data) <- c("ID", "weeks",
 # long - term exposure data 
 preg_cor_data <- estimates_correlation_data  %>% 
                  dplyr::group_by(ID) %>% 
-                 dplyr::summarise(dplyr::across(3:9, mean))
+                 dplyr::summarise(dplyr::across(2:10, mean))
 
 dplyr::glimpse(preg_cor_data)
 
@@ -1021,15 +1021,33 @@ dplyr::glimpse(preg_cor_data)
 ### --- PLotting correlation matrix --- ###
 ###########################################
 
-### ---  Short - term exposure correlation matrix --- ### 
-ggcorr(estimates_correlation_data[, 3:11], 
-       method = c("pairwise", "spearman"), label = TRUE, label_size = 4 , label_round = 2)
-
-
 ### ---  Long - term exposure correlation matrix --- ### 
-ggcorr(predexpos[predexpos,3:7], method = c("pairwise", "spearman"), 
-       # nbreaks = 7, palette = "PRGn",
-       label = TRUE, label_size = 4, label_round = 2)
+preg_corr <- ggcorr(preg_cor_data[, 2:10], 
+                    method = c("pairwise", "spearman"), 
+                    label = TRUE, label_size = 4 , label_round = 2) +
+  ggplot2::labs(title = "(A) Long-term exposure (Entire pregnancy)") + 
+  theme(legend.position = "none", 
+        plot.title = element_text(face = "bold", size = 20))
 
+preg_corr
+
+
+### ---  Short - term exposure correlation matrix --- ### 
+weekly_corr <-  ggcorr(estimates_correlation_data[, 3:11], 
+              method = c("pairwise", "spearman"),
+              label = TRUE, label_size = 4 , label_round = 2) +
+              ggplot2::labs(title = "(B) Short-term exposure (Weekly exposure)") +
+              theme(legend.position = "none", 
+                    plot.title = element_text(face = "bold", size = 20))
+
+weekly_corr
+
+
+# plotting things together
+correlation_fig <- preg_corr | weekly_corr
+correlation_fig
+
+### --- save figure -- ###
+ggsave(correlation_fig )
 
 
