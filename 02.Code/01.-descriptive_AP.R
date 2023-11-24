@@ -1077,11 +1077,11 @@ dplyr::glimpse(pm25_long_exp)
 dplyr::glimpse(bc_long_exp)
 
 
-
 # Generate the correlation plots with reduced margins
 no2_long_plot <- ggcorr(no2_long_exp[, 2:4], method = c("pairwise", "spearman"),
                         label = TRUE, label_size = 4, label_round = 2, 
                         hjust = 0.5, vjust = 0.8) +
+  ggplot2::labs(title = "(A) Long-term exposure") + 
   theme(legend.position = "none",
         plot.title = element_text(face = "bold", size = 14),
         plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
@@ -1114,25 +1114,29 @@ ggsave(plot = long_corr_pollutant, "03.Outputs/figures/long_corr_pollutant.png",
 ######################################################
 no2_short_exp <- estimates_correlation_data  %>% dplyr::select(ID, `NO2 LUR`, `NO2 DM`, `NO2 HM`)
 pm25_short_exp <- estimates_correlation_data  %>% dplyr::select(ID, `PM25 LUR`, `PM25 DM`, `PM25 HM`)
-bc_long_exp <- estimates_correlation_data %>% dplyr::select(ID, `BC LUR`, `BC DM`, `BC HM`)
+bc_short_exp <- estimates_correlation_data %>% dplyr::select(ID, `BC LUR`, `BC DM`, `BC HM`)
 
+dplyr::glimpse(no2_short_exp)
+dplyr::glimpse(pm25_short_exp)
+dplyr::glimpse(bc_short_exp)
 
 # Generate the correlation plots with reduced margins
-no2_long_plot <- ggcorr(no2_long_exp[, 2:4], method = c("pairwise", "spearman"),
+no2_short_plot <- ggcorr(no2_short_exp[, 2:4], method = c("pairwise", "spearman"),
                         label = TRUE, label_size = 4, label_round = 2, 
                         hjust = 0.5, vjust = 0.8) +
+  ggplot2::labs(title = "(B) Short-term exposure") + 
   theme(legend.position = "none",
         plot.title = element_text(face = "bold", size = 14),
         plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
 
-pm25_long_plot <- ggcorr(pm25_long_exp[, 2:4], method = c("pairwise", "spearman"),
+pm25_short_plot <- ggcorr(pm25_short_exp[, 2:4], method = c("pairwise", "spearman"),
                          label = TRUE, label_size = 4, label_round = 2,
                          hjust = 0.5, vjust = 0.8) +
   theme(legend.position = "none",
         plot.title = element_text(face = "bold", size = 14),
         plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
 
-bc_long_plot <- ggcorr(bc_long_exp[, 2:4], method = c("pairwise", "spearman"),
+bc_short_plot <- ggcorr(bc_short_exp[, 2:4], method = c("pairwise", "spearman"),
                        label = TRUE, label_size = 4, label_round = 2,
                        hjust = 0.5, vjust = 0.8) +
   theme(legend.position = "none",
@@ -1140,16 +1144,19 @@ bc_long_plot <- ggcorr(bc_long_exp[, 2:4], method = c("pairwise", "spearman"),
         plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
 
 # Use grid.arrange to place the plots side by side
-long_corr_pollutant <- no2_long_plot | pm25_long_plot | bc_long_plot
-long_corr_pollutant
+short_corr_pollutant <- no2_short_plot | pm25_short_plot | bc_short_plot
+short_corr_pollutant
 
 ### --- save figure --- ###
-ggsave(plot = long_corr_pollutant, "03.Outputs/figures/long_corr_pollutant.png",
+ggsave(plot = short_corr_pollutant, "03.Outputs/figures/short_corr_pollutant.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
 
 
+corrplot_windows <- long_corr_pollutant / short_corr_pollutant
+ggsave(plot = corrplot_windows, "03.Outputs/figures/corrplot_windows.png",
+       dpi = 600, width = 15, height = 7, units = "in")
 
 
 
