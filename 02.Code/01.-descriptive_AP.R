@@ -877,7 +877,7 @@ library(ggpattern)
 ##################################
 ### --- NO2 model boxplot --- ###
 ################################
-ggplot2::ggplot(data = models_estimates, 
+no2_boxplot <- ggplot2::ggplot(data = models_estimates, 
                 mapping = aes(x = model, y = no2, color = model, fill = model)) + 
   geom_boxplot(alpha = 0.7, color = "black") + 
  #scale_color_manual(values = c('LUR' = '#440154', 
@@ -891,7 +891,7 @@ ggplot2::ggplot(data = models_estimates,
 
 
 ### --- PM25 model boxplot --- ### 
-ggplot2::ggplot(data = models_estimates, 
+pm25_boxplot <- ggplot2::ggplot(data = models_estimates, 
                 mapping = aes(x = model, y = pm25, color = model, fill = model)) + 
   geom_boxplot(alpha = 0.7, color = "black") + 
   #scale_color_manual(values = c('LUR' = '#440154', 
@@ -904,7 +904,7 @@ ggplot2::ggplot(data = models_estimates,
   theme_bw() + theme(legend.position = 'none')
 
 ### --- BC model boxplot --- ### 
-ggplot2::ggplot(data = models_estimates, 
+bc_model_boxplot <- ggplot2::ggplot(data = models_estimates, 
                 mapping = aes(x = model, y = bc, color = model, fill = model)) + 
   geom_boxplot(alpha = 0.7, color = "black") + 
   #scale_color_manual(values = c('LUR' = '#440154', 
@@ -913,8 +913,15 @@ ggplot2::ggplot(data = models_estimates,
   scale_fill_manual(values = c('LUR' = '#440154', 
                                'DM' = '#3b528b', 
                                'HM' = '#21918c')) +
-  ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9))
+  ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9)) +
   theme_bw() + theme(legend.position = 'none')
+
+boxplot_models <- no2_boxplot | pm25_boxplot | bc_model_boxplot
+boxplot_models
+
+### --- saving the figure --- ### 
+ggsave(plot = boxplot_models , "03.Outputs/figures/boxplot_models.png",
+       dpi = 600, width = 15, height = 5, units = "in")
 
 
 ##################################
@@ -1024,10 +1031,10 @@ dplyr::glimpse(preg_cor_data)
 ### ---  Long - term exposure correlation matrix --- ### 
 preg_corr <- ggcorr(preg_cor_data[, 2:10], 
                     method = c("pairwise", "spearman"), 
-                    label = TRUE, label_size = 4 , label_round = 2) +
+                    label = TRUE, label_size = 3 , label_round = 2, hjust = 0.85, layout.exp = 2) +
   ggplot2::labs(title = "(A) Long-term exposure (Entire pregnancy)") + 
   theme(legend.position = "none", 
-        plot.title = element_text(face = "bold", size = 20))
+        plot.title = element_text(face = "bold", size = 14))
 
 preg_corr
 
@@ -1035,19 +1042,121 @@ preg_corr
 ### ---  Short - term exposure correlation matrix --- ### 
 weekly_corr <-  ggcorr(estimates_correlation_data[, 3:11], 
               method = c("pairwise", "spearman"),
-              label = TRUE, label_size = 4 , label_round = 2) +
+              label = TRUE, label_size = 3 , label_round = 2, hjust = 0.85, layout.exp = 2) +
               ggplot2::labs(title = "(B) Short-term exposure (Weekly exposure)") +
               theme(legend.position = "none", 
-                    plot.title = element_text(face = "bold", size = 20))
+                    plot.title = element_text(face = "bold", size = 14))
 
 weekly_corr
-
 
 # plotting things together
 correlation_fig <- preg_corr | weekly_corr
 correlation_fig
 
 ### --- save figure -- ###
-ggsave(correlation_fig )
+ggsave(plot = correlation_fig, "03.Outputs/figures/correlation_fig.png",
+       dpi = 600, width = 15, height = 5, units = "in")
+
+
+#############################################################
+### --- Correlation Long-term exposure per pollutant --- ### 
+########################################################## 
+
+dplyr::glimpse(preg_cor_data) # long-term dataset
+dplyr::glimpse(estimates_correlation_data) # short-term dataset
+
+######################################################
+### --- create new dataset long-term exposure --- ###
+####################################################
+no2_long_exp <-  preg_cor_data %>% dplyr::select(ID, `NO2 LUR`, `NO2 DM`, `NO2 HM`)
+pm25_long_exp <- preg_cor_data %>% dplyr::select(ID, `PM25 LUR`, `PM25 DM`, `PM25 HM`)
+bc_long_exp <- preg_cor_data %>% dplyr::select(ID, `BC LUR`, `BC DM`, `BC HM`)
+
+dplyr::glimpse(no2_long_exp)
+dplyr::glimpse(pm25_long_exp)
+dplyr::glimpse(bc_long_exp)
+
+
+### --- NO2 --- ###
+no2_long_plot <- ggcorr(no2_long_exp[, 2:4], 
+       method = c("pairwise", "spearman"), 
+       label = TRUE, label_size = 3 , label_round = 2, layout.exp = 2) +
+  #ggplot2::labs(title = "(A) Long-term exposure (Entire pregnancy)") + 
+  theme(legend.position = "none", 
+        plot.title = element_text(face = "bold", size = 14),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))
+
+### --- PM25 --- ### 
+pm25_long_plot <- ggcorr(pm25_long_exp[, 2:4], 
+       method = c("pairwise", "spearman"), 
+       label = TRUE, label_size = 3 , label_round = 2, layout.exp = 2) +
+  #ggplot2::labs(title = "(A) Long-term exposure (Entire pregnancy)") + 
+  theme(legend.position = "none", 
+        plot.title = element_text(face = "bold", size = 14),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))
+
+### --- BC --- ###
+bc_long_plot <- ggcorr(bc_long_exp[, 2:4], 
+       method = c("pairwise", "spearman"), 
+       label = TRUE, label_size = 3 , label_round = 2, layout.exp = 2) +
+#ggplot2::labs(title = "(A) Long-term exposure (Entire pregnancy)") + 
+  theme(legend.position = "none", 
+        plot.title = element_text(face = "bold", size = 14),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm")) 
+
+no2_long_plot | pm25_long_plot | bc_long_plot
+
+# Adjust the individual plot margins as needed
+no2_long_plot <- no2_long_plot + 
+  theme(plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))
+
+pm25_long_plot <- pm25_long_plot + 
+  theme(plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))
+
+bc_long_plot <- bc_long_plot + 
+  theme(plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))
+
+# Arrange your plots side by side with grid.arrange
+grid.arrange(no2_long_plot, pm25_long_plot, bc_long_plot, ncol = 3)
+
+
+#######################################################
+### --- create new dataset short-term exposure --- ###
+######################################################
+no2_short_exp <- estimates_correlation_data  %>% dplyr::select(ID, `NO2 LUR`, `NO2 DM`, `NO2 HM`)
+pm25_short_exp <- estimates_correlation_data  %>% dplyr::select(ID, `PM25 LUR`, `PM25 DM`, `PM25 HM`)
+bc_long_exp <- estimates_correlation_data %>% dplyr::select(ID, `BC LUR`, `BC DM`, `BC HM`)
+
+
+# Generate the correlation plots with reduced margins
+no2_long_plot <- ggcorr(no2_long_exp[, 2:4], method = c("pairwise", "spearman"),
+                        label = TRUE, label_size = 3, label_round = 2) +
+  theme(legend.position = "none",
+        plot.title = element_text(face = "bold", size = 14),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
+
+pm25_long_plot <- ggcorr(pm25_long_exp[, 2:4], method = c("pairwise", "spearman"),
+                         label = TRUE, label_size = 3, label_round = 2) +
+  theme(legend.position = "none",
+        plot.title = element_text(face = "bold", size = 14),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
+
+bc_long_plot <- ggcorr(bc_long_exp[, 2:4], method = c("pairwise", "spearman"),
+                       label = TRUE, label_size = 3, label_round = 2) +
+  theme(legend.position = "none",
+        plot.title = element_text(face = "bold", size = 14),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm"))  # Smaller margins
+
+# Use grid.arrange to place the plots side by side
+long_corr_pollutant <- no2_long_plot | pm25_long_plot | bc_long_plot
+
+### --- save figure --- ###
+ggsave(plot = long_corr_pollutant, "03.Outputs/figures/long_corr_pollutant.png",
+       dpi = 600, width = 15, height = 5, units = "in")
+
+
+
+
+
 
 
