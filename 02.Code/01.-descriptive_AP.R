@@ -1,7 +1,7 @@
 # Install packages
 pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate, 
                mice, ggmice, plyr, data.table, mapview, ggmap, omsdata, sf, sp, patchwork,
-               ggpattern)
+               ggpattern, GGally)
 
 ##############################
 ### --- Load the data --- ###
@@ -556,7 +556,9 @@ ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png",
 dm_estimates_plot <- dm_estimates %>% 
                      dplyr::ungroup()
 
-dm_estimates_plot <- dm_estimates_plot %>% dplyr::group_by(gid) %>%  dplyr::summarise_all(funs(mean))
+dm_estimates_plot <- dm_estimates_plot %>% dplyr::group_by(gid) %>%  
+  dplyr::summarise_all(funs(mean))
+
 dplyr::glimpse(dm_estimates_plot)
 
 dm_estimates_plot <- dm_estimates_plot %>% 
@@ -971,5 +973,63 @@ estimates_correlation_data <- lur_estimates_filtered %>%
                               dplyr::inner_join(hm_estimates_filtered, by = c("subject_id", "weeks"))
 
 dplyr::glimpse(estimates_correlation_data)
+
+
+#######################################
+### --- export correlation data --- ###
+#######################################
+rio::export(estimates_correlation_data, "01.Data/estimates_correlation_data.csv")
+
+####################################################################################
+
+
+####################################################
+### --- Correlation plot long term exposure --- ###
+##################################################
+pacman::p_load(GGally)
+library("GGally")
+
+estimates_correlation_data <- read.csv("01.Data/estimates_correlation_data.csv")
+dplyr::glimpse(estimates_correlation_data)
+estimates_correlation_data %>% dplyr::group_by(subject_id)
+
+###################################
+### --- Data for the plots --- ###
+#################################
+
+# short - term exposure data 
+estimates_correlation_data <- estimates_correlation_data %>% 
+                              dplyr::select(subject_id, weeks, 
+                                            no2_lur:bc_lur, no2_dm:bc_hm)
+
+dplyr::glimpse(estimates_correlation_data)
+
+names(estimates_correlation_data) <- c("ID", "weeks", 
+                                       "NO2 LUR", "PM25 LUR", "BC LUR",
+                                       "NO2 DM", "PM25 DM", "BC DM",
+                                       "NO2 HM", "PM25 HM", "BC HM")
+
+# long - term exposure data 
+preg_cor_data <- estimates_correlation_data  %>% 
+                 dplyr::group_by(ID) %>% 
+                 dplyr::summarise(dplyr::across(3:9, mean))
+
+dplyr::glimpse(preg_cor_data)
+
+
+############################################
+### --- PLotting correlation matrix --- ###
+###########################################
+
+### ---  Short - term exposure correlation matrix --- ### 
+ggcorr(estimates_correlation_data[, 3:11], 
+       method = c("pairwise", "spearman"), label = TRUE, label_size = 4 , label_round = 2)
+
+
+### ---  Long - term exposure correlation matrix --- ### 
+ggcorr(predexpos[predexpos,3:7], method = c("pairwise", "spearman"), 
+       # nbreaks = 7, palette = "PRGn",
+       label = TRUE, label_size = 4, label_round = 2)
+
 
 
