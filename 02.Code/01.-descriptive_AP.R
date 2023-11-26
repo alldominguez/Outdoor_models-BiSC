@@ -373,6 +373,9 @@ rio::export(lur_estimates, "01.Data/lur_estimates.csv")
 ### --- Plotting estimates --- ###
 ##################################
 
+lur_estimates <- read.csv("01.Data/lur_estimates.csv")
+
+
 ### -- LUR estimates --- ### 
 dplyr::glimpse(lur_estimates)
 
@@ -400,6 +403,8 @@ amb_plot <- ggplot() +
   theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
   facet_grid(. ~ "NO2 LUR model") + theme_bw()
 
+amb_plot 
+
 filter_amb_shp <- amb_shp %>% 
                   dplyr::filter(NOMMUNI %in% c("Badalona", "Barcelona", "Esplugues de Llobregat",
                                              "l'Hospitalet de Llobregat", "Sant Joan Despí", "Sant Just Desvern",
@@ -414,6 +419,8 @@ amb_plot_filtered <- ggplot() +
   facet_grid(. ~ "NO2 LUR model") + theme_bw() +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
   ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) 
+
+amb_plot_filtered
 
 # Check CRS of shapefile
 print(sf::st_crs(amb_shp))
@@ -463,7 +470,8 @@ no2_plot_lur <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "(A) LUR model",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -490,7 +498,8 @@ pm25_plot_lur <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "",
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -514,9 +523,10 @@ pm25_plot_lur <- ggplot() +
 # LUR estimates BC
 bc_plot_lur <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1, alpha = 0.7) +
+  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1, alpha = 0.5) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "", 
        color =expression(paste("BC", " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -552,6 +562,9 @@ ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png",
 ### --- Dispersion exposure estimate plots --- ###
 ##################################################
 
+dm_estimates <- read.csv("01.Data/dm_estimates.csv")
+
+
 # summarise all the pollutants 
 dm_estimates_plot <- dm_estimates %>% 
                      dplyr::ungroup()
@@ -580,7 +593,8 @@ no2_plot_dm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = no2_dm), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "(B) DM model",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -607,7 +621,8 @@ pm25_plot_dm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = pm25_dm), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "",
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -633,7 +648,8 @@ bc_plot_dm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = bc_dm), size = 1, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "", 
        color =expression(paste("BC", " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -662,7 +678,7 @@ dm_map_plot
 ####################################
 ### --- Saving the DM plot --- ###
 ##################################
-ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot.png", 
+ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot_v2.png", 
        dpi = 600, width = 10, height = 5, units = "in")
 
 #############################################################################################
@@ -671,10 +687,7 @@ ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot.png",
 ### --- Hybrid exposure estimate plots --- ###
 #############################################
 
-
-###################################################
-### --- Dispersion exposure estimate plots --- ###
-##################################################
+hm_estimates <- read.csv("01.Data/hm_estimates.csv")
 
 # summarise all the pollutants 
 hm_estimates_plot <- hm_estimates %>% 
@@ -705,7 +718,8 @@ no2_plot_hm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = no2_hm), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "(C) HM model",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -734,7 +748,8 @@ pm25_plot_hm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = pm25_hm), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "",
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -762,7 +777,8 @@ bc_plot_hm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = bc_hm), size = 1, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis") + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "", 
        color =expression(paste("BC", " (µg/m"^3*")"))) +
   xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
@@ -793,8 +809,23 @@ hm_map_plot
 ####################################
 ### --- Saving the DM plot --- ###
 ##################################
-ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot.png", 
+ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot_v2.png", 
        dpi = 600, width = 10, height = 5, units = "in")
+
+
+
+
+### check all the plots ###
+lur_map_plot / dm_map_plot/ hm_map_plot
+
+# Note: We need to fix the scales to compare the models 
+lur_estimates_sf %>% dplyr::select(no2_lur, pm25_lur, bc_lur) %>% summary()
+dm_estimates_sf %>% dplyr::select(no2_dm, pm25_dm, bc_dm) %>% summary()
+hm_estimates_sf %>% dplyr::select(no2_hm, pm25_hm, bc_hm) %>% summary()
+
+
+
+
 
 ###################################################################################################
 
@@ -1291,13 +1322,135 @@ BC_HEX
 NO2_HEX / PM25_HEX / BC_HEX
 
 
+##################################################
+### --- Rescalling MAP legend comparison --- ####
+################################################
+
+# Calculate overall min and max for NO2 from the summaries you have
+min_no2 <- min(lur_estimates_sf$no2_lur, dm_estimates_sf$no2_dm, hm_estimates_sf$no2_hm, na.rm = TRUE)
+max_no2 <- max(lur_estimates_sf$no2_lur, dm_estimates_sf$no2_dm, hm_estimates_sf$no2_hm, na.rm = TRUE)
+
+# Define the breaks you want to show in the legend
+legend_breaks <- c(min_no2, 50, 100, max_no2)
+legend_labels <- c(as.integer(min_no2), "50", "100", as.integer(max_no2))
 
 
+##############################
+### --- NO2 LUR model --- ###
+#############################
+NO2_LUR_model_plot <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_no2, max_no2),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_no2), "50", "100", as.integer(max_no2))  # Format the labels as desired
+  ) + # Set the limits to the overall range
+  labs(title = "(A) NO2 models",  
+       color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "none", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") + # Remove background rectangle from facet labels)  +
+  facet_grid(.~'LUR model')
 
 
+#############################
+### --- NO2 DM model --- ###
+############################
+NO2_DM_model_plot <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = no2_dm), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_no2, max_no2),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_no2), "50", "100", as.integer(max_no2))  # Format the labels as desired
+  )  + # Set the limits to the overall range
+  labs(title = "",  
+       color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  theme_bw() +  
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "none", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") + # Remove background rectangle from facet labels)  +
+  facet_grid(.~'Dispersion model')
 
 
+#################################
+### --- NO2 Hybrid model --- ###
+################################
+NO2_HM_model_plot <- ggplot() +
+  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = no2_hm), size = 1.0, alpha = 0.7) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_no2, max_no2),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_no2), "50", "100", as.integer(max_no2))  # Format the labels as desired
+  )  + # Set the limits to the overall range
+  labs(title = "",  
+       color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
+  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  theme_bw() + 
+  theme(
+    plot.title = element_blank(),  # Remove plot title since it's empty
+    legend.position = "right",
+    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
+    legend.title.align = 0.5,
+    strip.text.x = element_text(face = "bold", hjust = 0),  # Left align the facet label
+    strip.background = element_blank(),  # Remove the background from the facet label
+    legend.text = element_text(size = 10), 
+    legend.key.size = unit(1, 'lines'), 
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()
+  ) +
+  facet_grid(.~'Hybrid model')  # Add the model name as facet label
 
+NO2_LUR_model_plot | NO2_DM_model_plot | NO2_HM_model_plot
 
 
 
