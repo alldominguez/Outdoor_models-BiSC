@@ -367,7 +367,7 @@ rio::export(lur_estimates, "01.Data/lur_estimates.csv")
 ##############################################################################################
 
 # Note 1: to plot the estimates we going to group by gid
-# Note 2: to summarize the long-term exposure we group by 
+# Note 2: to summarize the long-term exposure we group by subject_id
 
 ####################################
 ### --- Plotting estimates --- ###
@@ -1151,12 +1151,154 @@ short_corr_pollutant
 ggsave(plot = short_corr_pollutant, "03.Outputs/figures/short_corr_pollutant.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
-
-
-
+######################################################
+### --- long-and-short-term correlation plots --- ### 
+####################################################
 corrplot_windows <- long_corr_pollutant / short_corr_pollutant
 ggsave(plot = corrplot_windows, "03.Outputs/figures/corrplot_windows.png",
        dpi = 600, width = 15, height = 7, units = "in")
+
+
+####################################
+### --- Hexbin scatterplots --- ###
+##################################
+library("tidyverse")
+library("colorspace")
+library("lubridate")
+library("gridExtra")
+
+
+# Note: This could be added in the supplementary materials 
+
+########################################
+### --- NO2 Hexbin scatterplots --- ###
+######################################
+
+NO2_HM_LUR <- estimates_correlation_data %>%
+              ggplot() +
+              geom_hex(aes(y =`NO2 HM`, x = `NO2 LUR`)) +
+              #scale_fill_continuous_sequential(palette = "spectral") +
+                scale_fill_distiller(palette = "Spectral") + 
+              coord_equal() +
+              theme_bw() + 
+              labs(fill="Count") +
+              ylab(expression(NO[2] ~ "HM predictions" ~ (mu * g/m^3))) + 
+              xlab(expression(NO[2] ~ "LUR predictions" ~ (mu * g/m^3))) +
+              theme(aspect.ratio = 1) + 
+              theme(legend.position = 'none')
+
+NO2_HM_LUR
+
+NO2_HM_DM <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`NO2 HM`, x = `NO2 DM`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw() + 
+  labs(fill="Count") +
+  ylab(expression(NO[2] ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(NO[2] ~ "DM predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1)
+
+NO2_HM_DM
+
+# NO2 predictions comparison
+NO2_HEX <- NO2_HM_LUR | NO2_HM_DM
+NO2_HEX
+
+### --- Export HEXBIN plot --- ### 
+
+#########################################
+### --- PM25 Hexbin scatterplots --- ###
+#######################################
+
+PM25_HM_LUR <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`PM25 HM`, x = `PM25 LUR`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw() + 
+  labs(fill="Count") +
+  ylab(expression(PM[25] ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(PM[25] ~ "LUR predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1) + 
+  theme(legend.position = 'none')
+
+PM25_HM_LUR
+
+PM25_HM_DM <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`PM25 HM`, x = `PM25 DM`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw() + 
+  labs(fill="Count") +
+  ylab(expression(PM[25] ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(PM[25] ~ "DM predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1)
+
+PM25_HM_DM
+
+# PM25 predictions comparison 
+PM25_HEX <- PM25_HM_LUR | PM25_HM_DM
+PM25_HEX
+
+### --- Export HEXBIN plot --- ###
+
+
+#########################################
+### --- BC Hexbin scatterplots --- ###
+#######################################
+
+BC_HM_LUR <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`BC HM`, x = `BC LUR`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw() + 
+  labs(fill="Count") +
+  ylab(expression(BC ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(BC ~ "LUR predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1) + 
+  theme(legend.position = 'none')
+
+BC_HM_LUR
+
+BC_HM_DM <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`BC HM`, x = `BC DM`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw() + 
+  labs(fill="Count") +
+  ylab(expression(BC ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(BC ~ "DM predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1)
+
+BC_HM_DM
+
+# PM25 predictions comparison 
+BC_HEX <- BC_HM_LUR | BC_HM_DM
+BC_HEX
+
+
+# Putting all the figures together 
+NO2_HEX / PM25_HEX / BC_HEX
+
+
+
+
+
+
+
+
+
+
 
 
 
