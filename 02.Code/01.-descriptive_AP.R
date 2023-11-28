@@ -902,7 +902,6 @@ models_estimates$model <- factor(models_estimates$model,
 
 
 library(ggplot2)
-pacman
 library(ggpattern)
 
 ##################################
@@ -918,7 +917,8 @@ no2_boxplot <- ggplot2::ggplot(data = models_estimates,
                                'DM' = '#3b528b', 
                                'HM' = '#21918c')) +
   ylab(bquote(NO[2] ~ (mu*g/m^3))) +
-  theme_bw() + theme(legend.position = 'none')
+  theme_bw() +
+  theme(legend.position = 'none')
 
 
 ### --- PM25 model boxplot --- ### 
@@ -932,7 +932,8 @@ pm25_boxplot <- ggplot2::ggplot(data = models_estimates,
                                'DM' = '#3b528b', 
                                'HM' = '#21918c')) +
   ylab(bquote(PM[25] ~ (mu*g/m^3))) +
-  theme_bw() + theme(legend.position = 'none')
+  theme_bw() + 
+  theme(legend.position = 'none')
 
 ### --- BC model boxplot --- ### 
 bc_model_boxplot <- ggplot2::ggplot(data = models_estimates, 
@@ -945,14 +946,29 @@ bc_model_boxplot <- ggplot2::ggplot(data = models_estimates,
                                'DM' = '#3b528b', 
                                'HM' = '#21918c')) +
   ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9)) +
-  theme_bw() + theme(legend.position = 'none')
+  theme_bw() + 
+  theme(legend.position = 'none')
 
+
+### --- Putting al the graphs together --- ###
 boxplot_models <- no2_boxplot | pm25_boxplot | bc_model_boxplot
-boxplot_models
+boxplot_models + theme(aspect.ratio = 1)
 
 ### --- saving the figure --- ### 
 ggsave(plot = boxplot_models , "03.Outputs/figures/boxplot_models.png",
-       dpi = 600, width = 15, height = 5, units = "in")
+       dpi = 600, width = 10, height = 3, units = "in")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ##################################
@@ -1326,10 +1342,6 @@ ggsave(plot = BC_HEX, "03.Outputs/figures/BC_HEX.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
-
-
-
-
 # Putting all the figures together 
 NO2_HEX / PM25_HEX / BC_HEX
 
@@ -1610,7 +1622,7 @@ PM25_models_map <-  PM25_LUR_model_plot | PM25_DM_model_plot | PM25_HM_model_plo
 PM25_models_map
 
 ### --- save the plot --- ###
-ggsave(plot = PM25_models_map, "03.Outputs/figures/NO2_models_map.png",
+ggsave(plot = PM25_models_map, "03.Outputs/figures/PM25_models_map.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
@@ -1757,4 +1769,52 @@ ggsave(plot = BC_models_map, "03.Outputs/figures/BC_models_map.png",
 
 ### --- Putting all the models together with the fixed scale --- ###
 NO2_models_map / PM25_models_map / BC_models_map
+
+
+###########################################################################################
+
+########################################################
+### --- Descriptive table observed measurements --- ###
+######################################################
+dplyr::glimpse(no2_measures)
+dplyr::glimpse(pm25_measures)
+dplyr::glimpse(bc_measures)
+dplyr::glimpse(pm25_constituents_measures)
+
+### Table 1. 
+no2_measures$year <- as.factor(no2_measures$year) 
+levels(no2_measures$year) # "2018" "2019" "2020" "2021"
+
+
+### --- NO2 (2018) --- ### 
+no2_measures %>% dplyr::filter(year == "2018") %>% 
+                 dplyr::select(NO2.DirectMeasurements) %>% 
+                 skimr::skim()
+
+
+### --- NO2 (2019) --- ### 
+no2_measures %>% dplyr::filter(year == "2019") %>% 
+  dplyr::select(NO2.DirectMeasurements) %>% 
+  skimr::skim()
+
+### --- NO2 (2020) --- ### 
+no2_measures %>% dplyr::filter(year == "2020") %>% 
+  dplyr::select(NO2.DirectMeasurements) %>% 
+  skimr::skim()
+
+### --- NO2 (2021) --- ### 
+no2_measures %>% dplyr::filter(year == "2021") %>% 
+  dplyr::select(NO2.DirectMeasurements) %>% 
+  skimr::skim()
+
+
+
+skimr::skim(no2_measures)
+skimr::skim(pm25_measures)
+skimr::skim(bc_measures)
+skimr::skim(pm25_constituents_measures)
+
+  
+
+
 
