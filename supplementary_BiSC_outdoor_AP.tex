@@ -11,14 +11,21 @@
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{authblk} % this is for multiple authors 
+\usepackage{authblk} % this is for multiple autho  rs 
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{multirow}
 
 % Configure for "Fig.":
 \crefname{figure}{Fig.}{Figs.}
 \Crefname{figure}{Fig.}{Figs.}
 
+
+% reference configuration
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{apalike} % for an APA-like style
+\usepackage{amsmath}
 
 % reference configuration
 \usepackage[authoryear,round]{natbib}
@@ -40,24 +47,17 @@
 \begin{document}
 \maketitle
 
-% Index table with to put order to supplementary materials 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% --- Land Use Regression modelling --- %%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Land Use Regression modelling details}
 
-\subsection{Predictor variables}
+\subsection{Predictor variables and sources of information}
+
 \subsection{Performance metrics}
-
-
-\section{Dispersion modelling details}
-
-\subsection{Predictor variables}
-\subsection{Performance metrics}
-
-
-
-\section{Model evaluation metrics}
-
 The following metrics were used to evaluate the LUR model for all the air pollution assessed. 
+
+
 
 % --- R2 --- %
 \begin{equation}
@@ -80,47 +80,86 @@ r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \sum
 \end{equation}
 \vspace{0.5 cm}
 
-For the DM models we evaluate their performance using a different set of metrics as following: 
+
+\subsection{Model performance}
 
 
-% --- Percentage of observed-modelled pairs (n) --- %
-\begin{equation}
-n = \frac{N_{\text{pairs used}}}{N_{\text{total pairs}}} \times 100
-\end{equation}
 
-% --- Factor of Two (FAC2) --- % 
-\begin{equation}
-\text{FAC2} = \frac{1}{n} \sum_{i=1}^{n} U,
-\end{equation}
-%Where \( U \) is 1 if \( 0.5 \leq \frac{M_i}{O_i} \leq 2 \) and 0 otherwise.
-
-% --- Mean Bias (MB) --- % 
-\begin{equation}
-\text{MB} = \frac{1}{n} \sum_{i=1}^{n} (O_i - M_i)
-\end{equation}
-
-% --- Mean Gross Error (MGE) --- % 
-\begin{equation}
-\text{MGE} = \frac{1}{n} \sum_{i=1}^{n} |O_i - M_i|
-\end{equation}
-
-% --- Normalized Mean Bias (NMB) --- % 
-\begin{equation}
-\text{NMB} = \frac{\sum_{i=1}^{n} (M_i - O_i)}{\sum_{i=1}^{n} O_i}
-\end{equation}
-
-% --- Root Mean Square Error (RMSE) --- % 
-\begin{equation}
-\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (O_i - M_i)^2}
-\end{equation}
-
-% --- Correlation Coefficient (r) --- % 
-\begin{equation}
-r = \frac{\sum_{i=1}^{n} (O_i - \bar{O})(M_i - \bar{M})}{\sqrt{\sum_{i=1}^{n} (O_i - \bar{O})^2 \sum_{i=1}^{n} (M_i - \bar{M})^2}}
-\end{equation}
-\vspace{0.5cm}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% --- Dispersion modelling --- %%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\section{Dispersion modelling details}
+
+\subsection{Predictor variables and sources of information}
+
+\subsection{Performance metrics}
+
+\subsection{Model performance}
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% --- Hybrid modelling --- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Hybrid modelling details}
+
+\subsection{Predictor variables and sources of information}
+
+
+\subsection{Performance metrics}
+
+
+\subsection{Model performance}
+
+%%% --- Table with performance metrics for Hybrid models --- %%%
+\begin{table}[ht]
+\centering
+\caption{Performance metric for hybrid models.}
+\begin{tabular}{llllll}
+\toprule
+\textbf{Dataset campaign} & \textbf{Pollutant} & \textbf{N} & \textbf{R\textsuperscript{2} (10-CV)} & \textbf{RMSE (10-CV)} \\
+\midrule
+BiSC-home & NO\textsubscript{2} & 1232 & 0.64 & 7.48 \\
+\multirow{5}{*}{BiSCAPE} & PM\textsubscript{2.5} & 161 & 0.66 & 3.45 \\
+& BC & 74 & 0.86 &  0.23 \\
+& Fe & ... & 0.54 & ... \\
+& Cu & ... & 0.70 & ... \\
+& Zn & ... & 0.42 & ... \\
+\bottomrule
+\end{tabular}
+\label{tablesX}
+\end{table}
+
+
+\subsection{Variable importance}
+
+%%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/fig_HM_allmodels_importance.png}
+\caption{Comparison between measurements and prediction values for the hybrid models for \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu} and \textit{Zn}.}
+\label{fig2}
+\end{figure}
+
+\newpage
+
+\subsection{Comparison between observed measurements and predictions}
+
+%%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/fig_HM_test_all_models.png}
+\caption{Comparison between measurements and prediction values for the hybrid models for \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu} and \textit{Zn}.}
+\label{fig2}
+\end{figure}
 
 
 
