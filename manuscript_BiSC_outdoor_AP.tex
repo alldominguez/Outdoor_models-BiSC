@@ -11,7 +11,7 @@
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{authblk} % this is for multiple authors 
+\usepackage{authblk} % this is for multiple autho  rs 
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{cleveref}
 \usepackage{booktabs}
@@ -64,7 +64,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-Air pollution is the leading environmental risk factor for human health worldwide. A detailed and comprehensive exposure assessment of outdoor air pollution considering both spatial and temporal variability is fundamental to conduct epidemiological studies.  
+Air pollution is the leading environmental risk factor for human health worldwide linked to wide range of adverse health outcomes. A detailed and comprehensive exposure assessment of outdoor air pollution considering both spatial and temporal variability is fundamental to conduct epidemiological studies.  
 
 \end{abstract}
 
@@ -83,7 +83,7 @@ Urban areas add a layer of complexity to air pollution modelling due to complex 
 
 Furthermore, the COVID-19 pandemic has introduced unprecedented challenges for air pollution modelling and exposure assessment. These challenges encompass changes in air pollution patterns, constraints on data collection due to health and safety restrictions (lockdowns), and the complexity of data integration due to changes in traffic, mobility, and land use dynamics in cities \cite{gonzalez2022, querol2021}. 
  
-In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional state-of-the-art techniques, while HM was innovatively designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
+In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional techniques, while HM was designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Material and methods--- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -170,7 +170,7 @@ We carried out both internal and external validation for the NO\textsubscript{2}
 Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. Details from the metrics used for dispersion model validation can be found in the \textbf{Supplementary material X}.\vspace{0.5cm} 
 
 \subsection{Hybrid model evaluation}
-We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and the \textit{out-of-bag (OBB) score}. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one. In contrast, the OOB approach trains the model on two-thirds of the data and uses the residual third for external validation. We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}
+We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and the \textit{out-of-bag (OBB) score}. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one. In contrast, the OOB approach trains the model on two-thirds of the data and uses the residual third for external validation. We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}. 
 
 All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS predictor variables were computed using X software. 
 
@@ -180,93 +180,125 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 
-% --- Performance --- %
+% --- Distribution of the monitoring campaigns --- % 
+\subsection{Distribution of monitoring campaigns}
+
+Distribution of the concentration for the BiSCAPE and BiSC-Home campaign for all the pollutants were shown in \hyperref[table1]{Table 1}. For all the air pollutants assessed, concentration varied substantially between pollutants. 
+
+%%% Table 1. Outdoor air pollution concentration from BiSC-home and BiSCAPE campaigns (2018-2021) 
+
+
+%%% --- Table 1. Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns --- %%%
+\begin{table}[h!]
+\centering
+\caption{Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns}
+\begin{tabular}{lllllllll}
+\toprule
+Campaign & Pollutant & Year & Units & mean & sd & p25 & p50 & p75 \\ 
+\midrule
+BiSC-home & NO\textsubscript{2} & 2018-2021 & \(\mu\)g/m\textsuperscript{3} & 38.8 & 12.4 & 30.0 & 37.5 & 45.8 \\ 
+\multirow{5}{*}{BiSCAPE} 
+& PM\textsubscript{25} & 2021-2022 & \(\mu\)g/m\textsuperscript{3} & 13.4 & 6.14 & 9.06 & 11.3 & 16.2 \\ 
+& BC & 2021-2022 & \(\mu\)g/m\textsuperscript{3} & 1.27 & 0.50 & 0.88 & 1.22 & 1.52 \\ 
+& Fe & 2021-2022 & \(\mu\)g/m\textsuperscript{3} & 0.25 & 0.13 & 0.15 & 0.21 & 0.32 \\ 
+& Cu & 2021-2022 & ng/m\textsuperscript{3} & 7.10 & 3.82  & 4.37 & 6.36 & 8.98 \\ 
+& Mn & 2021-2022 & ng/m\textsuperscript{3} & 40.7 & 36.5 & 18.9 & 28.2 & 46.7 \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+The spatial distribution of the campaigns were showed in \cref{fig1}. 
+
+
+
+
+
+
+
 Since models were built based on different approaches there where not directly comparable due to differences on a temporal basis
 
-Since different approaches were to built outdoor air pollution models were not directly comparable due to differences on temporal 
-
-
-
+Since different approaches were used to built outdoor air pollution models these were not directly comparable due to differences on temporal 
 
 The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. The performance of the PM25 
 
-Performance metrics for LUR and DM are shown in the supplementary materials. 
-
-\begin{table}[ht]
-\centering
-\caption{Performance metric for hybrid models.}
-\begin{tabular}{llllll}
-\toprule
-\textbf{Model} & \textbf{Pollutant} & \textbf{Dataset campaign} & \textbf{N} & \textbf{R\textsuperscript{2} (10-CV)} & \textbf{RMSE (10-CV)} \\
-\midrule
-\multirow{6}{*}{HM} & NO\textsubscript{2} & BiSC-hchatome & 1232 & 0.64 & 7.48 \\
-& PM\textsubscript{2.5} & BiSCAPE & 161 & 0.66 & 3.45 \\
-& BC & BiSCAPE & 74 & 0.86 &  0.23 \\
-& Fe & BiSCAPE & ... & 0.54 & ... \\
-& Cu & BiSCAPE & ... & 0.70 & ... \\
-& Zn & BiSCAPE & ... & 0.42 & ... \\
-\bottomrule
-\end{tabular}
-\label{tab:my_label}
-\end{table}
+Performance metrics for LUR, DM and HM are shown in the supplementary materials files. 
 
 
-
-
+\
 % --- Exposure concentrations --- %
-Outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model is shown in FIGURE X. The exposure range was larger for the LUR model
+Predictions from outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model is shown in FIGURE X. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
 
-% --- Correlation between measures and model estimates --- %
-Spearman correlation of air pollution exposure during the entire pregnancy between measurements, LUR, DM and HM at the residential addresses ranged from r = x to x (figure X). 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%%% --- Figure x. Boxplot models comparison --- %%%
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/boxplot_models.png}
+\caption{Distribution exposure concentration for the entire pregnancy period \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
+\end{figure}
 
 
 
 
 \textbf{\cref{fig2}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5} and BC concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants, after averaging weekly estimates for all the study period (2019 - 2021).   
 
-%%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% --- Spatial distribution of outdoor air pollution estimates  --- %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% --- Figure. Average exposure during the entire pregnancy period --- %%%
 % Put the figure text closer to the Figure 3
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/fig_HM_test_all_models.png}
-\caption{Comparison between measurements and prediction values for the hybrid models for \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu} and \textit{Zn}.}
-\label{fig2}
+\includegraphics[width=1.0\textwidth]{figures/NO2_models_map.png}
 \end{figure}
 
-%%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
 % Put the figure text closer to the Figure 3
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/lur_map_plot.png}
+\includegraphics[width=1.0\textwidth]{figures/PM25_models_map.png}
+\end{figure}
+
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/BC_models_map.png}
 \caption{Pregnancy exposure for the entire pregnancy period \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
-\label{fig2}
 \end{figure}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --- Correlation between measures and model estimates --- %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Correlation for long-term exposure (entire pregnancy) at the residential addresses ranged from r = 0.48 to 0.92 (figure 3.A). 
+
+Correlation for short-term exposure (weekly exposure) varied from r = 0.37 to 0.90 (figure 3.B).   
+
+
+
+% Here add the correlation plot (long and short term)
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/correlation_fig.png}
+\caption{Correlation between traffic-related air pollutants for LUR, DM, HM in different windows of exposure \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
+\end{figure}
+
+Correlation between the predicted air pollutants for the different models assessed was moderate to strongly correlated for both long-and-short term exposure. 
+
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Discussion --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-We successfully developed spatiotemporal models using three different approaches (LUR, dispersion and hybrid models). All models had moderate to good performance evaluated by the defined metrics in the \textbf{methods section} and displayed in more detail in the \textbf{Supplementary materials}
+We successfully developed spatiotemporal models using three different approaches (LUR, DM and HM). All models show moderate to good performance evaluated by the defined metrics in the \textbf{methods section} and displayed in more detail in the \textbf{Supplementary materials}. 
 
 As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
 
