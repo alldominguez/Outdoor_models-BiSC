@@ -869,7 +869,9 @@ hm_estimates <- hm_estimates %>%
 
 # Note: Now I add fe, cu, zn to the datset for LUR and HM (we can't do the rbind with dm)
 lur_estimates <- lur_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
-                                                 no2, pm25, bc, fe, cu, zn, model)
+                                                 no2, pm25, bc,
+                                                 #fe, cu, zn,
+                                                 model)
 
 
 dm_estimates <- dm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
@@ -877,7 +879,9 @@ dm_estimates <- dm_estimates %>% dplyr::select(gid, subject_id, weeks, date_star
 
 
 hm_estimates <- hm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
-                                               no2, pm25, bc, fe, cu, zn, model)
+                                               no2, pm25, bc, 
+                                               #fe, cu, zn, 
+                                               model)
 
 
 dplyr::glimpse(lur_estimates)
@@ -959,40 +963,81 @@ bc_model_boxplot <- ggplot2::ggplot(data = models_estimates,
   theme(legend.position = 'none')
 
 ### --- Fe model  boxplot --- ### 
-fe_model_boxplot <- ggplot2::ggplot(data = models_estimates, 
-                                    mapping = aes(x = model, y = bc, color = model, fill = model)) + 
+fe_model_boxplot <- ggplot2::ggplot(data = model_estimates_elements, 
+                                    mapping = aes(x = model, y = fe, color = model, fill = model)) + 
   geom_boxplot(alpha = 0.7, color = "black") + 
   #scale_color_manual(values = c('LUR' = '#440154', 
   #                               'DM' = '#3b528b', 
   #                              'HM' = '#21918c')) +
   scale_fill_manual(values = c('LUR' = '#440154', 
-                               'DM' = '#3b528b', 
                                'HM' = '#21918c')) +
-  ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9)) +
+  ylab(bquote(Fe ~ (mu*g/m^3))) + 
+  #ylim(c(0, 9)) +
   theme_bw() + 
   theme(legend.position = 'none')
 
-
+fe_model_boxplot
 
 ### --- Cu model boxplot --- ### 
+cu_model_boxplot <- ggplot2::ggplot(data = model_estimates_elements, 
+                                    mapping = aes(x = model, y = cu, color = model, fill = model)) + 
+  geom_boxplot(alpha = 0.7, color = "black") + 
+  #scale_color_manual(values = c('LUR' = '#440154', 
+  #                               'DM' = '#3b528b', 
+  #                              'HM' = '#21918c')) +
+  scale_fill_manual(values = c('LUR' = '#440154', 
+                               'HM' = '#21918c')) +
+  ylab(bquote(Cu ~ (n*g/m^3))) + 
+  #ylim(c(0, 9)) +
+  theme_bw() + 
+  theme(legend.position = 'none')
+
+cu_model_boxplot
 
 
+### --- Mn model boxplot --- ### 
+zn_model_boxplot <- ggplot2::ggplot(data = model_estimates_elements, 
+                                    mapping = aes(x = model, y = zn, color = model, fill = model)) + 
+  geom_boxplot(alpha = 0.7, color = "black") + 
+  #scale_color_manual(values = c('LUR' = '#440154', 
+  #                               'DM' = '#3b528b', 
+  #                              'HM' = '#21918c')) +
+  scale_fill_manual(values = c('LUR' = '#440154', 
+                               'HM' = '#21918c')) +
+  ylab(bquote(Zn ~ (n*g/m^3))) + 
+  #ylim(c(0, 9)) +
+  theme_bw() + 
+  theme(legend.position = 'none')
 
-
-
-
-
-
-
-
+zn_model_boxplot
 
 ### --- Putting al the graphs together --- ###
 boxplot_models <- no2_boxplot | pm25_boxplot | bc_model_boxplot
 boxplot_models + theme(aspect.ratio = 1)
 
+boxplot_models_constituents <- fe_model_boxplot | cu_model_boxplot | zn_model_boxplot
+boxplot_models_constituents + theme(aspect.ratio = 1)
+
+
+boxplot_all_models_estimates <- boxplot_models / boxplot_models_constituents
+boxplot_all_models_estimates
+  
 ### --- saving the figure --- ### 
+
+# NO2, PM25, BC
 ggsave(plot = boxplot_models , "03.Outputs/figures/boxplot_models.png",
        dpi = 600, width = 10, height = 3, units = "in")
+
+# FE, CU, ZN
+ggsave(plot = boxplot_models_constituents , "03.Outputs/figures/boxplot_models_elements.png",
+       dpi = 600, width = 10, height = 3, units = "in")
+
+
+
+# NO2, PM25, BC, FE, CU, ZN (all models estimates )
+ggsave(plot = boxplot_all_models_estimates, "03.Outputs/figures/boxplot_all_models_estimates.png",
+       dpi = 600, width = 10, height = 6, units = "in")
+
 
 
 ##################################
@@ -1811,11 +1856,19 @@ dplyr::glimpse(pm25_constituents_measures)
 ### Table 1. Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns --- ###
 ############################################################################################################
 
+
+no2_measures %>% dplyr::select(NO2.DirectMeasurements) %>% skimr::skim()
+pm25_measures %>% dplyr::select(c_biscape) %>% skimr::skim()
+bc_measures %>% dplyr::select(c_biscape) %>% skimr::skim()
+
+
+bc_measures$c_biscape
+
 no2_measures$year <- as.factor(no2_measures$year) 
 levels(no2_measures$year) # "2018" "2019" "2020" "2021"
 
 
-
+pm25_measures$year <- as.factor(pm25_measures$year)
 
 
 skimr::skim(no2_measures)
@@ -1825,6 +1878,7 @@ skimr::skim(pm25_constituents_measures)
 
   
 
-
+view(pm25_measures)
+view(no2_measure)
 
 
