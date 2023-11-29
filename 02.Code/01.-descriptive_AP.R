@@ -813,8 +813,6 @@ ggsave(plot = hm_map_plot, "03.Outputs/figures/hm_map_plot_v2.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
-
-
 ### check all the plots ###
 lur_map_plot / dm_map_plot/ hm_map_plot
 
@@ -822,9 +820,6 @@ lur_map_plot / dm_map_plot/ hm_map_plot
 lur_estimates_sf %>% dplyr::select(no2_lur, pm25_lur, bc_lur) %>% summary()
 dm_estimates_sf %>% dplyr::select(no2_dm, pm25_dm, bc_dm) %>% summary()
 hm_estimates_sf %>% dplyr::select(no2_hm, pm25_hm, bc_hm) %>% summary()
-
-
-
 
 
 ###################################################################################################
@@ -872,8 +867,9 @@ hm_estimates <- hm_estimates %>%
                               zn = zn_hm)
 
 
+# Note: Now I add fe, cu, zn to the datset for LUR and HM (we can't do the rbind with dm)
 lur_estimates <- lur_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
-                                                 no2, pm25, bc, model)
+                                                 no2, pm25, bc, fe, cu, zn, model)
 
 
 dm_estimates <- dm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
@@ -881,7 +877,7 @@ dm_estimates <- dm_estimates %>% dplyr::select(gid, subject_id, weeks, date_star
 
 
 hm_estimates <- hm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
-                                               no2, pm25, bc, model)
+                                               no2, pm25, bc, fe, cu, zn, model)
 
 
 dplyr::glimpse(lur_estimates)
@@ -890,10 +886,23 @@ dplyr::glimpse(hm_estimates)
 
 # putting all the estimates together
 models_estimates <- rbind(lur_estimates, dm_estimates, hm_estimates)
+model_estimates_elements <- rbind(lur_estimates, hm_estimates)
+
+dplyr::glimpse(model_estimates_elements)
 
 # levels of model variable
 models_estimates$model <- as.factor(models_estimates$model)
-levels(models_estimates$model)
+levels(model_estimates$model)
+
+model_estimates_elements$model <- as.factor(model_estimates_elements$model)
+levels(model_estimates_elements$model)
+
+model_estimates_elements$model <- factor(model_estimates_elements$model, 
+                                         levels = c("LUR", "HM"),
+                                         ordered = TRUE)
+
+levels(model_estimates_elements$model)
+
 
 models_estimates$model <- factor(models_estimates$model,
                                 levels = c("LUR", "DM", "HM"),
@@ -949,6 +958,33 @@ bc_model_boxplot <- ggplot2::ggplot(data = models_estimates,
   theme_bw() + 
   theme(legend.position = 'none')
 
+### --- Fe model  boxplot --- ### 
+fe_model_boxplot <- ggplot2::ggplot(data = models_estimates, 
+                                    mapping = aes(x = model, y = bc, color = model, fill = model)) + 
+  geom_boxplot(alpha = 0.7, color = "black") + 
+  #scale_color_manual(values = c('LUR' = '#440154', 
+  #                               'DM' = '#3b528b', 
+  #                              'HM' = '#21918c')) +
+  scale_fill_manual(values = c('LUR' = '#440154', 
+                               'DM' = '#3b528b', 
+                               'HM' = '#21918c')) +
+  ylab(bquote(BC ~ (mu*g/m^3))) + ylim(c(0, 9)) +
+  theme_bw() + 
+  theme(legend.position = 'none')
+
+
+
+### --- Cu model boxplot --- ### 
+
+
+
+
+
+
+
+
+
+
 
 ### --- Putting al the graphs together --- ###
 boxplot_models <- no2_boxplot | pm25_boxplot | bc_model_boxplot
@@ -957,18 +993,6 @@ boxplot_models + theme(aspect.ratio = 1)
 ### --- saving the figure --- ### 
 ggsave(plot = boxplot_models , "03.Outputs/figures/boxplot_models.png",
        dpi = 600, width = 10, height = 3, units = "in")
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ##################################
@@ -1225,10 +1249,12 @@ NO2_HM_LUR <- estimates_correlation_data %>%
               ggplot() +
               geom_hex(aes(y =`NO2 HM`, x = `NO2 LUR`)) +
               #scale_fill_continuous_sequential(palette = "spectral") +
-                scale_fill_distiller(palette = "Spectral") + 
+              scale_fill_distiller(palette = "Spectral") + 
               coord_equal() +
               theme_bw() + 
               labs(fill="Count") +
+              xlim(c(0, 150)) +
+              ylim(c(0, 150)) +
               ylab(expression(NO[2] ~ "HM predictions" ~ (mu * g/m^3))) + 
               xlab(expression(NO[2] ~ "LUR predictions" ~ (mu * g/m^3))) +
               theme(aspect.ratio = 1) + 
@@ -1256,7 +1282,7 @@ NO2_HEX
 
 ### --- Export HEXBIN plot --- ### 
 ggsave(plot = NO2_HEX, "03.Outputs/figures/NO2_HEX.png",
-       dpi = 600, width = 10, height = 5, units = "in")
+       dpi = 600, width = 6, height = 5, units = "in")
 
 #########################################
 ### --- PM25 Hexbin scatterplots --- ###
@@ -1297,7 +1323,7 @@ PM25_HEX
 
 ### --- Export HEXBIN plot --- ###
 ggsave(plot = PM25_HEX, "03.Outputs/figures/PM25_HEX.png",
-       dpi = 600, width = 10, height = 5, units = "in")
+       dpi = 600, width = 6, height = 5, units = "in")
 
 #########################################
 ### --- BC Hexbin scatterplots --- ###
@@ -1339,7 +1365,7 @@ BC_HEX
 
 ### --- Export HEXBIN plot --- ###
 ggsave(plot = BC_HEX, "03.Outputs/figures/BC_HEX.png",
-       dpi = 600, width = 10, height = 5, units = "in")
+       dpi = 600, width = 6, height = 5, units = "in")
 
 
 # Putting all the figures together 
@@ -1781,31 +1807,14 @@ dplyr::glimpse(pm25_measures)
 dplyr::glimpse(bc_measures)
 dplyr::glimpse(pm25_constituents_measures)
 
-### Table 1. 
+##############################################################################################################
+### Table 1. Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns --- ###
+############################################################################################################
+
 no2_measures$year <- as.factor(no2_measures$year) 
 levels(no2_measures$year) # "2018" "2019" "2020" "2021"
 
 
-### --- NO2 (2018) --- ### 
-no2_measures %>% dplyr::filter(year == "2018") %>% 
-                 dplyr::select(NO2.DirectMeasurements) %>% 
-                 skimr::skim()
-
-
-### --- NO2 (2019) --- ### 
-no2_measures %>% dplyr::filter(year == "2019") %>% 
-  dplyr::select(NO2.DirectMeasurements) %>% 
-  skimr::skim()
-
-### --- NO2 (2020) --- ### 
-no2_measures %>% dplyr::filter(year == "2020") %>% 
-  dplyr::select(NO2.DirectMeasurements) %>% 
-  skimr::skim()
-
-### --- NO2 (2021) --- ### 
-no2_measures %>% dplyr::filter(year == "2021") %>% 
-  dplyr::select(NO2.DirectMeasurements) %>% 
-  skimr::skim()
 
 
 
@@ -1815,6 +1824,7 @@ skimr::skim(bc_measures)
 skimr::skim(pm25_constituents_measures)
 
   
+
 
 
 
