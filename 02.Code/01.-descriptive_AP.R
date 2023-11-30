@@ -413,6 +413,16 @@ filter_amb_shp <- amb_shp %>%
                                              "Sant Cugat del Vallès", "Sant Boi de Llobregat","Cornellà de Llobregat"))
 
 
+amb_bcn <- amb_shp %>%  
+           dplyr::filter(NOMMUNI %in% c("Barcelona", "Badalona", 
+                                        "Esplugues de Llobregat",
+                                        "l'Hospitalet de Llobregat", "Sant Adrià de Besòs", 
+                                        "Santa Coloma de Gramenet", "Sant Joan Despí", "Sant Just Desvern",
+                                        "Cornellà de Llobregat"))
+
+
+
+
 amb_plot_filtered <- ggplot() + 
   geom_sf(data = filter_amb_shp, fill = "grey", color = "white")+ 
   theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
@@ -421,6 +431,19 @@ amb_plot_filtered <- ggplot() +
   ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) 
 
 amb_plot_filtered
+
+
+amb_bcn <- ggplot() + 
+  geom_sf(data = amb_bcn, fill = "grey", color = "white")+ 
+  theme(plot.title = element_text(color = "black", size = 14, face = "bold")) +
+  facet_grid(. ~ "NO2 LUR model") + theme_bw() +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) 
+
+amb_bcn
+
+
+
 
 # Check CRS of shapefile
 print(sf::st_crs(amb_shp))
@@ -444,17 +467,33 @@ ggplot() +
 #####################################################################################
 
 
-# First, convert your points to an sf object
-lur_estimates_sf <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 25831)
 
+lur_estimates <- read.csv("01.Data/lur_estimates.csv")
+
+
+# summarise all the pollutants 
+lur_estimates_plot <- lur_estimates %>% 
+  dplyr::ungroup()
+
+lur_estimates_plot <- lur_estimates_plot %>% dplyr::group_by(gid) %>%  
+  dplyr::summarise_all(funs(mean))
+
+dplyr::glimpse(lur_estimates_plot)
+
+lur_estimates_plot <- lur_estimates_plot %>% 
+  dplyr::select(gid, subject_id, no2_lur, pm25_lur, bc_lur, lon, lat) %>% 
+  tidyr::drop_na()
+
+
+lur_estimates_sf <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 25831)
 lur_estimates_wgs84 <- st_transform(lur_estimates_sf, 4326)
 
-# Plotting with ggplot2
 
+# Plotting with ggplot2
 dplyr::glimpse(amb_shp)
 
 ggplot() +
-  geom_sf(data = amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_wgs84, aes(color = no2_lur), size = 0.1) +
   theme_minimal() +
   labs(title = "Barcelona LUR Estimates")
@@ -467,15 +506,15 @@ print(st_bbox(amb_shp))
 
 # LUR estimates NO2 
 no2_plot_lur <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0, alpha = 0.7) +
   theme_minimal() +
   scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
   #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "(A) LUR model",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   #facet_grid(. ~ "NO2 LUR model") +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold"),
@@ -492,6 +531,8 @@ no2_plot_lur <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),  # Remove the panel border
         panel.background = element_blank())  # Optionally, make the panel background transparent)
+
+no2_plot_lur
 
 # LUR estimates PM25 
 pm25_plot_lur <- ggplot() +
@@ -519,6 +560,9 @@ pm25_plot_lur <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),  # Remove the panel border
         panel.background = element_blank())  # Optionally, make the panel background transparent)
+
+pm25_plot_lur
+
 
 # LUR estimates BC
 bc_plot_lur <- ggplot() +
@@ -1433,12 +1477,26 @@ max_no2 <- max(lur_estimates_sf$no2_lur, dm_estimates_sf$no2_dm, hm_estimates_sf
 legend_breaks <- c(min_no2, 50, 100, max_no2)
 legend_labels <- c(as.integer(min_no2), "50", "100", as.integer(max_no2))
 
+
+lur_estimates_sf$
+
+# We use this vector to filtered the data
+subjects_out <- c("10051711", "10032711", "12031211", 
+                  "11003411", "10038011", "12032011",
+                  "12025111", "10052911", "12020611", "12025611")
+
+subject_out <- c("")
+
+lur_estimates_sf <- lur_estimates_sf %>%
+                    dplyr::filter(!(subject_id %in% subjects_out))
+
 ##############################
 ### --- NO2 LUR model --- ###
 #############################
 NO2_LUR_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = no2_lur), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = no2_lur), 
+          size = 1.2, alpha = 1) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
@@ -1448,8 +1506,8 @@ NO2_LUR_model_plot <- ggplot() +
   ) + # Set the limits to the overall range
   labs(title = expression(paste("(A) NO"[2], " models")), 
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold"),
         legend.position = "none",
@@ -1471,13 +1529,21 @@ NO2_LUR_model_plot <- ggplot() +
   ) +
   facet_grid(.~'LUR model')
 
+NO2_LUR_model_plot
 
 #############################
 ### --- NO2 DM model --- ###
 ############################
+
+# filtering the subject outside the area 
+dm_estimates_sf <- dm_estimates_sf %>%
+  dplyr::filter(!(subject_id %in% subjects_out))
+
+
 NO2_DM_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = dm_estimates_sf, aes(color = no2_dm), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = no2_dm),
+          size = 1.2, alpha = 1) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
@@ -1487,8 +1553,8 @@ NO2_DM_model_plot <- ggplot() +
   )  + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() +  
   theme(plot.title = element_text(face = "bold"),
         legend.position = "none", 
@@ -1509,13 +1575,20 @@ NO2_DM_model_plot <- ggplot() +
         strip.placement = "outside") + # Remove background rectangle from facet labels)  +
   facet_grid(.~'Dispersion model')
 
+NO2_DM_model_plot
 
 #################################
 ### --- NO2 Hybrid model --- ###
 ################################
+
+# filtering the participants outside of the area
+hm_estimates_sf <- hm_estimates_sf %>%
+  dplyr::filter(!(subject_id %in% subjects_out))
+
 NO2_HM_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = hm_estimates_sf, aes(color = no2_hm), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = no2_hm), 
+          size = 1.2, alpha = 1) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
@@ -1525,8 +1598,8 @@ NO2_HM_model_plot <- ggplot() +
   )  + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(
     plot.title = element_blank(),  # Remove plot title since it's empty
@@ -1549,14 +1622,28 @@ NO2_HM_model_plot <- ggplot() +
   ) +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
 
+NO2_HM_model_plot
+
 
 ### --- NO2 models comparison ---- ###
 NO2_models_map <- NO2_LUR_model_plot | NO2_DM_model_plot | NO2_HM_model_plot
 NO2_models_map
 
 ### --- save the figure --- ### 
-ggsave(plot = NO2_models_map, "03.Outputs/figures/NO2_models_map.png",
-       dpi = 600, width = 10, height = 5, units = "in")
+ggsave(plot = NO2_models_map, "03.Outputs/figures/NO2_models_map_v2.png",
+       dpi = 600, width = 10, height = 5)
+
+
+################################################################
+### --- creating an interactive plot to remove some ids --- ###
+###############################################################
+pacman::p_load(plotly)
+library(plotly)
+p_interactive <- ggplotly(NO2_HM_model_plot) 
+
+p_interactive$data[[2]]$text <- hm_estimates_sf$subject_id
+p_interactive$data[[2]]$hoverinfo <- "text"
+
 
 ###########################
 ### --- PM25 models --- ###
@@ -1880,5 +1967,8 @@ skimr::skim(pm25_constituents_measures)
 
 view(pm25_measures)
 view(no2_measure)
+
+
+
 
 
