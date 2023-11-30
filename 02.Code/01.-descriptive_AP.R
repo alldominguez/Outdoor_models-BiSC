@@ -1472,10 +1472,12 @@ NO2_HEX / PM25_HEX / BC_HEX
 # Calculate overall min and max for NO2 from the summaries you have
 min_no2 <- min(lur_estimates_sf$no2_lur, dm_estimates_sf$no2_dm, hm_estimates_sf$no2_hm, na.rm = TRUE)
 max_no2 <- max(lur_estimates_sf$no2_lur, dm_estimates_sf$no2_dm, hm_estimates_sf$no2_hm, na.rm = TRUE)
+min_no2
+max_no2
 
 # Define the breaks you want to show in the legend
-legend_breaks <- c(min_no2, 50, 100, max_no2)
-legend_labels <- c(as.integer(min_no2), "50", "100", as.integer(max_no2))
+legend_breaks <- c(min_no2, 26, 43, 60, max_no2)
+legend_labels <- c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))
 
 
 lur_estimates_sf$
@@ -1502,14 +1504,14 @@ NO2_LUR_model_plot <- ggplot() +
     option = "viridis", direction = 1, 
     limits = c(min_no2, max_no2),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_no2), "50", "100", as.integer(max_no2))  # Format the labels as desired
+    labels = c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))  # Format the labels as desired
   ) + # Set the limits to the overall range
   labs(title = expression(paste("(A) NO"[2], " models")), 
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(plot.title = element_text(face = "bold"),
+  theme(plot.title = element_text(face = "bold", size = 16),
         legend.position = "none",
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
@@ -1523,7 +1525,7 @@ NO2_LUR_model_plot <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),
         panel.background = element_blank(),
-        strip.text = element_text(face = "bold", hjust = 0),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12),
         strip.background = element_blank(),
         strip.placement = "outside"
   ) +
@@ -1549,7 +1551,7 @@ NO2_DM_model_plot <- ggplot() +
     option = "viridis", direction = 1, 
     limits = c(min_no2, max_no2),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_no2), "50", "100", as.integer(max_no2))  # Format the labels as desired
+    labels = c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))  # Format the labels as desired
   )  + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
@@ -1570,7 +1572,7 @@ NO2_DM_model_plot <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),
         panel.background = element_blank(),
-        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
         strip.background = element_blank(), # Remove background rectangle from facet labels
         strip.placement = "outside") + # Remove background rectangle from facet labels)  +
   facet_grid(.~'Dispersion model')
@@ -1594,7 +1596,7 @@ NO2_HM_model_plot <- ggplot() +
     option = "viridis", direction = 1, 
     limits = c(min_no2, max_no2),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_no2), "50", "100", as.integer(max_no2))  # Format the labels as desired
+    labels = c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))  # Format the labels as desired
   )  + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
@@ -1606,7 +1608,7 @@ NO2_HM_model_plot <- ggplot() +
     legend.position = "right",
     legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
     legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0),  # Left align the facet label
+    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
     strip.background = element_blank(),  # Remove the background from the facet label
     legend.text = element_text(size = 10), 
     legend.key.size = unit(1, 'lines'), 
@@ -1656,27 +1658,27 @@ min_pm25
 max_pm25
 
 # Define the breaks you want to show in the legend
-legend_breaks <- c(min_pm25, 20, 40, max_pm25)
-legend_labels <- c(as.integer(min_pm25), "20", "40", as.integer(max_pm25))
+legend_breaks <- c(min_pm25, 10, 14, 18, 22, max_pm25)
+legend_labels <- c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))
 
 ##############################
 ### --- PM25 LUR model --- ###
 #############################
 PM25_LUR_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
     limits = c(min_pm25, max_pm25),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_pm25), "20", "40", as.integer(max_pm25))) + # Set the limits to the overall range
+    labels = c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))) + # Set the limits to the overall range
   labs(title = expression(paste("(B) PM"[2.5], " models")),   
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(plot.title = element_text(face = "bold"),
+  theme(plot.title = element_text(face = "bold", size = 16),
         legend.position = "none", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
@@ -1690,7 +1692,7 @@ PM25_LUR_model_plot <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),
         panel.background = element_blank(),
-        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
         strip.background = element_blank(), # Remove background rectangle from facet labels
         strip.placement = "outside") + # Remove background rectangle from facet labels)  +
   facet_grid(.~'LUR model')
@@ -1701,18 +1703,18 @@ PM25_LUR_model_plot
 ### --- PM25 DM model --- ###
 ############################
 PM25_DM_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = dm_estimates_sf, aes(color = pm25_dm), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = pm25_dm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
     limits = c(min_pm25, max_pm25),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_pm25), "20", "40", as.integer(max_pm25))) + # Set the limits to the overall range
+    labels = c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() +  
   theme(plot.title = element_text(face = "bold"),
         legend.position = "none", 
@@ -1728,7 +1730,7 @@ PM25_DM_model_plot <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),
         panel.background = element_blank(),
-        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
         strip.background = element_blank(), # Remove background rectangle from facet labels
         strip.placement = "outside") + # Remove background rectangle from facet labels)  +
   facet_grid(.~'Dispersion model')
@@ -1739,25 +1741,25 @@ PM25_DM_model_plot
 ### --- PM25 Hybrid model --- ###
 ################################
 PM25_HM_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = hm_estimates_sf, aes(color = pm25_hm), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = pm25_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
     limits = c(min_pm25, max_pm25),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_pm25), "20", "40", as.integer(max_pm25))) + # Set the limits to the overall range
+    labels = c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(
     plot.title = element_blank(),  # Remove plot title since it's empty
     legend.position = "right",
     legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
     legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0),  # Left align the facet label
+    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
     strip.background = element_blank(),  # Remove the background from the facet label
     legend.text = element_text(size = 10), 
     legend.key.size = unit(1, 'lines'), 
@@ -1780,7 +1782,7 @@ PM25_models_map <-  PM25_LUR_model_plot | PM25_DM_model_plot | PM25_HM_model_plo
 PM25_models_map
 
 ### --- save the plot --- ###
-ggsave(plot = PM25_models_map, "03.Outputs/figures/PM25_models_map.png",
+ggsave(plot = PM25_models_map, "03.Outputs/figures/PM25_models_map_v2.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
@@ -1795,28 +1797,28 @@ min_bc
 max_bc
 
 # Define the breaks you want to show in the legend
-legend_breaks <- c(min_bc, 2, 4, 6, max_bc)
-legend_labels <- c(as.integer(min_bc), "2", "4", "6", as.integer(max_bc))
+legend_breaks <- c(min_bc, 0.8, 1.5, 2.3, 3.0, max_bc)
+legend_labels <- c(as.integer(min_bc),  "0.8", "1.5", "2.3", "3.0", as.integer(max_bc))
 
 ##############################
 ### --- BC LUR model --- ###
 #############################
 BC_LUR_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
     limits = c(min_bc, max_bc),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_bc), "2", "4", "6", as.integer(max_bc))
+    labels = c(round(min_bc, digit = 1),  "0.8", "1.5", "2.3", "3.0", round(max_bc, digit = 1))
     ) + # Set the limits to the overall range
   labs(title = expression(paste("(C) BC models")),   
        color = expression(paste("BC" ," (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(plot.title = element_text(face = "bold"),
+  theme(plot.title = element_text(face = "bold", size = 16),
         legend.position = "none", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
@@ -1830,7 +1832,7 @@ BC_LUR_model_plot <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),
         panel.background = element_blank(),
-        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
         strip.background = element_blank(), # Remove background rectangle from facet labels
         strip.placement = "outside") + # Remove background rectangle from facet labels)  +
   facet_grid(.~'LUR model')
@@ -1841,19 +1843,19 @@ BC_LUR_model_plot
 ### --- BC DM model --- ###
 ############################
 BC_DM_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = dm_estimates_sf, aes(color = bc_dm), size = 1.0, alpha = 0.7) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = dm_estimates_sf, aes(color = bc_dm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
     limits = c(min_bc, max_bc),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_bc), "2", "4", "6", as.integer(max_bc))
+    labels = c(round(min_bc, digit = 1),  "0.8", "1.5", "2.3", "3.0", round(max_bc, digit = 1))
   ) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("BC", " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() +  
   theme(plot.title = element_text(face = "bold"),
         legend.position = "none", 
@@ -1869,7 +1871,7 @@ BC_DM_model_plot <- ggplot() +
         legend.key.size = unit(0.5, 'cm'),
         panel.border = element_blank(),
         panel.background = element_blank(),
-        strip.text = element_text(face = "bold", hjust = 0), # Make facet labels bold and align to the left
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
         strip.background = element_blank(), # Remove background rectangle from facet labels
         strip.placement = "outside") + # Remove background rectangle from facet labels)  +
   facet_grid(.~'Dispersion model')
@@ -1880,26 +1882,26 @@ BC_DM_model_plot
 ### --- BC Hybrid model --- ###
 ################################
 BC_HM_model_plot <- ggplot() +
-  geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
-  geom_sf(data = hm_estimates_sf, aes(color = bc_hm), size = 1, alpha = 1) +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = bc_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
     limits = c(min_bc, max_bc),
     breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_bc), "2", "4", "6", as.integer(max_bc))
+    labels = c(round(min_bc, digit = 1),  "0.8", "1.5", "2.3", "3.0", round(max_bc, digit = 1))
   ) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("BC", " (µg/m"^3*")"))) +
-  xlim(c(st_bbox(filter_amb_shp)[1], st_bbox(filter_amb_shp)[3])) +
-  ylim(c(st_bbox(filter_amb_shp)[2], st_bbox(filter_amb_shp)[4])) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(
     plot.title = element_blank(),  # Remove plot title since it's empty
     legend.position = "right",
     legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
     legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0),  # Left align the facet label
+    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
     strip.background = element_blank(),  # Remove the background from the facet label
     legend.text = element_text(size = 10), 
     legend.key.size = unit(1, 'lines'), 
@@ -1921,12 +1923,21 @@ BC_HM_model_plot
 BC_models_map <-  BC_LUR_model_plot | BC_DM_model_plot | BC_HM_model_plot
 BC_models_map
 
-### --- save the data --- ### 
-ggsave(plot = BC_models_map, "03.Outputs/figures/BC_models_map.png",
+### --- save the plot --- ### 
+ggsave(plot = BC_models_map, "03.Outputs/figures/BC_models_map_v2.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 ### --- Putting all the models together with the fixed scale --- ###
-NO2_models_map / PM25_models_map / BC_models_map
+all_maps <- NO2_models_map / PM25_models_map / BC_models_map
+all_maps
+
+
+### --- save the plot --- ### 
+ggsave(plot = all_maps, "03.Outputs/figures/all_maps.png",
+       dpi = 600, width = 10, height = 10, units = "in")
+
+
+
 
 
 ###########################################################################################
