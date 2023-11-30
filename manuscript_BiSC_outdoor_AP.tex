@@ -106,7 +106,7 @@ Barcelona (\textbf{\cref{fig1}}), is one of the most populated and dense cities 
 \label{fig1}
 \end{figure}
 
-Air pollution measurements were conducted during two separate monitoring campaigns. The first, named the "BiSC-home" campaign, took place at the home addresses of BiSC participants and involved measuring only NO\textsubscript{2} levels for one week during the first, and third trimester of pregnancy between 2018-2021. The second campaign was carried out in accordance with the ESCAPE guidelines, named "BiSCAPE", and included four distinct measurement periods: three in the winter, summer, and autumn of 2021, and a final one in the winter of 2022. During these periods, levels of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC were measured at 34 locations across Barcelona Metropolitan Area (Barcelona, Esplugues de Llobregat, and L'Hospitalet).These monitoring campaigns were used in the development of the LUR and hybrid models.
+Air pollution measurements were conducted during two separate monitoring campaigns. The first, named the "BiSC-home" campaign, took place at the home addresses of BiSC participants and involved measuring only NO\textsubscript{2} levels for one week during the first, and third trimester of pregnancy between 2018-2021. The second campaign was carried out in accordance with the ESCAPE guidelines, named "BiSCAPE", and included four distinct measurement periods: three in the winter, summer, and autumn of 2021, and a final one in the winter of 2022. During these periods, levels of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC were measured at 34 locations across Barcelona Metropolitan Area (Barcelona, Esplugues de Llobregat, and L'Hospitalet).These monitoring campaigns were used in the development of the LUR and HM.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- LUR model --- %%%
@@ -180,63 +180,55 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --- Distribution of the monitoring campaigns --- % 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Distribution of monitoring campaigns}
 
-Distribution of the concentration for the BiSCAPE and BiSC-Home campaign for all the pollutants were shown in \hyperref[table1]{Table 1}. For all the air pollutants assessed, concentration varied substantially between pollutants. 
-
-%%% Table 1. Outdoor air pollution concentration from BiSC-home and BiSCAPE campaigns (2018-2021) 
+Distribution of the observed concentration for the BiSC-home and BiSCAPE campaigns for all pollutants are shown in \hyperref[table1]{Table 1}. NO\textsubscript{2} concentration levels for the combination of BiSC-home and BiSCAPE campaigns ranged between 6.85 \(\mu \text{g/m}^3\) and 97.3 \(\mu \text{g/m}^3\) with a mean (sd) of  38.8 (12.4) \( \mu \text{g/m}^3\). PM\textsubscript{2.5} observed levels ranged between 6.14 \(\mu \text{g/m}^3\) and 35.8 \( \mu \text{g/m}^3\) with a mean (sd) of 13.4 (6.14) \(\mu \text{g/m}^3\), while BC levels showed less variation during the BiSCAPE campaign ranged between 0.40 \(\mu \text{g/m}^3\) and 2.95 \(  \mu \text{g/m}^3\) with a mean of 1.27 (0.50) \( \mu \text{g/m}^3\). For PM\textsubscript{2.5} constituents concentration values observed during the BiSCAPE campaign varied substantially between elements with a mean of 0.25 for  FE,  7.10 for Cu, and a mean of 40.7 for Mn. 
 
 
-%%% --- Table 1. Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns --- %%%
+\\
+The spatial distribution of the outdoor air pollution measurements campaigns were showed in \cref{fig1}.  Panel Fig 1.A show a high density coverage  
+
+%%% ---------------------------------------------------------------- %%%
+%%% Table 1. Outdoor air pollution concentration BiSC-home, BiSCAPE  %%%
+%%% ---------------------------------------------------------------  %%%
 \begin{table}[h!]
 \centering
-\caption{Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns}
-\begin{tabular}{lllllllll}
+\caption{Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns (2018-2022)}
+\begin{tabular}{lllllllllll} % each one indicates a new column in the table 
 \toprule
-Campaign & Pollutant & Year & Units & mean & sd & p25 & p50 & p75 \\ 
+Campaign & Pollutant & Year  & mean & sd & min & p25 & p50 & p75 & max \\ 
 \midrule
-BiSC-home & NO\textsubscript{2} & 2018-2021 & \(\mu\)g/m\textsuperscript{3} & 38.8 & 12.4 & 30.0 & 37.5 & 45.8 \\ 
+BiSC-home, BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-2021 & 38.8 & 12.4 & 6.85 &30.0 & 37.5 & 45.8 & 97.3 \\ 
 \multirow{5}{*}{BiSCAPE} 
-& PM\textsubscript{25} & 2021-2022 & \(\mu\)g/m\textsuperscript{3} & 13.4 & 6.14 & 9.06 & 11.3 & 16.2 \\ 
-& BC & 2021-2022 & \(\mu\)g/m\textsuperscript{3} & 1.27 & 0.50 & 0.88 & 1.22 & 1.52 \\ 
-& Fe & 2021-2022 & \(\mu\)g/m\textsuperscript{3} & 0.25 & 0.13 & 0.15 & 0.21 & 0.32 \\ 
-& Cu & 2021-2022 & ng/m\textsuperscript{3} & 7.10 & 3.82  & 4.37 & 6.36 & 8.98 \\ 
-& Mn & 2021-2022 & ng/m\textsuperscript{3} & 40.7 & 36.5 & 18.9 & 28.2 & 46.7 \\ 
+& PM\textsubscript{25} (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 13.4 & 6.14 & 5.01 & 9.06 & 11.3 & 16.2 & 35.8 \\ 
+& BC (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 1.27 & 0.50 & 0.40 & 0.88 & 1.22 & 1.52 & 2 .95 \\ 
+& Fe (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 0.25 & 0.13 & 0.07 & 0.15 & 0.21 & 0.32 & 0.77 \\ 
+& Cu (ng/m\textsuperscript{3}) & 2021-2022 & 7.10 & 3.82 & 1.78 & 4.37 & 6.36 & 8.98 & 22.7 \\ 
+& Mn (ng/m\textsuperscript{3}) & 2021-2022  & 40.7 & 36.5 & 6.71 &  18.9 & 28.2 & 46.7 & 273 \\ 
 \bottomrule
 \end{tabular}
 \end{table}
 
-The spatial distribution of the campaigns were showed in \cref{fig1}. 
+
+Since different approaches were used to built outdoor air pollution models these were not directly comparable due to differences on temporal basis. 
+
+The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. Performance metrics for LUR, DM and HM are shown in the supplementary materials. 
 
 
-
-
-
-
-
-Since models were built based on different approaches there where not directly comparable due to differences on a temporal basis
-
-Since different approaches were used to built outdoor air pollution models these were not directly comparable due to differences on temporal 
-
-The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. The performance of the PM25 
-
-Performance metrics for LUR, DM and HM are shown in the supplementary materials files. 
-
-
-\
 % --- Exposure concentrations --- %
 Predictions from outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model is shown in FIGURE X. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
 
-%%% --- Figure x. Boxplot models comparison --- %%%
-\captionsetup[figure]{skip=6pt}
-% We add the figure with the study domain 
+%%% -------------------------------------------%%%%
+%%% --- Figure 2. Boxplot models comparison --- %%%
+%%% -------------------------------------------%%%%
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/boxplot_models.png}
-\caption{Distribution exposure concentration for the entire pregnancy period \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
+\includegraphics[width=1.0\textwidth]{figures/boxplot_all_models_estimates.png}
+\caption{Distribution of exposure to air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
 \end{figure}
-
-
 
 
 \textbf{\cref{fig2}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5} and BC concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants, after averaging weekly estimates for all the study period (2019 - 2021).   
@@ -272,15 +264,11 @@ Predictions from outdoor air pollution concentration exposure during the entire 
 \end{figure}
 
 
-
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --- Correlation between measures and model estimates --- %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Correlation for long-term exposure (entire pregnancy) at the residential addresses ranged from r = 0.48 to 0.92 (figure 3.A). 
-
-Correlation for short-term exposure (weekly exposure) varied from r = 0.37 to 0.90 (figure 3.B).   
-
-
+Correlation for long-term exposure (entire pregnancy) at the residential addresses ranged from r = 0.48 to 0.92 \textbf{(figure 4.A)}. Correlation for short-term exposure (weekly exposure) varied from r = 0.37 to 0.90 \textbf{(figure 4.B)}. Correlation between the air pollutant estimates for the different models assessed was moderate to strongly correlated for both long-and-short term exposure. Nitrogen dioxide 
 
 % Here add the correlation plot (long and short term)
 \captionsetup[figure]{skip=6pt}
@@ -290,15 +278,46 @@ Correlation for short-term exposure (weekly exposure) varied from r = 0.37 to 0.
 \caption{Correlation between traffic-related air pollutants for LUR, DM, HM in different windows of exposure \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
 \end{figure}
 
-Correlation between the predicted air pollutants for the different models assessed was moderate to strongly correlated for both long-and-short term exposure. 
 
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --- Comparison/agreement between air pollution estimates --- %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% --- Figure. Comparison/agreement between moodel predictions estimates --- %%%
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/NO2_HEX.png}
+\end{figure}
+
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/PM25_HEX.png}
+\end{figure}
+
+% Put the figure text closer to the Figure 3
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=1.0\textwidth]{figures/BC_HEX.png}
+\caption{Comparison/agreement between outdoor air pollution model estimates \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
+\end{figure}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Discussion --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-We successfully developed spatiotemporal models using three different approaches (LUR, DM and HM). All models show moderate to good performance evaluated by the defined metrics in the \textbf{methods section} and displayed in more detail in the \textbf{Supplementary materials}. 
+We successfully developed spatiotemporal models using three different approaches (LUR, DM, and HM). Models show moderate to good performance 
+
+
+
+spatiotemporal models using three different approaches (LUR, DM and HM). All models show moderate to good performance evaluated by the defined metrics in the \textbf{methods section} and displayed in more detail in the \textbf{Supplementary materials}. 
 
 As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
 
