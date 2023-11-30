@@ -12,14 +12,11 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{authblk} % this is for multiple autho  rs 
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
 \usepackage{cleveref}
 \usepackage{booktabs}
 \usepackage{multirow}
 
-% Configure for "Fig.":
-\crefname{figure}{Fig.}{Figs.}
-\Crefname{figure}{Fig.}{Figs.}
 
 
 % reference configuration
@@ -113,11 +110,11 @@ Air pollution measurements were conducted during two separate monitoring campaig
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{LUR models}
 
-LUR models for NO\textsubscript{2}  were developed using only data from the locations that had measured home-outdoor (BiSC-home campaign) levels for both sampling campaigns (i.e., we did not use data from participants who had data available for only one campaign, either first or third trimester). Almost half of the sites were measured before the COVID-19 pandemic started and half of the sites were during the pandemic period and its resulting restrictions. For PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents, and BC models were developed using BiSCAPE data from the 34 sites.
+LUR models for NO\textsubscript{2}  were developed using only data from the locations that had measured home-outdoor (BiSC-home campaign) levels for both sampling campaigns (i.e., we did not use data from participants who had data available for only one campaign, either first or third trimester). Almost half of the sites were measured before the COVID-19 pandemic started and half of the sites were during the pandemic period and its resulting restrictions. For PM\textsubscript{2.5}, BC  and PM\textsubscript{2.5} constituents models were developed using BiSCAPE data from the 34 sites.
 
-For the development of the LUR models, spatial variables that better represent the pollutant concentration distribution across the study area were created. Following the ESCAPE guidelines \cite{eeftens2012, beelen2013},  predictor variables were selected from three broad categories: traffic, land use, and urban configuration. A wide variety of buffer sizes were created, i.e, 25m, 50m, 100m, 300m, 500m, and 1000m to capture the area-specific predictor variable at every single location.
+For the development of the LUR models, spatial variables that better represent the air pollutant concentration distribution across the study area were created. Following the ESCAPE guidelines \cite{eeftens2012, beelen2013},  predictor variables were selected from three broad categories: traffic, land use, and urban configuration. A wide variety of buffer sizes were created, i.e, 25m, 50m, 100m, 300m, 500m, and 1000m to capture the area-specific predictor variable at every single location. Predictor variables were calculated using specific coordinates for each site. 
 
-We applied a supervised stepwise process in which we sequentially added a predictor variable to a linear regression model using pollutant concentrations as the independent variable to obtain the best possible model. This procedure was followed to build all the specific pollutant models. Previously to model development, we specified the direction expected of the effect that each predictor has in the model. For all predictor variables, univariate regression models with annual average air pollution concentration (NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC) were conducted, models with the highest adjusted explained variance (R\textsuperscript{2}) were selected. We then repeated the process using the previous model and all the remaining predictor variables. Details of the LUR modelling and variables used can be found in the \textbf{Supplementary material X}.
+We applied a supervised stepwise process in which we sequentially added a predictor variable to a linear regression model using pollutant concentrations as the independent variable to obtain the best possible model \cite{eeftens2012, beelen2013}. This procedure was followed to build all the specific pollutant models. Previously to model development, we specified the direction expected of the effect that each predictor has in the model. For all predictor variables, univariate regression models with annual average air pollution concentration (NO\textsubscript{2}, PM\textsubscript{2.5}, BC, and PM\textsubscript{2.5} constituents (Fe, Cu, Zn)) were conducted, models with the highest adjusted explained variance (adjusted R\textsuperscript{2}) and the right direction of the effect were selected. We then repeated the process using the previous model and all the remaining predictor variables. Details of the LUR modelling and variables used can be found in the \textbf{Supplementary materials} .
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Dispersion model --- %%%
@@ -183,14 +180,9 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --- Distribution of the monitoring campaigns --- % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Distribution of monitoring campaigns}
 
-Distribution of the observed concentration for the BiSC-home and BiSCAPE campaigns for all pollutants are shown in \hyperref[table1]{Table 1}. NO\textsubscript{2} concentration levels for the combination of BiSC-home and BiSCAPE campaigns ranged between 6.85 \(\mu \text{g/m}^3\) and 97.3 \(\mu \text{g/m}^3\) with a mean (sd) of  38.8 (12.4) \( \mu \text{g/m}^3\). PM\textsubscript{2.5} observed levels ranged between 6.14 \(\mu \text{g/m}^3\) and 35.8 \( \mu \text{g/m}^3\) with a mean (sd) of 13.4 (6.14) \(\mu \text{g/m}^3\), while BC levels showed less variation during the BiSCAPE campaign ranged between 0.40 \(\mu \text{g/m}^3\) and 2.95 \(  \mu \text{g/m}^3\) with a mean of 1.27 (0.50) \( \mu \text{g/m}^3\). For PM\textsubscript{2.5} constituents concentration values observed during the BiSCAPE campaign varied substantially between elements with a mean of 0.25 for  FE,  7.10 for Cu, and a mean of 40.7 for Mn. 
-
-
-\\
-The spatial distribution of the outdoor air pollution measurements campaigns were showed in \cref{fig1}.  Panel Fig 1.A show a high density coverage  
+Distribution of the observed concentration for the BiSC-home and BiSCAPE campaigns for all pollutants is shown in \Cref{table1}. NO\textsubscript{2} concentration levels for the combination of BiSC-home and BiSCAPE campaigns ranged between 6.85 and 97.3 \(\mu \text{g/m}^3\) with a mean of  38.8 \(\pm\) 12.4 \( \mu \text{g/m}^3\). PM\textsubscript{2.5} observed levels ranged between 6.14 and 35.8 \( \mu \text{g/m}^3\) with a mean of 13.4 \(\pm\) 6.14 \(\mu \text{g/m}^3\), while BC levels showed less variation during the BiSCAPE campaign, ranging from 0.40 to 2.95 \(  \mu \text{g/m}^3\) with a mean of 1.27 \(\pm\) 0.50 \( \mu \text{g/m}^3\). For PM\textsubscript{2.5} constituents  observed values during the BiSCAPE campaign varied substantially between elements with means of 0.25 \(\pm\) 0.13 \(  \mu \text{g/m}^3\)  for  Fe,  7.10 \(\pm\) 3.82 \( \text{ng/m}^3 \) for Cu, and 40.7 \(\pm\) 36.5 \( \text{ng/m}^3 \) for Zn. \\
 
 %%% ---------------------------------------------------------------- %%%
 %%% Table 1. Outdoor air pollution concentration BiSC-home, BiSCAPE  %%%
@@ -198,6 +190,7 @@ The spatial distribution of the outdoor air pollution measurements campaigns wer
 \begin{table}[h!]
 \centering
 \caption{Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns (2018-2022)}
+\label{table1} 
 \begin{tabular}{lllllllllll} % each one indicates a new column in the table 
 \toprule
 Campaign & Pollutant & Year  & mean & sd & min & p25 & p50 & p75 & max \\ 
@@ -208,26 +201,36 @@ BiSC-home, BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-20
 & BC (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 1.27 & 0.50 & 0.40 & 0.88 & 1.22 & 1.52 & 2 .95 \\ 
 & Fe (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 0.25 & 0.13 & 0.07 & 0.15 & 0.21 & 0.32 & 0.77 \\ 
 & Cu (ng/m\textsuperscript{3}) & 2021-2022 & 7.10 & 3.82 & 1.78 & 4.37 & 6.36 & 8.98 & 22.7 \\ 
-& Mn (ng/m\textsuperscript{3}) & 2021-2022  & 40.7 & 36.5 & 6.71 &  18.9 & 28.2 & 46.7 & 273 \\ 
+& Zn (ng/m\textsuperscript{3}) & 2021-2022  & 40.7 & 36.5 & 6.71 &  18.9 & 28.2 & 46.7 & 273 \\ 
 \bottomrule
 \end{tabular}
 \end{table}
 
+The spatial distribution of the outdoor air pollution sampling campaigns is shown in \Cref{fig1}. Figure 1A illustrates a high density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. Figure 1B exhibit a similar pattern of spatial distribution but with a reduced density in sampling locations. 
 
-Since different approaches were used to built outdoor air pollution models these were not directly comparable due to differences on temporal basis. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --- Model performance: LUR, DM, HM --- % 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model performance: LUR, DM, HM}
+
+Since different approaches were used to built outdoor air pollution models were not directly comparable due to differences on temporal basis. 
 
 The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. Performance metrics for LUR, DM and HM are shown in the supplementary materials. 
 
+\newpage
+
+\subsection{Comparison between models} % broad title then change this
 
 % --- Exposure concentrations --- %
-Predictions from outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model is shown in FIGURE X. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
+Predictions from outdoor air pollution concentration exposure during the entire pregnancy for each pollutant and model is shown in \Cref{fig2}. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
 
 %%% -------------------------------------------%%%%
 %%% --- Figure 2. Boxplot models comparison --- %%%
 %%% -------------------------------------------%%%%
 \begin{figure}[!htb]
 \includegraphics[width=1.0\textwidth]{figures/boxplot_all_models_estimates.png}
-\caption{Distribution of exposure to air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
+\caption{Distribution of exposure to outdoor air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
+\label{fig2}
 \end{figure}
 
 
@@ -245,24 +248,9 @@ Predictions from outdoor air pollution concentration exposure during the entire 
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/NO2_models_map.png}
+\includegraphics[width=1.0\textwidth]{figures/all_maps.png}
+\caption{Outdoor air pollution exposure during the entire pregnancy period (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}).}
 \end{figure}
-
-% Put the figure text closer to the Figure 3
-\captionsetup[figure]{skip=6pt}
-% We add the figure with the study domain 
-\begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/PM25_models_map.png}
-\end{figure}
-
-% Put the figure text closer to the Figure 3
-\captionsetup[figure]{skip=6pt}
-% We add the figure with the study domain 
-\begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/BC_models_map.png}
-\caption{Pregnancy exposure for the entire pregnancy period \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
-\end{figure}
-
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
