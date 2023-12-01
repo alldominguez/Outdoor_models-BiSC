@@ -1342,8 +1342,8 @@ NO2_HM_LUR <- estimates_correlation_data %>%
               coord_equal() +
               theme_bw() + 
               labs(fill="Count") +
-              xlim(c(0, 150)) +
-              ylim(c(0, 150)) +
+              #xlim(c(0, 150)) +
+              #ylim(c(0, 150)) +
               ylab(expression(NO[2] ~ "HM predictions" ~ (mu * g/m^3))) + 
               xlab(expression(NO[2] ~ "LUR predictions" ~ (mu * g/m^3))) +
               theme(aspect.ratio = 1) + 
@@ -1359,6 +1359,8 @@ NO2_HM_DM <- estimates_correlation_data %>%
   coord_equal() +
   theme_bw() + 
   labs(fill="Count") +
+  #xlim(c(0, 100)) +
+  #ylim(c(0, 100)) +
   ylab(expression(NO[2] ~ "HM predictions" ~ (mu * g/m^3))) + 
   xlab(expression(NO[2] ~ "DM predictions" ~ (mu * g/m^3))) +
   theme(aspect.ratio = 1)
@@ -1385,6 +1387,8 @@ PM25_HM_LUR <- estimates_correlation_data %>%
   coord_equal() +
   theme_bw() + 
   labs(fill="Count") +
+  #xlim(c(0, 60)) +
+  #ylim(c(0, 60)) +
   ylab(expression(PM[25] ~ "HM predictions" ~ (mu * g/m^3))) + 
   xlab(expression(PM[25] ~ "LUR predictions" ~ (mu * g/m^3))) +
   theme(aspect.ratio = 1) + 
@@ -1400,6 +1404,8 @@ PM25_HM_DM <- estimates_correlation_data %>%
   coord_equal() +
   theme_bw() + 
   labs(fill="Count") +
+  #xlim(c(0, 40)) +
+  #ylim(c(0, 40)) +
   ylab(expression(PM[25] ~ "HM predictions" ~ (mu * g/m^3))) + 
   xlab(expression(PM[25] ~ "DM predictions" ~ (mu * g/m^3))) +
   theme(aspect.ratio = 1)
@@ -1426,6 +1432,8 @@ BC_HM_LUR <- estimates_correlation_data %>%
   coord_equal() +
   theme_bw() + 
   labs(fill="Count") +
+ #xlim(c(0, 4)) +
+ #ylim(c(0, 4)) +
   ylab(expression(BC ~ "HM predictions" ~ (mu * g/m^3))) + 
   xlab(expression(BC ~ "LUR predictions" ~ (mu * g/m^3))) +
   theme(aspect.ratio = 1) + 
@@ -1441,6 +1449,8 @@ BC_HM_DM <- estimates_correlation_data %>%
   coord_equal() +
   theme_bw() + 
   labs(fill="Count") +
+  #xlim(c(0, 4)) +
+  #ylim(c(0, 4)) +
   ylab(expression(BC ~ "HM predictions" ~ (mu * g/m^3))) + 
   xlab(expression(BC ~ "DM predictions" ~ (mu * g/m^3))) +
   theme(aspect.ratio = 1)
@@ -1452,13 +1462,18 @@ BC_HEX <- BC_HM_LUR | BC_HM_DM
 BC_HEX
 
 
-### --- Export HEXBIN plot --- ###
-ggsave(plot = BC_HEX, "03.Outputs/figures/BC_HEX.png",
+### --- Save HEXBIN plot --- ###
+ggsave(plot = BC_HEX, "03.Outputs/figures/BC_HEX_v2.png",
        dpi = 600, width = 6, height = 5, units = "in")
 
 
 # Putting all the figures together 
-NO2_HEX / PM25_HEX / BC_HEX
+HEX_all <- NO2_HEX / PM25_HEX / BC_HEX
+HEX_all
+
+### --- Save HEXBIN all plots together --- ###
+ggsave(plot = HEX_all, "03.Outputs/figures/HEX_all.png",
+       dpi = 600, width = 10, height = 10)
 
 
 ##################################################
@@ -1935,10 +1950,6 @@ all_maps
 ### --- save the plot --- ### 
 ggsave(plot = all_maps, "03.Outputs/figures/all_maps.png",
        dpi = 600, width = 10, height = 10, units = "in")
-
-
-
-
 
 ###########################################################################################
 
