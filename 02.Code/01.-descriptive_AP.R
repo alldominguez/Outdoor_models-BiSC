@@ -481,13 +481,14 @@ lur_estimates_plot <- lur_estimates_plot %>% dplyr::group_by(gid) %>%
 dplyr::glimpse(lur_estimates_plot)
 
 lur_estimates_plot <- lur_estimates_plot %>% 
-  dplyr::select(gid, subject_id, no2_lur, pm25_lur, bc_lur, lon, lat) %>% 
+  dplyr::select(gid, subject_id, 
+                no2_lur, pm25_lur, bc_lur, fe_lur, cu_lur, zn_lur,
+                lon, lat) %>% 
   tidyr::drop_na()
 
 
 lur_estimates_sf <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 25831)
 lur_estimates_wgs84 <- st_transform(lur_estimates_sf, 4326)
-
 
 # Plotting with ggplot2
 dplyr::glimpse(amb_shp)
@@ -744,7 +745,10 @@ hm_estimates_plot <- hm_estimates_plot %>%
 dplyr::glimpse(hm_estimates_plot)
 
 hm_estimates_plot <- hm_estimates_plot %>% 
-                     dplyr::select(gid, subject_id, no2_hm, pm25_hm, bc_hm, lon, lat) %>% 
+                     dplyr::select(gid, subject_id, 
+                                   no2_hm, pm25_hm, bc_hm, 
+                                   fe_hm, cu_hm, zn_hm, 
+                                   lon, lat) %>% 
                      tidyr::drop_na()
 
 
@@ -953,7 +957,6 @@ levels(model_estimates_elements$model)
 models_estimates$model <- factor(models_estimates$model,
                                 levels = c("LUR", "DM", "HM"),
                                 ordered = TRUE)
-
 
 dplyr::glimpse(model_estimates)
 view(model_estimates_elements)
@@ -1594,14 +1597,11 @@ legend_breaks <- c(min_no2, 26, 43, 60, max_no2)
 legend_labels <- c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))
 
 
-lur_estimates_sf$
-
 # We use this vector to filtered the data
 subjects_out <- c("10051711", "10032711", "12031211", 
                   "11003411", "10038011", "12032011",
                   "12025111", "10052911", "12020611", "12025611")
 
-subject_out <- c("")
 
 lur_estimates_sf <- lur_estimates_sf %>%
                     dplyr::filter(!(subject_id %in% subjects_out))
@@ -2049,6 +2049,221 @@ all_maps
 ### --- save the plot --- ### 
 ggsave(plot = all_maps, "03.Outputs/figures/all_maps.png",
        dpi = 600, width = 10, height = 10, units = "in")
+
+
+###########################
+### --- Fe models --- ###
+#########################
+dplyr::glimpse(lur_estimates_sf)
+
+# Calculate overall min and max for NO2 from the summaries you have
+min_fe <- min(lur_estimates_sf$fe_lur, hm_estimates_sf$fe_hm, na.rm = TRUE)
+max_fe <- max(lur_estimates_sf$fe_lur, hm_estimates_sf$fe_hm, na.rm = TRUE)
+min_fe
+max_fe
+
+
+# Define the breaks you want to show in the legend
+legend_breaks <- c(min_fe, 0.20, 0.32, 0.45, 0.60, max_fe)
+legend_labels <- c(as.integer(min_fe), "0.20", "0.32", "0.45", "0.60", as.integer(max_fe))
+
+##############################
+### --- Fe LUR model --- ###
+#############################
+FE_LUR_model_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = fe_lur), size = 1.0, alpha = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_fe, max_fe),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(round(min_fe, digit = 1),  "0.20", "0.32", "0.45", "0.60", round(max_fe, digit = 1))
+  ) + # Set the limits to the overall range
+  labs(title = expression(paste("(D) Fe models")),   
+       color = expression(paste("Fe" ," (µg/m"^3*")"))) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", size = 16),
+        legend.position = "none", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") + # Remove background rectangle from facet labels)  +
+  facet_grid(.~'LUR model')
+
+FE_LUR_model_plot
+
+
+#################################
+### --- Fe Hybrid model --- ###
+################################
+Fe_HM_model_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = fe_hm), size = 1.0, alpha = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_fe, max_fe),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(round(min_fe, digit = 1),  "0.20", "0.32", "0.45", "0.60", round(max_fe, digit = 1))
+  ) + # Set the limits to the overall range
+  labs(title = "",  
+       color = expression(paste("Fer", " (µg/m"^3*")"))) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
+  theme_bw() + 
+  theme(
+    plot.title = element_blank(),  # Remove plot title since it's empty
+    legend.position = "right",
+    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
+    legend.title.align = 0.5,
+    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
+    strip.background = element_blank(),  # Remove the background from the facet label
+    legend.text = element_text(size = 10), 
+    legend.key.size = unit(1, 'lines'), 
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()
+  ) +
+  facet_grid(.~'Hybrid model')  # Add the model name as facet label
+
+
+
+### --- FE models comparison ---- ###
+FE_models_map <-  FE_LUR_model_plot | FE_HM_model_plot | plot_spacer()
+FE_models_map
+
+### --- save the plot --- ### 
+ggsave(plot = FE_models_map, "03.Outputs/figures/FE_models_map.png",
+       dpi = 600, width = 10, height = 5, units = "in")
+
+
+###########################
+### --- Cu models --- ###
+#########################
+dplyr::glimpse(lur_estimates_sf)
+dplyr::glimpse(hm_estimates_sf)
+
+# Calculate overall min and max for NO2 from the summaries you have
+min_cu <- min(lur_estimates_sf$cu_lur, hm_estimates_sf$cu_hm, na.rm = TRUE)
+max_cu <- max(lur_estimates_sf$cu_lur, hm_estimates_sf$cu_hm, na.rm = TRUE)
+min_cu
+max_cu
+
+
+# Define the breaks you want to show in the legend
+legend_breaks <- c(min_cu, 4.54, 8.11, 11.68, 15.25, max_cu)
+legend_labels <- c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.integer(max_cu))
+
+##############################
+### --- CU LUR model --- ###
+#############################
+CU_LUR_model_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = cu_lur), size = 1.0, alpha = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_cu, max_cu),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.integer(max_cu))
+  ) + # Set the limits to the overall range
+  labs(title = expression(paste("(D) Cu models")),   
+       color = expression(paste("Cu" ," (ng/m"^3*")"))) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", size = 16),
+        legend.position = "none", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") + # Remove background rectangle from facet labels)  +
+  facet_grid(.~'LUR model')
+
+CU_LUR_model_plot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###########################################################################################
 
