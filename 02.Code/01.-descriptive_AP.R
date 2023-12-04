@@ -955,8 +955,6 @@ models_estimates$model <- factor(models_estimates$model,
                                 ordered = TRUE)
 
 
-
-
 dplyr::glimpse(model_estimates)
 view(model_estimates_elements)
 
@@ -1126,11 +1124,15 @@ dplyr::glimpse(hm_estimates_filtered) %>% dplyr::group_by(subject_id)
 
 # select variables 
 lur_estimates_filtered 
+
 dm_estimates_filtered <- dm_estimates_filtered %>% 
-                         dplyr::select(subject_id, weeks, no2_dm, pm25_dm, bc_dm)
+                         dplyr::select(subject_id, weeks,
+                                       no2_dm, pm25_dm, bc_dm)
 
 hm_estimates_filtered <- hm_estimates_filtered %>% 
-                         dplyr::select(subject_id, weeks, no2_hm, pm25_hm, bc_hm)
+                         dplyr::select(subject_id, weeks,
+                                       no2_hm, pm25_hm, bc_hm,
+                                       fe_hm, cu_hm, zn_hm)
 
 
 estimates_correlation_data <- lur_estimates_filtered %>% 
@@ -1161,23 +1163,27 @@ estimates_correlation_data %>% dplyr::group_by(subject_id)
 ###################################
 ### --- Data for the plots --- ###
 #################################
+dplyr::glimpse(estimates_correlation_data)
 
 # short - term exposure data 
 estimates_correlation_data <- estimates_correlation_data %>% 
                               dplyr::select(subject_id, weeks, 
-                                            no2_lur:bc_lur, no2_dm:bc_hm)
+                                            no2_lur:zn_lur, 
+                                            no2_dm:zn_hm)
 
 dplyr::glimpse(estimates_correlation_data)
 
 names(estimates_correlation_data) <- c("ID", "weeks", 
                                        "NO2 LUR", "PM25 LUR", "BC LUR",
+                                       "FE LUR", "CU LUR", "ZN LUR", 
                                        "NO2 DM", "PM25 DM", "BC DM",
-                                       "NO2 HM", "PM25 HM", "BC HM")
+                                       "NO2 HM", "PM25 HM", "BC HM", 
+                                       "FE HM", "CU HM", "ZN HM")
 
 # long - term exposure data 
 preg_cor_data <- estimates_correlation_data  %>% 
                  dplyr::group_by(ID) %>% 
-                 dplyr::summarise(dplyr::across(2:10, mean))
+                 dplyr::summarise(dplyr::across(2:16, mean)) # start from 2 because the data is grouped by subject id this mean less one variable
 
 dplyr::glimpse(preg_cor_data)
 
@@ -1187,7 +1193,7 @@ dplyr::glimpse(preg_cor_data)
 ###########################################
 
 ### ---  Long - term exposure correlation matrix --- ### 
-preg_corr <- ggcorr(preg_cor_data[, 2:10], 
+preg_corr <- ggcorr(preg_cor_data[, 2:16], 
                     method = c("pairwise", "spearman"), 
                     label = TRUE, label_size = 3 , label_round = 2, hjust = 0.85, layout.exp = 2) +
   ggplot2::labs(title = "(A) Long-term exposure (Entire pregnancy)") + 
@@ -1198,7 +1204,7 @@ preg_corr
 
 
 ### ---  Short - term exposure correlation matrix --- ### 
-weekly_corr <-  ggcorr(estimates_correlation_data[, 3:11], 
+weekly_corr <-  ggcorr(estimates_correlation_data[, 3:17], 
               method = c("pairwise", "spearman"),
               label = TRUE, label_size = 3 , label_round = 2, hjust = 0.85, layout.exp = 2) +
               ggplot2::labs(title = "(B) Short-term exposure (Weekly exposure)") +
@@ -1212,7 +1218,7 @@ correlation_fig <- preg_corr | weekly_corr
 correlation_fig
 
 ### --- save figure -- ###
-ggsave(plot = correlation_fig, "03.Outputs/figures/correlation_fig.png",
+ggsave(plot = correlation_fig, "03.Outputs/figures/correlation_fig_v2.png",
        dpi = 600, width = 15, height = 5, units = "in")
 
 
@@ -1345,8 +1351,8 @@ NO2_HM_LUR <- estimates_correlation_data %>%
               #ylim(c(0, 150)) +
               ylab(expression(NO[2] ~ "HM predictions" ~ (mu * g/m^3))) + 
               xlab(expression(NO[2] ~ "LUR predictions" ~ (mu * g/m^3))) +
-              theme(aspect.ratio = 1) + 
-              theme(legend.position = 'none')
+              theme(aspect.ratio = 1) 
+              #theme(legend.position = 'none')
 
 NO2_HM_LUR
 
@@ -1388,10 +1394,10 @@ PM25_HM_LUR <- estimates_correlation_data %>%
   labs(fill="Count") +
   #xlim(c(0, 60)) +
   #ylim(c(0, 60)) +
-  ylab(expression(PM[25] ~ "HM predictions" ~ (mu * g/m^3))) + 
-  xlab(expression(PM[25] ~ "LUR predictions" ~ (mu * g/m^3))) +
-  theme(aspect.ratio = 1) + 
-  theme(legend.position = 'none')
+  ylab(expression(PM[2.5] ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(PM[2.5] ~ "LUR predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1)  
+  #theme(legend.position = 'none')
 
 PM25_HM_LUR
 
@@ -1405,8 +1411,8 @@ PM25_HM_DM <- estimates_correlation_data %>%
   labs(fill="Count") +
   #xlim(c(0, 40)) +
   #ylim(c(0, 40)) +
-  ylab(expression(PM[25] ~ "HM predictions" ~ (mu * g/m^3))) + 
-  xlab(expression(PM[25] ~ "DM predictions" ~ (mu * g/m^3))) +
+  ylab(expression(PM[2.5] ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(PM[2.5] ~ "DM predictions" ~ (mu * g/m^3))) +
   theme(aspect.ratio = 1)
 
 PM25_HM_DM
@@ -1435,8 +1441,8 @@ BC_HM_LUR <- estimates_correlation_data %>%
  #ylim(c(0, 4)) +
   ylab(expression(BC ~ "HM predictions" ~ (mu * g/m^3))) + 
   xlab(expression(BC ~ "LUR predictions" ~ (mu * g/m^3))) +
-  theme(aspect.ratio = 1) + 
-  theme(legend.position = 'none')
+  theme(aspect.ratio = 1)  
+  #theme(legend.position = 'none')
 
 BC_HM_LUR
 
@@ -1475,32 +1481,98 @@ ggsave(plot = HEX_all, "03.Outputs/figures/HEX_all.png",
        dpi = 600, width = 10, height = 7)
 
 
+### --- Save HEXBIN LUR together --- ###
+HM_LUR_HEX <- NO2_HM_LUR / PM25_HM_LUR / BC_HM_LUR
+HM_LUR_HEX
+
+# Exporting figure 
+ggsave(plot = HM_LUR_HEX, "03.Outputs/figures/HM_LUR_HEX.png",
+       dpi = 600, width = 3, height = 9, units = "in")
+
+
+### --- Save HEXBIN figures together --- ###
+HM_DM_HEX <- NO2_HM_DM / PM25_HM_DM / BC_HM_DM
+HM_DM_HEX
+
+ggsave(plot = HM_DM_HEX, "03.Outputs/figures/HM_DM_HEX.png",
+       dpi = 600, width = 3, height = 9, units = "in")
+
 ####################################### 
 ### --- Fe Hexbin scatterplots --- ### 
 #####################################
+FE_HM_LUR <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`FE HM`, x = `FE LUR`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw(base_size = 10) + 
+  labs(fill="Count") +
+  #xlim(c(0, 4)) +
+  #ylim(c(0, 4)) +
+  ylab(expression(Fe ~ "HM predictions" ~ (mu * g/m^3))) + 
+  xlab(expression(Fe ~ "LUR predictions" ~ (mu * g/m^3))) +
+  theme(aspect.ratio = 1) + 
+  theme(legend.position = "right")
 
-
-
-
-
+FE_HM_LUR
 
 #######################################
 ### --- Cu Hexbin scatterplots --- ###
 ######################################
+CU_HM_LUR <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`CU HM`, x = `CU LUR`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw(base_size = 10) + 
+  labs(fill="Count") +
+  #xlim(c(0, 4)) +
+  #ylim(c(0, 4)) +
+  ylab(expression(Cu ~ "HM predictions" ~ (n * g/m^3))) + 
+  xlab(expression(Cu ~ "LUR predictions" ~ (n * g/m^3))) +
+  theme(aspect.ratio = 1) + 
+  theme(legend.position = "right")
 
-
-
-
-
+CU_HM_LUR
 
 ######################################
 ### --- Zn Hexbin scatterplot --- ### 
 #####################################
 
+ZN_HM_LUR <- estimates_correlation_data %>%
+  ggplot() +
+  geom_hex(aes(y =`ZN HM`, x = `ZN LUR`)) +
+  #scale_fill_continuous_sequential(palette = "spectral") +
+  scale_fill_distiller(palette = "Spectral") + 
+  coord_equal() +
+  theme_bw(base_size = 10) + 
+  labs(fill="Count") +
+  #xlim(c(0, 4)) +
+  #ylim(c(0, 4)) +
+  ylab(expression(Zn ~ "HM predictions" ~ (n * g/m^3))) + 
+  xlab(expression(Zn ~ "LUR predictions" ~ (n * g/m^3))) +
+  theme(aspect.ratio = 1) + 
+  theme(legend.position = "right")
+
+ZN_HM_LUR
+
+### --- Combining all plots --- ### 
+PM25_elements_HEX <- FE_HM_LUR / CU_HM_LUR / ZN_HM_LUR
+PM25_elements_HEX
+
+# Exporting figure 
+ggsave(plot = PM25_elements_HEX, "03.Outputs/figures/PM25_elements_HEX.png",
+       dpi = 600, width = 3, height = 9, units = "in")
 
 
+### --- Final HEXBIN plot --- ### 
+final_HEXBIN <- (NO2_HM_LUR / PM25_HM_LUR / BC_HM_LUR) | (FE_HM_LUR / CU_HM_LUR / ZN_HM_LUR) | (NO2_HM_DM / PM25_HM_DM / BC_HM_DM)
 
-
+# Exporting figure 
+ggsave(plot = final_HEXBIN, "03.Outputs/figures/final_HEXBIN.png",
+       dpi = 600, width = 9, height = 9, units = "in")
 
 
 ##################################################
