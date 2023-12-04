@@ -936,8 +936,6 @@ dplyr::glimpse(hm_estimates)
 models_estimates <- rbind(lur_estimates, dm_estimates, hm_estimates)
 model_estimates_elements <- rbind(lur_estimates, hm_estimates)
 
-dplyr::glimpse(model_estimates_elements)
-
 # levels of model variable
 models_estimates$model <- as.factor(models_estimates$model)
 levels(model_estimates$model)
@@ -957,6 +955,10 @@ models_estimates$model <- factor(models_estimates$model,
                                 ordered = TRUE)
 
 
+
+
+dplyr::glimpse(model_estimates)
+view(model_estimates_elements)
 
 library(ggplot2)
 library(ggpattern)
@@ -1076,13 +1078,9 @@ ggsave(plot = boxplot_models , "03.Outputs/figures/boxplot_models.png",
 ggsave(plot = boxplot_models_constituents , "03.Outputs/figures/boxplot_models_elements.png",
        dpi = 600, width = 10, height = 3, units = "in")
 
-
-
 # NO2, PM25, BC, FE, CU, ZN (all models estimates )
 ggsave(plot = boxplot_all_models_estimates, "03.Outputs/figures/boxplot_all_models_estimates.png",
        dpi = 600, width = 10, height = 6, units = "in")
-
-
 
 ##################################
 ### --- Correlation plots --- ###
@@ -1340,7 +1338,8 @@ NO2_HM_LUR <- estimates_correlation_data %>%
               #scale_fill_continuous_sequential(palette = "spectral") +
               scale_fill_distiller(palette = "Spectral") + 
               coord_equal() +
-              theme_bw() + 
+              theme_bw(base_size = 10) + 
+              theme(axis.text = element_text(size = 10)) + 
               labs(fill="Count") +
               #xlim(c(0, 150)) +
               #ylim(c(0, 150)) +
@@ -1357,7 +1356,7 @@ NO2_HM_DM <- estimates_correlation_data %>%
   #scale_fill_continuous_sequential(palette = "spectral") +
   scale_fill_distiller(palette = "Spectral") + 
   coord_equal() +
-  theme_bw() + 
+  theme_bw(base_size = 10) + 
   labs(fill="Count") +
   #xlim(c(0, 100)) +
   #ylim(c(0, 100)) +
@@ -1385,7 +1384,7 @@ PM25_HM_LUR <- estimates_correlation_data %>%
   #scale_fill_continuous_sequential(palette = "spectral") +
   scale_fill_distiller(palette = "Spectral") + 
   coord_equal() +
-  theme_bw() + 
+  theme_bw(base_size = 10) + 
   labs(fill="Count") +
   #xlim(c(0, 60)) +
   #ylim(c(0, 60)) +
@@ -1402,7 +1401,7 @@ PM25_HM_DM <- estimates_correlation_data %>%
   #scale_fill_continuous_sequential(palette = "spectral") +
   scale_fill_distiller(palette = "Spectral") + 
   coord_equal() +
-  theme_bw() + 
+  theme_bw(base_size = 10) + 
   labs(fill="Count") +
   #xlim(c(0, 40)) +
   #ylim(c(0, 40)) +
@@ -1430,7 +1429,7 @@ BC_HM_LUR <- estimates_correlation_data %>%
   #scale_fill_continuous_sequential(palette = "spectral") +
   scale_fill_distiller(palette = "Spectral") + 
   coord_equal() +
-  theme_bw() + 
+  theme_bw(base_size = 10) + 
   labs(fill="Count") +
  #xlim(c(0, 4)) +
  #ylim(c(0, 4)) +
@@ -1447,7 +1446,7 @@ BC_HM_DM <- estimates_correlation_data %>%
   #scale_fill_continuous_sequential(palette = "spectral") +
   scale_fill_distiller(palette = "Spectral") + 
   coord_equal() +
-  theme_bw() + 
+  theme_bw(base_size = 10) + 
   labs(fill="Count") +
   #xlim(c(0, 4)) +
   #ylim(c(0, 4)) +
@@ -1469,11 +1468,39 @@ ggsave(plot = BC_HEX, "03.Outputs/figures/BC_HEX_v2.png",
 
 # Putting all the figures together 
 HEX_all <- NO2_HEX / PM25_HEX / BC_HEX
-HEX_all
+HEX_all 
 
 ### --- Save HEXBIN all plots together --- ###
 ggsave(plot = HEX_all, "03.Outputs/figures/HEX_all.png",
-       dpi = 600, width = 10, height = 10)
+       dpi = 600, width = 10, height = 7)
+
+
+####################################### 
+### --- Fe Hexbin scatterplots --- ### 
+#####################################
+
+
+
+
+
+
+#######################################
+### --- Cu Hexbin scatterplots --- ###
+######################################
+
+
+
+
+
+
+######################################
+### --- Zn Hexbin scatterplot --- ### 
+#####################################
+
+
+
+
+
 
 
 ##################################################
