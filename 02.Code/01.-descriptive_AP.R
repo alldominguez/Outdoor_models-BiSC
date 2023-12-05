@@ -2110,7 +2110,7 @@ FE_LUR_model_plot
 #################################
 ### --- Fe Hybrid model --- ###
 ################################
-Fe_HM_model_plot <- ggplot() +
+FE_HM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = fe_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
@@ -2145,8 +2145,6 @@ Fe_HM_model_plot <- ggplot() +
     panel.background = element_blank()
   ) +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
-
-
 
 ### --- FE models comparison ---- ###
 FE_models_map <-  FE_LUR_model_plot | FE_HM_model_plot | plot_spacer()
@@ -2187,7 +2185,7 @@ CU_LUR_model_plot <- ggplot() +
     breaks = legend_breaks, # Set the breaks for the legend
     labels = c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.integer(max_cu))
   ) + # Set the limits to the overall range
-  labs(title = expression(paste("(D) Cu models")),   
+  labs(title = expression(paste("(E) Cu models")),   
        color = expression(paste("Cu" ," (ng/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
@@ -2214,14 +2212,160 @@ CU_LUR_model_plot <- ggplot() +
 CU_LUR_model_plot
 
 
+#################################
+### --- CU Hybrid model --- ###
+################################
+CU_HM_model_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = cu_hm), size = 1.0, alpha = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_cu, max_cu),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.integer(max_cu))
+  ) + # Set the limits to the overall range
+  labs(title = "",  
+       color = expression(paste("Cu", " (ng/m"^3*")"))) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
+  theme_bw() + 
+  theme(
+    plot.title = element_blank(),  # Remove plot title since it's empty
+    legend.position = "right",
+    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
+    legend.title.align = 0.5,
+    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
+    strip.background = element_blank(),  # Remove the background from the facet label
+    legend.text = element_text(size = 10), 
+    legend.key.size = unit(1, 'lines'), 
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()
+  ) +
+  facet_grid(.~'Hybrid model')  # Add the model name as facet label
+
+### --- FE models comparison ---- ###
+CU_models_map <-  CU_LUR_model_plot | CU_HM_model_plot | plot_spacer()
+CU_models_map
+
+### --- save the plot --- ### 
+ggsave(plot = CU_models_map, "03.Outputs/figures/CU_models_map.png",
+       dpi = 600, width = 10, height = 5, units = "in")
+
+###########################
+### --- ZN models --- ###
+#########################
+dplyr::glimpse(lur_estimates_sf)
+dplyr::glimpse(hm_estimates_sf)
+
+# Calculate overall min and max for NO2 from the summaries you have
+min_zn <- min(lur_estimates_sf$zn_lur, hm_estimates_sf$zn_hm, na.rm = TRUE)
+max_zn <- max(lur_estimates_sf$zn_lur, hm_estimates_sf$zn_hm, na.rm = TRUE)
+min_zn
+max_zn
+
+# Define the breaks you want to show in the legend
+legend_breaks <- c(min_zn, 32.56, 54.55, 76.53, 98.51, max_zn)
+legend_labels <- c(as.integer(min_zn), "32.56", "54.55", "76.53", "98.51", as.integer(max_zn))
+
+##############################
+### --- ZN LUR model --- ###
+#############################
+ZN_LUR_model_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = lur_estimates_sf, aes(color = zn_lur), size = 1.0, alpha = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_zn, max_zn),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_zn), "32.56", "54.55", "76.53", "98.51", as.integer(max_zn))
+  ) + # Set the limits to the overall range
+  labs(title = expression(paste("(F) Zn models")),   
+       color = expression(paste("Zn" ," (ng/m"^3*")"))) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", size = 16),
+        legend.position = "none", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") + # Remove background rectangle from facet labels)  +
+  facet_grid(.~'LUR model')
+
+ZN_LUR_model_plot
 
 
+#################################
+### --- ZN Hybrid model --- ###
+################################
+ZN_HM_model_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
+  geom_sf(data = hm_estimates_sf, aes(color = zn_hm), size = 1.0, alpha = 1.0) +
+  theme_minimal() +
+  scale_color_viridis_c(
+    option = "viridis", direction = 1, 
+    limits = c(min_zn, max_zn),
+    breaks = legend_breaks, # Set the breaks for the legend
+    labels = c(as.integer(min_zn), "32.56", "54.55", "76.53", "98.51", as.integer(max_zn))
+  ) + # Set the limits to the overall range
+  labs(title = "",  
+       color = expression(paste("Zn", " (ng/m"^3*")"))) +
+  xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
+  ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
+  theme_bw() + 
+  theme(
+    plot.title = element_blank(),  # Remove plot title since it's empty
+    legend.position = "right",
+    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
+    legend.title.align = 0.5,
+    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
+    strip.background = element_blank(),  # Remove the background from the facet label
+    legend.text = element_text(size = 10), 
+    legend.key.size = unit(1, 'lines'), 
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()
+  ) +
+  facet_grid(.~'Hybrid model')  # Add the model name as facet label
+
+### --- FE models comparison ---- ###
+ZN_models_map <-  ZN_LUR_model_plot | ZN_HM_model_plot | plot_spacer()
+ZM_models_map
+
+### --- save the plot --- ### 
+ggsave(plot = ZN_models_map, "03.Outputs/figures/ZN_models_map.png",
+       dpi = 600, width = 10, height = 5, units = "in")
 
 
-
-
-
-
+### --- All plots together --- ### 
+PM25_elemenets_map <- FE_models_map / CU_models_map / ZN_models_map
+PM25_elemenets_map 
 
 
 
@@ -2290,19 +2434,13 @@ bc_measures$c_biscape
 no2_measures$year <- as.factor(no2_measures$year) 
 levels(no2_measures$year) # "2018" "2019" "2020" "2021"
 
-
 pm25_measures$year <- as.factor(pm25_measures$year)
-
 
 skimr::skim(no2_measures)
 skimr::skim(pm25_measures)
 skimr::skim(bc_measures)
 skimr::skim(pm25_constituents_measures)
 
-  
-
-view(pm25_measures)
-view(no2_measure)
 
 
 
