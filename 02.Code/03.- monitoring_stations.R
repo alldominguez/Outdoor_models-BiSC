@@ -116,6 +116,9 @@ monitoring_station_fig
 bcn_stations <- read.csv("01.Data/BiSC_monitoring_stations/imputed/bcn_ms_bisc_new_imputed.csv")
 dplyr::glimpse(bcn_stations)
 
+bcn_stations <- read.csv("01.Data/BiSC_monitoring_stations/imputed/monitoring_stations_imputed.csv")
+dplyr::glimpse(bcn_stations)
+
 bcn_stations$date <- as.Date(bcn_stations$date)
 
 library(tidyr)
@@ -236,5 +239,67 @@ location_ts_stations <- monitoring_station_fig | (no2_ts_plot / pm25_ts_plot)
 ### --- Export figure --- ### 
 ggsave(plot = location_ts_stations , "03.Outputs/figures/location_ts_stations.png",
        dpi = 600, width = 12, height = 10, units = "in")
+
+
+###############################################
+### --- Supplementary materials paper  --- ### 
+#############################################
+
+bcn_stations <- read.csv("01.Data/BiSC_monitoring_stations/imputed/monitoring_stations_imputed.csv")
+dplyr::glimpse(bcn_stations)
+
+bcn_stations$date <- as.Date(bcn_stations$date)
+
+
+### --- NO2 monitoring station --- ###
+no2_pr_ts <- bcn_stations %>% dplyr::select(date, 
+                                            no2_palau_reial) %>% 
+             ggplot(aes(x = date, y = no2_palau_reial)) + 
+             geom_line(color = "firebrick") + 
+             labs(x = "", 
+                  y = expression(NO[2]*" (µg/m" ^ "3" * ")")) + 
+             theme_bw() + 
+             theme(legend.position = "none") +
+             facet_wrap(.~ "Palau Reial")
+
+no2_pr_ts
+
+### --- PM25 monitoring station --- ###
+pm25_pr_ts <- bcn_stations %>% dplyr::select(date, 
+                                            pm25_palau_reial) %>% 
+              ggplot(aes(x = date, y = pm25_palau_reial)) + 
+              geom_line(color = "firebrick") + 
+              labs(x = "", 
+                   y = expression(PM[2.5]*" (µg/m" ^ "3" * ")")) + 
+              theme_bw() + 
+              theme(legend.position = "none") 
+
+pm25_pr_ts
+
+### --- PM25 monitoring station --- ###
+bc_pr_ts <- bcn_stations %>% dplyr::select(date, 
+                                           bc_palau_reial) %>% 
+            ggplot(aes(x = date, y = bc_palau_reial)) + 
+            geom_line(color = "firebrick") + 
+            labs(x = "", 
+                 y = expression(BC*" (µg/m" ^ "3" * ")")) + 
+            theme_bw() + 
+            theme(legend.position = "none") 
+
+bc_pr_ts
+
+
+# all moni otring stations
+palau_reial_stations <-  no2_pr_ts / pm25_pr_ts / bc_pr_ts
+palau_reial_stations
+
+location_ts_stations <- monitoring_station_fig | (no2_pr_ts / pm25_pr_ts / bc_pr_ts)
+location_ts_stations
+
+### --- Export figure --- ### 
+ggsave(plot = location_ts_stations , "03.Outputs/figures/location_ts_stations.png",
+       dpi = 600, width = 12, height = 10, units = "in")
+
+
 
 
