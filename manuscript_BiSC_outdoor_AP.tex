@@ -6,7 +6,7 @@
 \usepackage{caption}
 % Set page size and margins
 % Replace `letterpaper' with`a4paper' for UK/EU standard size
-\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry} 
 
 % Useful packages
 \usepackage{amsmath}
@@ -61,7 +61,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-Air pollution is the leading environmental risk factor for human health worldwide linked to wide range of adverse health outcomes. A detailed and comprehensive exposure assessment of outdoor air pollution considering both spatial and temporal variability is fundamental to conduct epidemiological studies.  
+Air pollution is the leading environmental risk factor for human health worldwide linked to wide range of adverse health outcomes. A detailed and comprehensive exposure assessment of outdoor air pollution considering both spatial and temporal variability in urban areas is essential to identify critical windows of susceptibility during pregnancy to traffic-related air pollution. Within the framework of the Barcelona Life Study Cohort (BiSC), we developed Land use regression (LUR), dispersion (DM), and hybrid (HM) models to estimate outdoor air pollution exposure at residential addresses during pregnancy for several traffic-related air pollutants; NO\textsubscript{2}, PM\textsubscript{2.5}, BC, and PM\textsubscript{2.5} constituents (Fe, Cu, Zn).  The overall aim is to obtain accurate estimates of traffic-related air pollution, intended to be used in the prenatal exposure assessment for a cohort of pregnant women in the city of Barcelona.
+We create 101 spatial predictor variables 
+
 
 \end{abstract}
 
@@ -70,13 +72,13 @@ Air pollution is the leading environmental risk factor for human health worldwid
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-Air pollution stands as the primary environmental risk factor for human health and the fourth most deadly health risk worldwide, playing a significant role in the global burden of disease \cite{cohen2017, he2020state}. Exposure to ambient air pollution has been linked with a extensive array of adverse health outcomes \cite{boogaard2022, guxens2022hei, haddad2023}. In this context urbanization have been playing a major role increasing air pollution exposure as cities grow and more population moves to urban areas \cite{nieuwenhuijsen2016}. This trends present challenges for epidemiological studies \cite{tonne2017}, where accurate estimates capturing both the spatial and temporal variability are essential to evaluate the health impacts of air pollution in urban areas \cite{boogaard2022}. \\
+Air pollution stands as the primary environmental risk factor for human health and the fourth most deadly health risk worldwide, playing a significant role in the global burden of disease \cite{cohen2017, he2020state}. Exposure to ambient air pollution has been linked with many adverse health outcomes \cite{boogaard2022, guxens2022hei, haddad2023}. In this context, urbanization has been playing a major role in increasing air pollution exposure as cities grow and more population moves to urban areas \cite{nieuwenhuijsen2016}. These trends present challenges for epidemiological studies \cite{tonne2017}, where accurate estimates capturing both the spatial and temporal variability are essential to evaluate the health impacts of air pollution in urban areas \cite{boogaard2022}. \\
 
-Over the past few decades, several modelling techniques have been adopted in environmental epidemiology to determine exposure concentrations of air pollution \cite{hoek2017, di2019no2, di2019pm25, stafoggia2019, stafoggia2020}. Among these, Land use regression (LUR) and dispersion models (DM) are the most common approaches for estimating air pollution exposure concentrations in epidemiological studies \cite{gulliver2015, dehoogh2014}. LUR models employ regression techniques to predict air pollution levels at non-monitored locations, drawing on observed air pollution data and spatial explanatory variables that work as proxies for traffic-related air pollution \cite{briggs1997, hoek2008}. In contrast, DMs rely on mathematical simulations to estimate air pollution levels. These predictions are based on data from emissions sources, chemical transformation models, pollutant dispersion models, topography, roughness, and meteorological data \cite{hoek2017}. Although these methods have been extensively used they come with inherent limitations related to lack of temporal and spatial variation. To overcome the shortcomings, hybrid models (HM) have emerged, blending both spatial and temporal advantages, leading to refined and enhanced estimations \cite{hoek2017, korek2017, tularam2021, oh2021}. \\
+Over the past few decades, several modeling techniques have been adopted in environmental epidemiology to determine exposure concentrations of air pollution \cite{hoek2017, di2019no2, di2019pm25, stafoggia2019, stafoggia2020}. Among these, Land use regression (LUR) and dispersion models (DM) are the most common approaches for estimating air pollution exposure concentrations in epidemiological studies \cite{gulliver2015, dehoogh2014}. LUR models employ regression techniques to predict air pollution levels at non-monitored locations, drawing on observed air pollution data and spatial explanatory variables that work as proxies for traffic-related air pollution \cite{briggs1997, hoek2008}. In contrast, DMs rely on mathematical simulations to estimate air pollution levels. These predictions are based on data from emissions sources, chemical transformation models, pollutant dispersion models, topography, roughness, and meteorological data \cite{hoek2017}. Although these methods have been extensively used they come with inherent limitations related to lack of temporal and spatial variation. To overcome the shortcomings, hybrid models (HM) have emerged, blending both spatial and temporal advantages, leading to refined and enhanced estimations \cite{hoek2017, korek2017, tularam2021, oh2021}. \\
 
-While significant advancements have been made in spatiotemporal modelling of air pollution over large-scale domains, such models (multi-country and national domain models) often compromise their accuracy at smaller scales \cite{dehoogh2016, chen2019, chen2020, shen2022}. This gap underscores the need for a comprehensive assessment of outdoor air pollution exposure in smaller domains to understand the health impacts of air pollution exposure, especially during critical stages of development, due to the potential lasting effects of air pollution over the lifespan \cite{selevan2000, wick2010, ghosh2021}. \\
+While significant advancements have been made in spatiotemporal modelling of air pollution over large-scale domains, such models (multi-country and national domain models) often compromise their accuracy at smaller scales \cite{dehoogh2016, chen2019, chen2020, shen2022}. This gap underscores the need for a comprehensive assessment of outdoor air pollution exposure in smaller domains to understand the health impacts of air pollution exposure, especially during critical stages of development, due to the potentially lasting effects of air pollution over the lifespan \cite{selevan2000, wick2010, ghosh2021}. \\
 
-Urban areas add a layer of complexity to air pollution modelling due to complex spatiotemporal patterns that difficult accurate estimation of ground-level air pollutant concentrations \cite{sokhi2022}. In response to these challenges, machine learning (ML) algorithms have been increasingly used, particularly decision trees-based models \cite{liu2022}. This family of models is often used due to its ability to model potential, nonlinear interaction between predictor variables \cite{liu2022treebased}. Among the different ML algorithms, random forest (RF) has emerged as one of the most robust techniques for predicting outdoor air pollution concentrations \cite{chen2019, chen2020, stafoggia2019, stafoggia2020, schneider2020, mila2023}. Furthermore, the COVID-19 pandemic has introduced unprecedented challenges for air pollution modelling and exposure assessment. These challenges encompass changes in air pollution patterns, constraints on data collection due to health and safety restrictions (lockdowns), and the complexity of data integration due to changes in traffic, mobility, and land use dynamics in cities \cite{gonzalez2022, querol2021}. \\
+Urban areas add a layer of complexity to air pollution modelling due to complex spatiotemporal patterns that make difficult accurate estimation of ground-level air pollutant concentrations \cite{sokhi2022}. In response to these challenges, machine learning (ML) algorithms have been increasingly used, particularly decision trees-based models \cite{liu2022}. This family of models is often used due to its ability to model potential, nonlinear interaction between predictor variables \cite{liu2022treebased}. Among the different ML algorithms, random forest (RF) has emerged as one of the most robust techniques for predicting outdoor air pollution concentrations \cite{chen2019, chen2020, stafoggia2019, stafoggia2020, schneider2020, mila2023}. Furthermore, the COVID-19 pandemic has introduced unprecedented challenges for air pollution modelling and exposure assessment. These challenges encompass changes in air pollution patterns, constraints on data collection due to health and safety restrictions (lockdowns), and the complexity of data integration due to changes in traffic, mobility, and land use dynamics in cities \cite{gonzalez2022, querol2021}. \\
  
 In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional techniques, while HM was designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
 
@@ -93,11 +95,11 @@ In this study, within the framework of the Barcelona Life Study Cohort (BiSC), w
 Barcelona (\textbf{\cref{fig1}}), is one of the most populated and dense cities in Spain, with 1,656,725 inhabitants ($\approx16,255.4$ inhabitants/km\textsuperscript{2}). It is located on the Mediterranean coast of the Iberian peninsula, protected by the Collserola mountain range and delimited by two delta rivers (Besòs and LLobregat). The city has a Mediterranean climate, the wind patterns are dominated by a breeze that blows from the sea during the daytime and from the land during night-time. Barcelona is one of the cities in Europe with the highest vehicle traffic density (6,000 vehicles/km\textsuperscript{2}) \cite{casallas2018}. Air pollution measurements were conducted during two separate monitoring campaigns. The first, named the "BiSC-home" campaign, took place at the home addresses of BiSC participants and involved measuring only NO\textsubscript{2} levels for one week during the first, and third trimester of pregnancy between 2018-2021. The second campaign was carried out in accordance with the ESCAPE guidelines, named "BiSCAPE", and included four distinct measurement periods: three in the winter, summer, and autumn of 2021, and a final one in the winter of 2022. During these periods, levels of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC were measured at 34 locations across Barcelona Metropolitan Area (Barcelona, Esplugues de Llobregat, and L'Hospitalet).These monitoring campaigns were used in the development of the LUR and HM.
 
 % Put the figure text closer to the Figure 1
-\captionsetup[figure]{skip=-4pt}
+\captionsetup[figure]{skip=0pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/fig1_op2.png}
-\caption{Study domain and spatial distribution (BiSC participants, BiSCAPE campaign, monitoring stations, and traffic points)}
+\includegraphics[width=1.0\textwidth]{figures/figure_campaigns.png}
+\caption{Study domain and spatial distribution of the monitoring campaigns}
 \label{fig1}
 \end{figure}
 
@@ -190,23 +192,23 @@ Campaign & Pollutant & Year  & mean & sd & min & p25 & p50 & p75 & max \\
 BiSC-home, BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-2021 & 38.8 & 12.4 & 6.85 &30.0 & 37.5 & 45.8 & 97.3 \\
 \hline
 \multirow{5}{*}{BiSCAPE} 
-& PM\textsubscript{25} (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 13.4 & 6.14 & 5.01 & 9.06 & 11.3 & 16.2 & 35.8 \\ 
+& PM\textsubscript{2.5} (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 13.4 & 6.14 & 5.01 & 9.06 & 11.3 & 16.2 & 35.8 \\ 
 & BC (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 1.27 & 0.50 & 0.40 & 0.88 & 1.22 & 1.52 & 2 .95 \\ 
-& Fe (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 0.25 & 0.13 & 0.07 & 0.15 & 0.21 & 0.32 & 0.77 \\ 
-& Cu (ng/m\textsuperscript{3}) & 2021-2022 & 7.10 & 3.82 & 1.78 & 4.37 & 6.36 & 8.98 & 22.7 \\ 
-& Zn (ng/m\textsuperscript{3}) & 2021-2022  & 40.7 & 36.5 & 6.71 &  18.9 & 28.2 & 46.7 & 273 \\ 
+& PM\textsubscript{2.5 - Fe} (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 0.25 & 0.13 & 0.07 & 0.15 & 0.21 & 0.32 & 0.77 \\ 
+& PM\textsubscript{2.5 - Cu} (ng/m\textsuperscript{3}) & 2021-2022 & 7.10 & 3.82 & 1.78 & 4.37 & 6.36 & 8.98 & 22.7 \\ 
+& PM\textsubscript{2.5 - Zn} (ng/m\textsuperscript{3}) & 2021-2022  & 40.7 & 36.5 & 6.71 &  18.9 & 28.2 & 46.7 & 273 \\ 
 \bottomrule
 \end{tabular}
 \end{table}
 
-The spatial distribution of the outdoor air pollution sampling campaigns is shown in \Cref{fig1}. Figure 1A illustrates a high density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. Figure 1B exhibit a similar pattern of spatial distribution but with a reduced density in sampling locations. 
+The spatial distribution of the outdoor air pollution sampling campaigns is shown in \Cref{fig1}. Figure 1A illustrates a high density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. Figure 1B exhibit a similar pattern of spatial distribution of the monitoring campaign but with a reduced density in sampling locations. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --- Model performance: LUR, DM, HM --- % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model performance: LUR, DM, HM}
 
-Since different approaches were used to built outdoor air pollution models were not directly comparable due to differences on temporal basis. 
+Since different approaches and sampling campaigns were used to built outdoor air pollution models were not directly comparable. 
 
 The performance of the models varied substantially by pollutant. In table x. performance metrics for the HM are shown. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. Performance metrics for LUR, DM and HM are shown in the supplementary materials. 
 
@@ -227,7 +229,7 @@ Predictions from outdoor air pollution concentration exposure during the entire 
 \end{figure}
 
 
-\textbf{\cref{fig2}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5} and BC concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants, after averaging weekly estimates for all the study period (2019 - 2021).   
+\textbf{\Cref{fig2}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5} and BC concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants, after averaging weekly estimates for all the study period (2019 - 2021).   
 
 
 \newpage
