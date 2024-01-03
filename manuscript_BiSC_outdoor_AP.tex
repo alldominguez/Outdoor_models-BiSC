@@ -83,7 +83,7 @@ Urban areas add a layer of complexity to air pollution modelling due to complex 
 In this study, within the framework of the Barcelona Life Study Cohort (BiSC), we developed LUR, DM, and HM models to estimate outdoor air pollution exposure at residential addresses. LUR and DM, were constructed using conventional techniques, while HM was designed by harnessing RF algorithm, integrating outputs from DM with explanatory variables from the LUR model. The overall aim is to obtain accurate NO\textsubscript{2}, PM\textsubscript{2.5}, PM\textsubscript{2.5} constituents (Fe, Zn, Cu, Sb), and BC estimates, intended to be used in the prenatal exposure assessment within the BiSC cohort. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% --- Material and methods--- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% --- Material and methods--- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Materials and methods}
 
@@ -189,7 +189,7 @@ Distribution of the observed concentration for the BiSC-home and BiSCAPE campaig
 \toprule
 Campaign & Pollutant & Year  & mean & sd & min & p25 & p50 & p75 & max \\ 
 \midrule
-BiSC-home, BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-2021 & 38.8 & 12.4 & 6.85 &30.0 & 37.5 & 45.8 & 97.3 \\
+BiSC-home + BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-2021 & 38.8 & 12.4 & 6.85 &30.0 & 37.5 & 45.8 & 97.3 \\
 \hline
 \multirow{5}{*}{BiSCAPE} 
 & PM\textsubscript{2.5} (\(\mu\)g/m\textsuperscript{3}) & 2021-2022  & 13.4 & 6.14 & 5.01 & 9.06 & 11.3 & 16.2 & 35.8 \\ 
@@ -203,7 +203,7 @@ BiSC-home, BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-20
 
 The spatial distribution of the outdoor air pollution sampling campaigns is shown in \Cref{fig1}. Figure 1A illustrates a high density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. Figure 1B exhibit a similar pattern of spatial distribution of the monitoring campaign but with a reduced density in sampling locations. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                       
 % --- Model performance: LUR, DM, HM --- % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model performance: LUR, DM, HM}
@@ -223,7 +223,7 @@ Predictions from outdoor air pollution concentration exposure during the entire 
 %%% --- Figure 2. Boxplot models comparison --- %%%
 %%% -------------------------------------------%%%%
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/boxplot_all_models_estimates.png}
+\includegraphics[width=0.9\textwidth]{figures/boxplot_all_models_estimates.png}
 \caption{Distribution of exposure to outdoor air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
 \label{fig2}
 \end{figure}
@@ -243,8 +243,15 @@ Predictions from outdoor air pollution concentration exposure during the entire 
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/all_maps.png}
+\includegraphics[width=0.9\textwidth]{figures/combined_figure1.png}
 \caption{Outdoor air pollution exposure during the entire pregnancy period (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}).}
+\end{figure}
+
+\captionsetup[figure]{skip=6pt}
+% We add the figure with the study domain 
+\begin{figure}[!htb]
+\includegraphics[width=0.9\textwidth]{figures/combined_figure2.png}
+\caption{Outdoor air pollution exposure during the entire pregnancy period for LUR and hm(\textit{PM$_{2.5}$}, \textit{PM$_{2.5-Fe}$}, \textit{PM$_{2.5-Cu}$}, \textit{PM$_{2.5-Zn}$}.}
 \end{figure}
 
 \newpage
@@ -280,17 +287,13 @@ Correlation for long-term exposure (entire pregnancy) at the residential address
 \end{figure}
 
 \newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Discussion --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 We successfully developed spatiotemporal models using three different approaches (LUR, DM, and HM). Models show moderate to good performance 
-
-
-
-spatiotemporal models using three different approaches (LUR, DM and HM). All models show moderate to good performance evaluated by the defined metrics in the \textbf{methods section} and displayed in more detail in the \textbf{Supplementary materials}. 
-
-As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
+evaluated by the defined metrics previously and displayed in more detail in the \textbf{supplementary materials}. As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
 
 \subsection{Comparison between LUR, DM, and Hybrid model}
 
