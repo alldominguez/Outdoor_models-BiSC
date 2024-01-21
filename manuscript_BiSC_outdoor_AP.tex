@@ -25,7 +25,7 @@
 \usepackage{amsmath}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% --- Tittle of the paper --- %%%
+%%% --- Title of the paper --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{\textbf{Development of outdoor air pollution models for estimating exposure in the Barcelona Life Study Cohort (BiSC)}}
 
@@ -65,8 +65,10 @@ Air pollution is the leading environmental risk factor for human health worldwid
 
 \end{abstract}
 
-\newpage
+\textbf{Keywords:} Air Pollution; Traffic-related air pollutants; Exposure assessment; Spatiotemporal models.
 
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Introduction --- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,7 +130,7 @@ To incorporate background pollution levels at a regional scale, data from Copern
 
 In addition, bias-adjustment techniques have been used to fit the model data to the observations through hourly bias spatial interpolation and generation of hourly maps. After that, data were processed  by cluster analysis techniques to obtain a mean cluster map. Each bias map by pollutant was associated to a cluster map class and an hourly-varying profile. 
 
-Further details regarding the ADMS-Urban model and the variables used can be found in \textbf{Supplementary materials X}.
+Further details regarding the ADMS-Urban model and the variables used can be found in \textbf{supplementary materials}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Hybrid model --- %%%
@@ -150,7 +152,7 @@ In summary, by combining data from multiple sources, our hybrid models aim to pr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Performance assessment}
 
-We evaluated model performance using various statistical approaches and on different temporal resolutions. The LUR models were evaluated on an annual basis, DM were assessed both hourly and daily, and HM were evaluated on a weekly basis.
+We evaluated model performance using various statistical approaches and on different temporal resolutions. The LUR models were evaluated on an annual basis, DM was assessed both hourly and daily, and HM was evaluated weekly.
 
 \subsubsection{LUR model evaluation}
 Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on k-1 folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as the coefficient of determination \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. Details from the metrics used for model validation can be found in the \textbf{supplementary material}.\\
@@ -158,14 +160,14 @@ Performance of the LUR models was assessed using \textit{k-fold cross-validation
 We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For PM\textsubscript{2.5}, and its constituents (Fe, Cu, Zn), and BC, internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of data.
 
 \subsection{Dispersion model evaluation}
- Briefly, once the input data has been introduced to the ADMS Urban model, the calculation of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC concentration levels has been carried out. Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality monitoring stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. The closer these values are, the better is the performance of the model.  Details from the metrics used for dispersion model validation and the XVPCA stations locations can be found in the \textbf{supplementary material}.\vspace{0.5cm}
+ Briefly, once the input data has been introduced to the ADMS Urban model, the calculation of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC concentration levels has been carried out. Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality monitoring stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. The closer these values are, the better the model's performance.  Details from the metrics used for dispersion model validation and the XVPCA stations locations can be found in the \textbf{supplementary material}.\vspace{0.5cm}
 
 \subsection{Hybrid model evaluation}
-We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed: the \textit{10-fold cross-validation} and an external validation using 20\% of the data to test the performance of the model. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one, while in the external validation procedure the model uses all the data observations available to check the performance of the model.
+We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed. Firstly,  
+\textit{10-fold cross-validation} was used to provide an internal validation measure to this purpose the model was trained using 80\% of the data available. Secondly, external validation was performed by allocating 20\% of the data as a test set to further evaluate the model's performance. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one, while in the external validation procedure the model uses all the data observations available to check the performance of the model.
 We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}. 
 
 All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS predictor variables were computed using X software. 
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Results --- %%%
