@@ -111,7 +111,7 @@ Barcelona (\textbf{\cref{fig1}}), is one of the most populated and dense cities 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{LUR models}
 
-LUR models for NO\textsubscript{2} were developed using only data from the locations that had measured home-outdoor (BiSC-home campaign) levels for both sampling campaigns (i.e., we did not use data from participants who had data available for only one campaign, either first or third trimester). Almost half of the sites were measured before the COVID-19 pandemic started and half of the sites were during and after the pandemic period and its resulting restrictions. For PM\textsubscript{2.5}, BC  and PM\textsubscript{2.5} constituents, models were developed using BiSCAPE data from the 34 sites. To develop the LUR models, spatial variables that better represent the air pollutant concentration distribution across the study area were created. Following the ESCAPE guidelines \cite{ESCAPE2010, eeftens2012, beelen2013},  predictor variables were selected from three broad categories: traffic, land use, and urban configuration. Various buffer sizes were created, i.e, 25m, 50m, 100m, 300m, 500m, and 1000m to capture the area-specific predictor variable at every location. Predictor variables were calculated using specific coordinates for each site. We applied a supervised stepwise process in which we sequentially added a predictor variable to a linear regression model using pollutant concentrations as the independent variable to obtain the best possible model \cite{eeftens2012, beelen2013}. This procedure was followed to build all the specific pollutant models. Previously to model development, we specified the direction expected of the effect that each predictor has in the model. For all predictor variables, univariate regression models with annual average air pollution concentration (NO\textsubscript{2}, PM\textsubscript{2.5}, BC, and PM\textsubscript{2.5} constituents (Fe, Cu, Zn)) were conducted, models with the highest adjusted explained variance (adjusted R\textsuperscript{2}) and the right direction of the effect were selected. We then repeated the process using the previous model and all the remaining predictor variables. Details of the LUR modeling and predictvariables can be found in the \textbf{Table S1}.
+LUR models for NO\textsubscript{2} were developed using only data from the locations that had measured home-outdoor (BiSC-home campaign) levels for both sampling campaigns (i.e., we did not use data from participants who had data available for only one campaign, either first or third trimester). Almost half of the sites were measured before the COVID-19 pandemic started and half of the sites were during and after the pandemic period and its resulting restrictions. For PM\textsubscript{2.5}, BC  and PM\textsubscript{2.5} constituents, models were developed using BiSCAPE data from the 34 sites. To develop the LUR models, spatial variables that better represent the air pollutant concentration distribution across the study area were created. Following the ESCAPE guidelines \cite{ESCAPE2010, eeftens2012, beelen2013},  predictor variables were selected from three broad categories: traffic, land use, and urban configuration. Various buffer sizes were created, i.e, 25m, 50m, 100m, 300m, 500m, and 1000m to capture the area-specific predictor variable at every location. Predictor variables were calculated using specific coordinates for each site. We applied a supervised stepwise process in which we sequentially added a predictor variable to a linear regression model using pollutant concentrations as the independent variable to obtain the best possible model \cite{eeftens2012, beelen2013}. This procedure was followed to build all the specific pollutant models. Previously to model development, we specified the direction expected of the effect that each predictor has in the model. For all predictor variables, univariate regression models with annual average air pollution concentration (NO\textsubscript{2}, PM\textsubscript{2.5}, BC, and PM\textsubscript{2.5} constituents (Fe, Cu, Zn)) were conducted, models with the highest adjusted explained variance (adjusted R\textsuperscript{2}) and the right direction of the effect were selected. We then repeated the process using the previous model and all the remaining predictor variables. Details of the LUR modeling and predictor variables can be found in the \textbf{supplementary materials, Table 1}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Dispersion model --- %%%
@@ -147,15 +147,15 @@ We employed the RF algorithm to capture non-linear relationships and potential i
 
 In summary, by combining data from multiple sources, our hybrid models aim to provide more accurate and reliable predictions. The distribution of the air pollution monitoring stations, meteorological stations, and traffic count measures are shown in the (\textbf{\cref{fig1}}, \textbf{Panel D}). 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% --- Model Evaluation and Comparison--- %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% --- Performance assessment --- %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Performance assessment}
 
-We evaluated model performance using various statistical approaches and on different temporal resolutions. The LUR models were evaluated on an annual basis, DM was assessed both hourly and daily, and HM was evaluated weekly.
+We evaluated model performance using various statistical approaches and on different temporal resolutions. The LUR models were evaluated on an annual basis, DM was assessed both hourly and daily, and HM was evaluated on a weekly basis.
 
 \subsubsection{LUR model evaluation}
-Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on k-1 folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as the coefficient of determination \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. Details from the metrics used for model validation can be found in the \textbf{supplementary material}.\\
+Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on \textit{k-1} folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as the coefficient of determination \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. Details from the metrics used for model validation can be found in the \textbf{supplementary material}.\\
 
 We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For PM\textsubscript{2.5}, and its constituents (Fe, Cu, Zn), and BC, internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of data.
 
@@ -163,9 +163,9 @@ We carried out both internal and external validation for the NO\textsubscript{2}
  Briefly, once the input data has been introduced to the ADMS Urban model, the calculation of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC concentration levels has been carried out. Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality monitoring stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. The closer these values are, the better the model's performance.  Details from the metrics used for dispersion model validation and the XVPCA stations locations can be found in the \textbf{supplementary material}.\vspace{0.5cm}
 
 \subsection{Hybrid model evaluation}
-We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed. Firstly,  
-\textit{10-fold cross-validation} was used to provide an internal validation measure to this purpose the model was trained using 80\% of the data available. Secondly, external validation was performed by allocating 20\% of the data as a test set to further evaluate the model's performance. While both methods vary in the sample size designated for training and testing, their core difference lies in the data-splitting strategy. In the 10-fold CV, the model trains on nine out of the ten data partitions and then validates against the remaining one, while in the external validation procedure the model uses all the data observations available to check the performance of the model.
-We follow a grid search for hyperparameter tuning  to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}. 
+We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed. Firstly, \textit{10-fold cross-validation (10-fold CV} was used to provide an internal validation measure, where the model was trained on 80\% of the data. Secondly, external validation was performed by allocating 20\% of the data as a test set to further evaluate the model's performance against previously unseen data. While both methods differ in their approach to partitioning the data, the fundamental distinction lies in how the data is utilized during the training and validation phases. The \textit{10-fold CV} method systematically rotates through the data, ensuring that each subset serves as a validation set once, while the external validation approach provides a straightforward assessment against a separate data portion. 
+
+Additionally, we employed a grid search for hyperparameter tuning to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}. 
 
 All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS predictor variables were computed using X software. 
 
@@ -209,7 +209,7 @@ BiSC-home + BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-2
 \end{tabular}
 \end{table}
 
-The spatial distribution of the outdoor air pollution campaigns is shown in \Cref{fig1}. \textbf{Figure 1A} illustrates a high density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. \textbf{Figure 1B} exhibit a similar pattern of spatial distribution of the monitoring campaign but with a reduced density in sampling locations. 
+The spatial distribution of the outdoor air pollution campaigns is illustrated in \Cref{fig1}. \textbf{Figure 1A} shows a high-density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. \textbf{Figure 1B} exhibit a similar pattern in the spatial distribution of the monitoring campaign, albeit with a reduced density of sampling locations compared to the BiSC-home campaign. 
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                       
@@ -217,7 +217,12 @@ The spatial distribution of the outdoor air pollution campaigns is shown in \Cre
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model performance: LUR, DM, HM}
 
-The performance of the models varied substantially by pollutant \Cref{fig3}. Hybrid BC model had the best performance of the models assessed, with a higher R\textsuperscript{2} and lower RMSE. 
+The performance of the models varied substantially across different pollutants as shown in the metrics displayed in the \Cref{fig3}, albeit all models showed moderate to good performance. HM outperformed LUR and DM models in predicting  NO\textsubscript{2} (R\textsubscript{2} = 0.64), PM\textsubscript{2.5} (R\textsubscript{2} = 0.66), BC (R\textsubscript{2} = 0.86) with corresponding RMSE values 7.48 \mu\)g/m\textsuperscript{3}, 3.45 \mu\)g/m\textsuperscript{3} and 0.23 \mu\)g/m\textsuperscript{3} respectively. LUR models show better performance for traffic-related air pollutants tracers PM\textsubscript{2.5 - Fe} (R\textsuperscript{2} = ), PM\textsubscript{2.5 - Cu} (R\textsuperscript{2} = ), and PM\textsubscript{2.5 - Zn} (R\textsuperscript{2} = ) compared to HM. 
+
+
+
+
+
 
 %%% --- Figure. Average exposure during the entire pregnancy period --- %%%
 % Put the figure text closer to the Figure 3
@@ -291,7 +296,7 @@ Correlation for long-term exposure (entire pregnancy) at the residential address
 %%% --- Discussion --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-We successfully developed spatiotemporal models using three different approaches (LUR, DM, and HM). Models show moderate to good performance 
+We successfully developed spatiotemporal models using three different approaches (LUR, ADM, and HM). Models show moderate to good performance 
 evaluated by the defined metrics previously and displayed in more detail in the \textbf{supplementary materials}. As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
 
 \subsection{Comparison between LUR, DM, and Hybrid model}
