@@ -128,6 +128,8 @@ The model also utilized meteorological data including wind speed, direction, air
 
 To incorporate background pollution levels at a regional scale, data from Copernicus Atmosphere Monitoring Service Information (CAMS) was used. Background air pollution data has been extracted from the CAMS reanalysis ensemble model for 2018, and from CAMS ensemble forecast model for 2019-2020 \cite{cams2020, franceinstitut}. 
 
+ADM results were evaluated considering the locations of XVPCA stations, to evaluate the model performance on those locations. The model was calibrated to fit the model results to the data measured in each XVPCA station. 
+
 In addition, bias-adjustment techniques have been used to fit the model data to the observations through hourly bias spatial interpolation and generation of hourly maps. After that, data were processed  by cluster analysis techniques to obtain a mean cluster map. Each bias map by pollutant was associated to a cluster map class and an hourly-varying profile. 
 
 Further details regarding the ADMS-Urban model and the variables used can be found in \textbf{supplementary materials}.
@@ -152,15 +154,17 @@ In summary, by combining data from multiple sources, our hybrid models aim to pr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Performance assessment}
 
-We evaluated model performance using various statistical approaches and on different temporal resolutions. The LUR models were evaluated on an annual basis, DM was assessed both hourly and daily, and HM was evaluated on a weekly basis.
+We evaluated model performance using various statistical approaches, using different external validation datasets, and on different temporal resolutions. The LUR models were evaluated on an annual basis, DM was assessed both hourly and daily, and HM was evaluated on a weekly basis.
 
 \subsubsection{LUR model evaluation}
-Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on \textit{k-1} folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as the coefficient of determination \(R^2\), the root-mean-square-error (RMSE), mean bias (MB), and the correlation coefficient (\(r\)). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. Details from the metrics used for model validation can be found in the \textbf{supplementary material}.\\
+Performance of the LUR models was assessed using \textit{k-fold cross-validation}. Specifically, we employed a 10-fold cross-validation technique. In this approach, the data was split into ten distinct sub-samples. For each iteration, the model was trained on \textit{k-1} folds and then validated using the leftover fold \cite{ziegel2003}. For every fold, we computed metrics such as the coefficient of determination \(R^2\) and the root-mean-square-error (RMSE). After each iteration, both the error and adjusted \(R\textsuperscript{2}\) were recorded. This process was repeated \(k-times\), and the average of these measures was reported as the indicator of the model validity. Details from the metrics used for model validation can be found in the \textbf{supplementary material}.\\
 
-We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For PM\textsubscript{2.5}, and its constituents (Fe, Cu, Zn), and BC, internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of data.
+We carried out both internal and external validation for the NO\textsubscript{2} LUR model. Internal validation was conducted by applying a K-fold cross-validation analysis. The 10-fold cross-validation procedure and its significance have been detailed above. For the external validation of the NO\textsubscript{2} LUR model, we applied data from BiSC-home participants' homes for those participants who had data available only for one measurement campaign, and therefore their data were not used for developing NO\textsubscript{2} LUR model. For PM\textsubscript{2.5}, PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, PM\textsubscript{2.5 - Zn}, and BC, internal validation was conducted using the \textit{leave-one-out-cross-validation (LOOCV)} process. For these models, we were not able to conduct external validation due to the lack of data availability.
 
 \subsection{Dispersion model evaluation}
- Briefly, once the input data has been introduced to the ADMS Urban model, the calculation of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC concentration levels has been carried out. Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality monitoring stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. The closer these values are, the better the model's performance.  Details from the metrics used for dispersion model validation and the XVPCA stations locations can be found in the \textbf{supplementary material}.\vspace{0.5cm}
+ Briefly, once the input data has been introduced to the ADMS Urban model, the calculation of NO\textsubscript{2}, PM\textsubscript{2.5}, and BC concentration levels has been carried out. Dispersion models were evaluated by comparing the yielded results from the ADM-Urban model with the real values measured by the air quality monitoring stations (XVPCA), including Ciutadella, Eixample, Gracia, Palau Reial, Poblenou, Sants, among others. Additionally, we compared the results of the model with data from the 4 campaigns carried out at BiSCAPE sites. In total, 98 periods were used to evaluate the performance of NO\textsubscript{2} model, 66 periods for PM\textsubscript{2.5}, and 93 periods for BC. The closer these values are, the better the model's performance. 
+
+Details from the metrics used for dispersion model validation and the XVPCA stations locations can be found in the \textbf{supplementary material}.\vspace{0.5cm}
 
 \subsection{Hybrid model evaluation}
 We assessed the performance of each hybrid model by contrasting predictions with observations. Two distinct validation approaches were employed. Firstly, \textit{10-fold cross-validation (10-fold CV} was used to provide an internal validation measure, where the model was trained on 80\% of the data. Secondly, external validation was performed by allocating 20\% of the data as a test set to further evaluate the model's performance against previously unseen data. While both methods differ in their approach to partitioning the data, the fundamental distinction lies in how the data is utilized during the training and validation phases. The \textit{10-fold CV} method systematically rotates through the data, ensuring that each subset serves as a validation set once, while the external validation approach provides a straightforward assessment against a separate data portion. 
@@ -211,13 +215,20 @@ BiSC-home + BiSCAPE & NO\textsubscript{2} (\mu\)g/m\textsuperscript{3}) & 2018-2
 
 The spatial distribution of the outdoor air pollution campaigns is illustrated in \Cref{fig1}. \textbf{Figure 1A} shows a high-density coverage in the central area of Barcelona, where the BiSC-home campaign was conducted. \textbf{Figure 1B} exhibit a similar pattern in the spatial distribution of the monitoring campaign, albeit with a reduced density of sampling locations compared to the BiSC-home campaign. 
 
-\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                       
 % --- Model performance: LUR, DM, HM --- % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model performance: LUR, DM, HM}
 
-The performance of the models varied substantially across different pollutants as shown in \Cref{fig3}. All models exhibit relatively good performance, evaluated by the following metrics; $R^{2}_{\text{10-CV}}$, $RMSE_{\text{10-CV}}$, $R^{2}_{\text{LOOCV}}$, and $RMSE_{\text{LOOCV}}$. The HM performance for NO\textsubscript{2} ($R^{2}_{\text{10-CV}} = 0.64$), PM\textsubscript{2.5} ($R^{2}_{\text{10-CV}} = 0.66$), and BC ($R^{2}_{\text{10-CV}} = 0.86$) was moderate to good, with corresponding $RMSE_{\text{10-CV}}$ values of $7.48 \, \mu\text{g/m}^{3}$, $3.45 \, \mu\text{g/m}^{3}$, and $0.23 \, \mu\text{g/m}^{3}$ while for PM\textsubscript{2.5} componentes, the performance was more conservative with PM\textsubscript{2.5 - Fe} ($R^{2}_{\text{10-CV}} = 0.89$), PM\textsubscript{2.5 - Cu} ($R^{2}_{\text{10-CV}} = 0.87$), and PM\textsubscript{2.5 - Zn} ($R^{2}_{\text{10-CV}} = 0.85$). Conversely, LUR models showed better performance in predicting PM\textsubscript{2.5 - Fe} ($R^{2}_{\text{LOOCV}} = 0.89$), PM\textsubscript{2.5 - Cu} ($R^{2}_{\text{LOOCV}} = 0.87$), and PM\textsubscript{2.5 - Zn} ($R^{2}_{\text{LOOCV}} = 0.85$) concentration levels in comparison to  NO\textsubscript{2} ($R^{2}_{\text{LOOCV}} = 0.62$), PM\textsubscript{2.5} ($R^{2}_{\text{LOOCV}} = 0.45$), and BC ($R^{2}_{\text{LOOCV}} = 0.83$). 
+\Cref{fig2} and \Cref{fig3} present maps of estimated exposures to NO\textsubscript{2}, PM\textsubscript{2.5}, BC, and PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, PM\textsubscript{2.5 - Zn} content  during the entire pregnancy for the BiSC participants using land use (LUR) regression models, dispersion models, and hybrid models. The performance of the models varied substantially across different pollutants as shown in \Cref{fig2} and \Cref{fig3}. All models exhibit relatively good performance, evaluated by the $R^{2}_{\text{10-CV}}$, $RMSE_{\text{10-CV}}$, $R^{2}_{\text{LOOCV}}$, and $RMSE_{\text{LOOCV}}$. 
+
+The HM demonstrated moderate to good performance for NO\textsubscript{2} ($R^{2}_{\text{10-CV}} = 0.64$), PM\textsubscript{2.5} ($R^{2}_{\text{10-CV}} = 0.66$), and BC ($R^{2}_{\text{10-CV}} = 0.86$), with corresponding $RMSE_{\text{10-CV}}$ values of $7.48 \, \mu\text{g/m}^{3}$, $3.45 \, \mu\text{g/m}^{3}$, and $0.23 \, \mu\text{g/m}^{3}$, respectively. However, for PM\textsubscript{2.5} components, the performance was more conservative, with PM\textsubscript{2.5 - Fe} ($R^{2}_{\text{10-CV}} = 0.54$), PM\textsubscript{2.5 - Cu} ($R^{2}_{\text{10-CV}} = 0.70$), and PM\textsubscript{2.5 - Zn} ($R^{2}_{\text{10-CV}} = 0.44$).
+
+In contrast, LUR models showed better performance in predicting PM\textsubscript{2.5 - Fe} ($R^{2}_{\text{LOOCV}} = 0.89$), PM\textsubscript{2.5 - Cu} ($R^{2}_{\text{LOOCV}} = 0.87$), and PM\textsubscript{2.5 - Zn} ($R^{2}_{\text{LOOCV}} = 0.85$) concentration levels in comparison to  NO\textsubscript{2} ($R^{2}_{\text{LOOCV}} = 0.62$), PM\textsubscript{2.5} ($R^{2}_{\text{LOOCV}} = 0.45$), and BC ($R^{2}_{\text{LOOCV}} = 0.83$) exposure concentrations. 
+
+Dispersion models were evaluated against observations from the XVPC monitoring stations, we average the metrics obtained during this process to gauge the overall performance of the dispersion model. A comparison between predicted and observed values for all the monitoring stations used in the DM is provided in the \textbf{supplementary materials}.
+
+The maps reveals distinct patterns of variability in estimated outdoor air pollution exposure concentrations. LUR models indicate high variability in exposure concentrations during pregnancy, whereas DM exhibit less variability. HM displays a variability pattern in the estimated air pollution exposures similar to those described for LUR models.
 
 %%% --- Figure. Average exposure during the entire pregnancy period --- %%%
 % Put the figure text closer to the Figure 3
@@ -226,7 +237,7 @@ The performance of the models varied substantially across different pollutants a
 \begin{figure}[!htb]
 \includegraphics[width=0.9\textwidth]{figures/combined_figure1.png}
 \caption{Outdoor air pollution exposure during the entire pregnancy period (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}).}
-\label{fig2a}
+\label{fig2}
 \end{figure}
 
 \captionsetup[figure]{skip=6pt}
@@ -234,13 +245,16 @@ The performance of the models varied substantially across different pollutants a
 \begin{figure}[!htb]
 \includegraphics[width=0.9\textwidth]{figures/combined_figure2.png}
 \caption{Outdoor air pollution exposure during the entire pregnancy period for LUR and hm(\textit{PM$_{2.5}$}, \textit{PM$_{2.5-Fe}$}, \textit{PM$_{2.5-Cu}$}, \textit{PM$_{2.5-Zn}$}.}
-\label{fig2b}
+\label{fig3}
 \end{figure}
+
+
+
 
 \newpage
 \subsection{Comparison between models} % broad title then change this
 % --- Exposure concentrations --- %
-Predictions from outdoor air pollution concentrations exposure during the entire pregnancy for each pollutant and model is shown in \Cref{fig2}. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
+Predictions from outdoor air pollution concentrations exposure during the entire pregnancy for each pollutant and model is shown in \Cref{fig4}. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
 
 %%% -------------------------------------------%%%%
 %%% --- Figure 3. Boxplot models comparison --- %%%
@@ -248,10 +262,10 @@ Predictions from outdoor air pollution concentrations exposure during the entire
 \begin{figure}[!htb]
 \includegraphics[width=0.9\textwidth]{figures/boxplot_all_models_estimates.png}
 \caption{Distribution of exposure to outdoor air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
-\label{fig3}
+\label{fig4}
 \end{figure}
 
-\textbf{\Cref{fig3}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5}, BC,  PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants during the entire pregnancy period, after averaging weekly estimates for all the study period (2019 - 2021).   
+\textbf{\Cref{fig5}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5}, BC,  PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants during the entire pregnancy period, after averaging weekly estimates for all the study period (2019 - 2021).   
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -265,6 +279,7 @@ Correlation for long-term exposure (entire pregnancy) at the residential address
 \begin{figure}[!htb]
 \includegraphics[width=1.0\textwidth]{figures/correlation_fig.png}
 \caption{Correlation between traffic-related air pollutants for LUR, DM, HM in different windows of exposure \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
+\label{fig5}
 \end{figure}
 
 
@@ -283,6 +298,7 @@ Correlation for long-term exposure (entire pregnancy) at the residential address
 \begin{figure}[!htb]
 \includegraphics[width=1.0\textwidth]{figures/final_HEXBIN.png}
 \caption{Comparison between outdoor air pollution model estimates \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC} and \textit{PM$_{2.5}$ constituents (Fe, Cu, Zn).}}
+\label{fig6}
 \end{figure}
 
 \newpage
