@@ -244,36 +244,32 @@ The maps reveals distinct patterns of variability in estimated outdoor air pollu
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=0.9\textwidth]{figures/combined_figure2.png}
+\includegraphics[width=0.9a\textwidth]{figures/combined_figure2.png}
 \caption{Outdoor air pollution exposure during the entire pregnancy period for LUR and hm(\textit{PM$_{2.5}$}, \textit{PM$_{2.5-Fe}$}, \textit{PM$_{2.5-Cu}$}, \textit{PM$_{2.5-Zn}$}.}
 \label{fig3}
 \end{figure}
 
-Results from the external validation of the LUR, DM, and HM models, conducted where information was available is depicted in \Cref{table2}. For NO\textsubscript{2}
+Results from validation of the LUR, DM, and HM models, conducted where information for validated the model was available are shown in \Cref{table2}. The validation of each model has been conducted using different validation datasets. NO\textsubscript{2} LUR model was validated using BiSC - home campaign data. NO\textsubscript{2}, PM\textsubscript{2.5} and BC from DM model were validated using data from BiSCAPE monitoring campaign. While HM models were validated using 20\% of data available initially before model training
 
 %%% --- Table 2. Performance from external validation for LUR, DM, HM --- %%%
-
-\begin{table}
-    \centering
-    \caption{Performance from external validation for LUR, DM, and HM.}
+\begin{table}[h!]
+\centering
+    \caption{Performance from validation for LUR, DM, and HM models.}
     \label{table2}
-    \begin{tabular}{llllllll}
+    \begin{tabular}{llcccccc}
     \toprule
-         Model & Validation dataset & \multicolumn{2}{c}{NO\textsubscript{2}} &  \multicolumn{2}{c}{PM\textsubscript{2.5}} &  \multicolumn{2}{c}{BC} \\
+         Model & Validation & \multicolumn{6}{c}{R\textsuperscript{2 \textsubscript{ Validation}}} \\
          \cmidrule(lr){3-8}
-         & & R\textsuperscript{2} & RMSE & R\textsuperscript{2} & RMSE & R\textsuperscript{2} & RMSE \\
+         & & NO\textsubscript{2} & PM\textsubscript{2.5} & BC & PM\textsubscript{2.5 - Fe} & PM\textsubscript{2.5 - Cu} & PM\textsubscript{2.5 - Zn} \\
     \midrule
-         LUR & External Validation & - & - & - & - & - & - \\
-         DM & External Validation & - & - & - & - & - & - \\
-         HM & External Validation & - & - & - & - & - & - \\
+         LUR & External validation BiSC-Home & 0.56 & - & - & - & - & - \\
+         DM & External validation BiSCAPE & 0.65 & 0.22 & 0.56 & - & - & - \\
+         HM & External validation split (test data) & 0.64 & 0.65 & 0.69 & 0.65 & 0.56 & 0.36  \\
     \bottomrule
     \end{tabular}
 \end{table}
 
-
-
-
-
+Due to lack of data availability we only evaluate the performance of NO\textsubscript{2} for LUR models. The performance of the LUR model decreased in the external validation by 16\%. When validated DM against BiSCAPE measurements model performance increase for NO\textsubscript{2} but decrease for PM\textsubscript{2.5} and BC. HM showed consistent results in performance using both approaches to validate the models for NO\textsubscript{2} and PM\textsubscript{2.5} models showed a similar performance that the one obtained using the \textit{10-CV}. While for BC, PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} performance varied between validation approaches by -19.7\%, +20.37\%, -20.0\% , and -18.8\% respectively. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Comparison between models --- %%% 
@@ -282,24 +278,21 @@ Results from the external validation of the LUR, DM, and HM models, conducted wh
 \subsection{Comparison between models} % broad title then change this
 
 % --- Exposure concentrations --- %
-Estimated outdoor air pollution concentrations exposure during the entire pregnancy for each pollutant and model is shown in \Cref{fig4}. The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and Hybrid. In addition to that HM show less variability in the exposure concentration.
+\textbf{\Cref{fig5}} presents the distribution of estimated NO\textsubscript{2}, PM\textsubscript{2.5}, BC,  PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} concentrations from the LUR, DM, and HM at the address level. The data shown are long-term estimated concentrations of pollutants during the entire pregnancy period, after averaging weekly estimates for all the study period (2019 - 2021). The exposure range was larger for the LUR model for all the pollutants assessed. Dispersion model predicted lower exposure concentration values than LUR and HM. In addition to that HM show less variability in the exposure concentration. 
 
 %%% -------------------------------------------%%%%
 %%% --- Figure 3. Boxplot models comparison --- %%%
 %%% -------------------------------------------%%%%
 \begin{figure}[!htb]
-\includegraphics[width=0.9\textwidth]{figures/boxplot_all_models_estimates.png}
-\caption{Distribution of exposure to outdoor air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
+\includegraphics[width=0.7\textwidth]{figures/boxplot_all_models_estimates.png}
+\caption{Distribution of estimated exposure to outdoor air pollution during the entire pregnancy period for each exposure assessment model (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}, \textit{Fe}, \textit{Cu}, \textit{Zn})}
 \label{fig4}
 \end{figure}
-
-\textbf{\Cref{fig5}} presents the distribution of the observed and estimated NO\textsubscript{2}, PM\textsubscript{2.5}, BC,  PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} concentrations from the LUR, DM, and HM. The data shown are long-term estimated concentrations of pollutants during the entire pregnancy period, after averaging weekly estimates for all the study period (2019 - 2021).   
-\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --- Correlation between measures and model estimates --- %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Correlation for long-term exposure (entire pregnancy) at the residential addresses ranged from r = 0.48 to 0.92 \textbf{(figure 4.A)}. Correlation for short-term exposure (weekly exposure) varied from r = 0.37 to 0.90 \textbf{(figure 4.B)}. Correlation between the air pollutant estimates for the different models assessed was moderate to strongly correlated for both long-and-short term exposure. 
+Correlation for long-term exposure (entire pregnancy) at the residential addresses ranged from r = 0.48 to 0.92 \textbf{(figure 5.A)}. Correlation for short-term exposure (weekly exposure) varied from r = 0.37 to 0.90 \textbf{(figure 5.B)}. Correlation between the air pollutant estimates for the different models assessed was moderate to strongly correlated for both long-and-short term exposure. 
 
 NO\textsubscript{2}
 
@@ -307,7 +300,7 @@ NO\textsubscript{2}
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/correlation_fig.png}
+\includegraphics[width=0.7\textwidth]{figures/correlation_fig.png}
 \caption{Correlation between traffic-related air pollutants for LUR, DM, HM in different windows of exposure \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}.}
 \label{fig5}
 \end{figure}
@@ -326,7 +319,7 @@ NO\textsubscript{2}
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=1.0\textwidth]{figures/final_HEXBIN.png}
+\includegraphics[width=0.7\textwidth]{figures/final_HEXBIN.png}
 \caption{Comparison between outdoor air pollution model estimates \textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC} and \textit{PM$_{2.5}$ constituents (Fe, Cu, Zn).}}
 \label{fig6}
 \end{figure}
