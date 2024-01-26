@@ -1,7 +1,7 @@
 # Install packages
 pacman::p_load(tidyverse, purrr, skimr, caret, tictoc, lubridate, 
                mice, ggmice, plyr, data.table, mapview, ggmap, omsdata, sf, sp, patchwork,
-               ggpattern, GGally)
+               ggpattern, GGally, viridis)
 
 ##############################
 ### --- Load the data --- ###
@@ -469,26 +469,35 @@ ggplot() +
 
 
 lur_estimates <- read.csv("01.Data/lur_estimates.csv")
-
+colnames(lur_estimates)
 
 # summarise all the pollutants 
 lur_estimates_plot <- lur_estimates %>% 
-  dplyr::ungroup()
-
-lur_estimates_plot <- lur_estimates_plot %>% dplyr::group_by(gid) %>%  
-  dplyr::summarise_all(funs(mean))
+                      dplyr::ungroup()
 
 dplyr::glimpse(lur_estimates_plot)
 
+lur_estimates_plot <- lur_estimates_plot %>%
+                      dplyr::select(subject_id, 
+                                    no2_lur:zn_lur, lon, lat) %>% 
+                      dplyr::group_by(subject_id) %>%  
+                      dplyr::summarise_all(funs(mean))
+
+dplyr::glimpse(lur_estimates_plot)
+view(lur_estimates_plot)
+
 lur_estimates_plot <- lur_estimates_plot %>% 
-  dplyr::select(gid, subject_id, 
-                no2_lur, pm25_lur, bc_lur, fe_lur, cu_lur, zn_lur,
-                lon, lat) %>% 
-  tidyr::drop_na()
+                      dplyr::select(subject_id, 
+                                    no2_lur, pm25_lur, bc_lur, fe_lur, cu_lur, zn_lur,
+                                    lon, lat) %>% 
+                      tidyr::drop_na()
 
 
 lur_estimates_sf <- st_as_sf(lur_estimates_plot, coords = c("lon", "lat"), crs = 25831)
 lur_estimates_wgs84 <- st_transform(lur_estimates_sf, 4326)
+
+
+dplyr::glimpse(lur_estimates_sf)
 
 # Plotting with ggplot2
 dplyr::glimpse(amb_shp)
@@ -608,19 +617,25 @@ ggsave(plot = lur_map_plot, "03.Outputs/figures/lur_map_plot.png",
 ##################################################
 
 dm_estimates <- read.csv("01.Data/dm_estimates.csv")
-
+dplyr::glimpse(dm_estimates)
 
 # summarise all the pollutants 
 dm_estimates_plot <- dm_estimates %>% 
                      dplyr::ungroup()
 
-dm_estimates_plot <- dm_estimates_plot %>% dplyr::group_by(gid) %>%  
-  dplyr::summarise_all(funs(mean))
+dm_estimates_plot <- dm_estimates_plot %>%
+                     dplyr::select(subject_id, 
+                                   no2_dm, pm25_dm, bc_dm,
+                                   lon, lat) %>% 
+                     dplyr::group_by(subject_id) %>%  
+                     dplyr::summarise_all(funs(mean))
 
 dplyr::glimpse(dm_estimates_plot)
 
 dm_estimates_plot <- dm_estimates_plot %>% 
-                     dplyr::select(gid, subject_id, no2_dm, pm25_dm, bc_dm, lon, lat) %>% 
+                     dplyr::select(subject_id, 
+                                   no2_dm, pm25_dm, bc_dm,
+                                   lon, lat) %>% 
                      tidyr::drop_na()
 
 
@@ -733,19 +748,39 @@ ggsave(plot = dm_map_plot, "03.Outputs/figures/dm_map_plot_v2.png",
 #############################################
 
 hm_estimates <- read.csv("01.Data/hm_estimates.csv")
+dplyr::glimpse(hm_estimates)
+dplyr::glimpse(hm_estimates_sf)
+
 
 # summarise all the pollutants 
 hm_estimates_plot <- hm_estimates %>% 
                      dplyr::ungroup()
 
+dplyr::glimpse(hm_estimates_plot)
+
+subjects_out <- c("10051711", "10032711", "12031211", 
+                  "11003411", "10038011", "12032011",
+                  "12025111", "10052911", "12020611", "12025611")
+unique_ids
+
+
+hm_estimates_plot <- hm_estimates_plot  %>% dplyr::filter(!subject_id %in% unique_ids)
+dplyr::glimpse(hm_estimates_plot)
+
+
 hm_estimates_plot <- hm_estimates_plot %>% 
+                     dplyr::select(gid,
+                                   no2_hm:zn_hm, 
+                                   lon, lat) %>% 
                      dplyr::group_by(gid) %>%  
                      dplyr::summarise_all(funs(mean))
 
+
 dplyr::glimpse(hm_estimates_plot)
 
+
 hm_estimates_plot <- hm_estimates_plot %>% 
-                     dplyr::select(gid, subject_id, 
+                     dplyr::select(gid, 
                                    no2_hm, pm25_hm, bc_hm, 
                                    fe_hm, cu_hm, zn_hm, 
                                    lon, lat) %>% 
@@ -754,6 +789,9 @@ hm_estimates_plot <- hm_estimates_plot %>%
 
 hm_estimates_sf <- st_as_sf(hm_estimates_plot, coords = c("lon", "lat"), crs = 25831)
 hm_estimates_wgs84 <- st_transform(hm_estimates_sf, 4326)
+
+dplyr::glimpse(hm_estimates_sf)
+
 
 library(sf)
 library(ggplot2)
@@ -766,7 +804,7 @@ no2_plot_hm <- ggplot() +
   geom_sf(data = filter_amb_shp, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = no2_hm), size = 1.0, alpha = 0.7) +
   theme_minimal() +
-  scale_color_viridis_c(option = "viridis", direction = -1) + # Using viridis green palette
+  scale_color_viridis_c(option = "viridis", direction = 1) + # Using viridis green palette
   #scale_color_distiller(palette = "Spectral", direction = -1) + # Using Spectral palette
   labs(title = "(C) HM model",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
@@ -928,7 +966,7 @@ dm_estimates <- dm_estimates %>% dplyr::select(gid, subject_id, weeks, date_star
 
 hm_estimates <- hm_estimates %>% dplyr::select(gid, subject_id, weeks, date_start, date_end, 
                                                no2, pm25, bc, 
-                                               #fe, cu, zn, 
+                                               fe, cu, zn, 
                                                model)
 
 
@@ -991,7 +1029,7 @@ pm25_boxplot <- ggplot2::ggplot(data = models_estimates,
   scale_fill_manual(values = c('LUR' = '#440154', 
                                'DM' = '#3b528b', 
                                'HM' = '#21918c')) +
-  ylab(bquote(PM[25] ~ (mu*g/m^3))) +
+  ylab(bquote(PM[2.5] ~ (mu*g/m^3))) +
   theme_bw() + 
   theme(legend.position = 'none')
 
@@ -1018,7 +1056,7 @@ fe_model_boxplot <- ggplot2::ggplot(data = model_estimates_elements,
   #                              'HM' = '#21918c')) +
   scale_fill_manual(values = c('LUR' = '#440154', 
                                'HM' = '#21918c')) +
-  ylab(bquote(Fe ~ (mu*g/m^3))) + 
+  ylab(bquote(PM[2.5-Fe] ~ (mu*g/m^3))) + 
   #ylim(c(0, 9)) +
   theme_bw() + 
   theme(legend.position = 'none')
@@ -1034,7 +1072,7 @@ cu_model_boxplot <- ggplot2::ggplot(data = model_estimates_elements,
   #                              'HM' = '#21918c')) +
   scale_fill_manual(values = c('LUR' = '#440154', 
                                'HM' = '#21918c')) +
-  ylab(bquote(Cu ~ (n*g/m^3))) + 
+  ylab(bquote(PM[2.5-Cu] ~ (n*g/m^3))) + 
   #ylim(c(0, 9)) +
   theme_bw() + 
   theme(legend.position = 'none')
@@ -1051,7 +1089,7 @@ zn_model_boxplot <- ggplot2::ggplot(data = model_estimates_elements,
   #                              'HM' = '#21918c')) +
   scale_fill_manual(values = c('LUR' = '#440154', 
                                'HM' = '#21918c')) +
-  ylab(bquote(Zn ~ (n*g/m^3))) + 
+  ylab(bquote(PM[2.5-Zn] ~ (n*g/m^3))) + 
   #ylim(c(0, 9)) +
   theme_bw() + 
   theme(legend.position = 'none')
@@ -1086,14 +1124,17 @@ ggsave(plot = boxplot_all_models_estimates, "03.Outputs/figures/boxplot_all_mode
 ##################################
 ### --- Correlation plots --- ###
 #################################
-  
+library(GGally)
+
 ### --- correlation long-term (entire pregnancy exposure period) --- ###
 
 # --- Read data --- ###
 lur_estimates <- read.csv("01.Data/lur_estimates.csv")
 dm_estimates <- read.csv("01.Data/dm_estimates.csv")
 hm_estimates <- read.csv("01.Data/hm_estimates.csv")
-  
+lur_predictors <- read.csv("01.Data/BiSC_LUR_models/lur_bisc_home_predvar.csv")
+
+
 # --- Check the data --- #
 dplyr::glimpse(lur_estimates)
 dplyr::glimpse(dm_estimates)
@@ -1114,6 +1155,16 @@ unique_ids <- setdiff(lur_estimates$subject_id, union(dm_estimates$subject_id, h
 unique_ids # 12012911 12024211 12041011
 unique_ids  <- c("12012911", "12024211", "12041011", "12015611",
                   "10002711", "10039411", "12003611", "12015611", "12035911")
+
+
+subjects_out <- c("10051711", "10032711", "12031211", 
+                  "11003411", "10038011", "12032011",
+                  "12025111", "10052911", "12020611", "12025611")
+
+hm_estimates_sf <- hm_estimates_sf  %>% dplyr::filter(!subject_id %in% subjects_out)
+dplyr::glimpse(hm_estimates_sf)
+
+
 
 # now we use unique_ids vector to filter lur_estimates
 lur_estimates_filtered <- lur_estimates %>% dplyr::filter(!subject_id %in% unique_ids)
@@ -1326,6 +1377,52 @@ ggsave(plot = corrplot_windows, "03.Outputs/figures/corrplot_windows.png",
        dpi = 600, width = 15, height = 7, units = "in")
 
 
+
+#########################################################
+### --- Correlation plot predictor variables LUR --- ###
+########################################################
+
+dplyr::glimpse(lur_predictors)
+lur_pred <- lur_predictors %>% dplyr::select(roadlength25:sqralt)
+
+numeric_lur_predictors <- lur_pred %>% 
+  select_if(is.numeric)
+
+# we create a pallete with custom colors 
+custom_colors <- c("#440154",  "#31688e","#35b779")
+
+# Calculate the Spearman correlation matrix
+cor_matrix <- cor(numeric_lur_predictors, method = "spearman", use = "complete.obs")
+
+lur_pred_corr <- ggcorrplot(cor_matrix, type = "lower", colors = custom_colors, lab = FALSE,
+                            legend.title = "Spearman \n Correlation") +
+  theme_classic() +
+  xlab('') +
+  ylab('') +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# Print the plot
+print(lur_pred_corr)
+
+### --- save the figure --- ###
+ggsave(plot = lur_pred_corr, "03.Outputs/figures/lur_pred_corr.png",
+       dpi = 600, width = 10, height = 10, units = "in")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ####################################
 ### --- Hexbin scatterplots --- ###
 ##################################
@@ -1333,7 +1430,6 @@ library("tidyverse")
 library("colorspace")
 library("lubridate")
 library("gridExtra")
-
 
 # Note: This could be added in the supplementary materials 
 
@@ -1381,7 +1477,7 @@ NO2_HEX
 
 ### --- Export HEXBIN plot --- ### 
 ggsave(plot = NO2_HEX, "03.Outputs/figures/NO2_HEX.png",
-       dpi = 600, width = 6, height = 5, units = "in")
+       dpi = 600, width = 6, height = 5, units = "in") 
 
 #########################################
 ### --- PM25 Hexbin scatterplots --- ###
@@ -1592,6 +1688,9 @@ max_no2 <- max(lur_estimates_sf$no2_lur, dm_estimates_sf$no2_dm, hm_estimates_sf
 min_no2
 max_no2
 
+min_no2_lur <- min(lur_estimates_sf$no2_lur)
+max_no2_lur <- max(lur_estimates_sf$no2_lur)
+
 # Define the breaks you want to show in the legend
 legend_breaks <- c(min_no2, 26, 43, 60, max_no2)
 legend_labels <- c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))
@@ -1609,6 +1708,20 @@ lur_estimates_sf <- lur_estimates_sf %>%
 ##############################
 ### --- NO2 LUR model --- ###
 #############################
+library(ggplot2)
+library(sf)
+
+
+no2_lur_min <-  min(lur_estimates_sf$no2_lur)
+no2_lur_max <- max(lur_estimates_sf$no2_lur)
+
+seq(no2_lur_min, no2_lur_max, length.out = 5)
+
+
+no2_lur_breaks <- c(no2_lur_min, 26, 43, 60, no2_lur_max)
+no2_lur_legends <-  c(as.integer(no2_lur_min), "26", "43", "60", as.integer(no2_lur_max))
+
+
 NO2_LUR_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = no2_lur), 
@@ -1616,9 +1729,9 @@ NO2_LUR_model_plot <- ggplot() +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_no2, max_no2),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))  # Format the labels as desired
+    limits = c(no2_lur_min , no2_lur_max),
+    breaks = no2_lur_breaks, # Set the breaks for the legend
+    labels = no2_lur_legends  # Format the labels as desired
   ) + # Set the limits to the overall range
   labs(title = expression(paste("(A) NO"[2], " models")), 
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
@@ -1626,7 +1739,7 @@ NO2_LUR_model_plot <- ggplot() +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", size = 16),
-        legend.position = "none",
+        legend.position = "right",
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -1655,6 +1768,15 @@ NO2_LUR_model_plot
 dm_estimates_sf <- dm_estimates_sf %>%
   dplyr::filter(!(subject_id %in% subjects_out))
 
+no2_dm_min <-  min(dm_estimates_sf$no2_dm)
+no2_dm_max <- max(dm_estimates_sf$no2_dm)
+
+seq(no2_dm_min, no2_dm_max, length.out = 5)
+
+no2_dm_breaks <- c(no2_dm_min, 26, 42, 57, no2_dm_max)
+no2_dm_legends <-  c(as.integer(no2_dm_min), "26", "42", "57", as.integer(no2_dm_max))
+
+
 
 NO2_DM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
@@ -1663,9 +1785,9 @@ NO2_DM_model_plot <- ggplot() +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_no2, max_no2),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))  # Format the labels as desired
+    limits = c(no2_dm_min, no2_dm_max),
+    breaks = no2_dm_breaks, # Set the breaks for the legend
+    labels = no2_dm_legends  # Format the labels as desired
   )  + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
@@ -1673,7 +1795,7 @@ NO2_DM_model_plot <- ggplot() +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() +  
   theme(plot.title = element_text(face = "bold"),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -1697,6 +1819,17 @@ NO2_DM_model_plot
 ### --- NO2 Hybrid model --- ###
 ################################
 
+
+no2_hm_min <-  min(hm_estimates_sf$no2_hm)
+no2_hm_max <- max(hm_estimates_sf$no2_hm)
+
+seq(no2_hm_min, no2_hm_max, length.out = 5)
+
+no2_hm_breaks <- c(no2_hm_min, 35, 48, 62, no2_hm_max)
+no2_hm_legends <-  c(as.integer(no2_hm_min), "35", "48", "62", as.integer(no2_hm_max))
+
+
+
 # filtering the participants outside of the area
 hm_estimates_sf <- hm_estimates_sf %>%
   dplyr::filter(!(subject_id %in% subjects_out))
@@ -1708,34 +1841,32 @@ NO2_HM_model_plot <- ggplot() +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_no2, max_no2),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_no2), "26", "43", "60", as.integer(max_no2))  # Format the labels as desired
+    limits = c(no2_hm_min, no2_hm_max),
+    breaks = no2_hm_breaks, # Set the breaks for the legend
+    labels = no2_hm_legends  # Format the labels as desired
   )  + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("NO"[2], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(
-    plot.title = element_blank(),  # Remove plot title since it's empty
-    legend.position = "right",
-    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
-    legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
-    strip.background = element_blank(),  # Remove the background from the facet label
-    legend.text = element_text(size = 10), 
-    legend.key.size = unit(1, 'lines'), 
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()
-  ) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "right", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
 
 NO2_HM_model_plot
@@ -1745,8 +1876,13 @@ NO2_HM_model_plot
 NO2_models_map <- NO2_LUR_model_plot | NO2_DM_model_plot | NO2_HM_model_plot
 NO2_models_map
 
+### --- save the R object --- ###
+saveRDS(NO2_LUR_model_plot, "03.Outputs/figures/objects/NO2_LUR_model_plot.rds")
+saveRDS(NO2_DM_model_plot, "03.Outputs/figures/objects/NO2_DM_model_plot.rds")
+saveRDS(NO2_HM_model_plot, "03.Outputs/figures/objects/NO2_HM_model_plot.rds")
+
 ### --- save the figure --- ### 
-ggsave(plot = NO2_models_map, "03.Outputs/figures/NO2_models_map_v2.png",
+ggsave(plot = NO2_models_map, "03.Outputs/figures/NO2_models_map_v3.png",
        dpi = 600, width = 10, height = 5)
 
 
@@ -1778,22 +1914,32 @@ legend_labels <- c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_
 ##############################
 ### --- PM25 LUR model --- ###
 #############################
+pm25_lur_min <-  min(lur_estimates_sf$pm25_lur)
+pm25_lur_max <- max(lur_estimates_sf$pm25_lur)
+
+seq(pm25_lur_min, pm25_lur_max, length.out = 5)
+
+pm25_lur_breaks <- c(pm25_lur_min, 11, 16, 22, pm25_lur_max)
+pm25_lur_legends <-  c(as.integer(pm25_lur_min), "11", "16", "22", as.integer(pm25_lur_max))
+
+
+
 PM25_LUR_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = pm25_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_pm25, max_pm25),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))) + # Set the limits to the overall range
+    limits = c(pm25_lur_min, pm25_lur_max),
+    breaks = pm25_lur_breaks, # Set the breaks for the legend
+    labels = pm25_lur_legends) + # Set the limits to the overall range
   labs(title = expression(paste("(B) PM"[2.5], " models")),   
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", size = 16),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -1816,22 +1962,32 @@ PM25_LUR_model_plot
 #############################
 ### --- PM25 DM model --- ###
 ############################
+pm25_dm_min <-  min(dm_estimates_sf$pm25_dm)
+pm25_dm_max <- max(dm_estimates_sf$pm25_dm)
+
+seq(pm25_dm_min, pm25_dm_max, length.out = 5)
+
+pm25_dm_breaks <- c(pm25_dm_min, 12, 16, 21, pm25_dm_max)
+pm25_dm_legends <-  c(as.integer(pm25_dm_min), "12", "16", "21", as.integer(pm25_dm_max))
+
+
+
 PM25_DM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = pm25_dm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_pm25, max_pm25),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))) + # Set the limits to the overall range
+    limits = c(pm25_dm_min, pm25_dm_max),
+    breaks = pm25_dm_breaks, # Set the breaks for the legend
+    labels = pm25_dm_legends) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() +  
   theme(plot.title = element_text(face = "bold"),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -1854,39 +2010,49 @@ PM25_DM_model_plot
 #################################
 ### --- PM25 Hybrid model --- ###
 ################################
+dplyr::glimpse(hm_estimates_sf)
+
+pm25_hm_min <-  min(hm_estimates_sf$pm25_hm)
+pm25_hm_max <- max(hm_estimates_sf$pm25_hm)
+
+seq(pm25_hm_min, pm25_hm_max, length.out = 5)
+
+pm25_hm_breaks <- c(pm25_hm_min, 12, 14, 16, pm25_hm_max)
+pm25_hm_legends <-  c(as.integer(pm25_hm_min), "12", "14", "16", as.integer(pm25_hm_max))
+
+
+
 PM25_HM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = pm25_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_pm25, max_pm25),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_pm25), "10", "14", "18", "22", as.integer(max_pm25))) + # Set the limits to the overall range
+    limits = c(pm25_hm_min, pm25_hm_max),
+    breaks = pm25_hm_breaks, # Set the breaks for the legend
+    labels = pm25_hm_legends) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("PM"[2.5], " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(
-    plot.title = element_blank(),  # Remove plot title since it's empty
-    legend.position = "right",
-    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
-    legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
-    strip.background = element_blank(),  # Remove the background from the facet label
-    legend.text = element_text(size = 10), 
-    legend.key.size = unit(1, 'lines'), 
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()
-  ) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "right", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
 
 PM25_HM_model_plot 
@@ -1895,8 +2061,15 @@ PM25_HM_model_plot
 PM25_models_map <-  PM25_LUR_model_plot | PM25_DM_model_plot | PM25_HM_model_plot
 PM25_models_map
 
+
+### --- save objects --- ###
+saveRDS(PM25_LUR_model_plot, "03.Outputs/figures/objects/PM25_LUR_model_plot.rds")
+saveRDS(PM25_DM_model_plot, "03.Outputs/figures/objects/PM25_DM_model_plot.rds")
+saveRDS(PM25_HM_model_plot, "03.Outputs/figures/objects/PM25_HM_model_plot.rds")
+
+
 ### --- save the plot --- ###
-ggsave(plot = PM25_models_map, "03.Outputs/figures/PM25_models_map_v2.png",
+ggsave(plot = PM25_models_map, "03.Outputs/figures/PM25_models_map_v3.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
@@ -1917,23 +2090,32 @@ legend_labels <- c(as.integer(min_bc),  "0.8", "1.5", "2.3", "3.0", as.integer(m
 ##############################
 ### --- BC LUR model --- ###
 #############################
+
+bc_lur_min <-  min(lur_estimates_sf$bc_lur)
+bc_lur_max <- max(lur_estimates_sf$bc_lur)
+
+seq(bc_lur_min, bc_lur_max, length.out = 5)
+
+bc_lur_breaks <- c(bc_lur_min, 1, 2, 2.8, bc_lur_max)
+bc_lur_legends <-  c(0.11, 1, 2, 2.8, 3.7)
+
+
 BC_LUR_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = bc_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_bc, max_bc),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(round(min_bc, digit = 1),  "0.8", "1.5", "2.3", "3.0", round(max_bc, digit = 1))
-    ) + # Set the limits to the overall range
+    limits = c(bc_lur_min, bc_lur_max),
+    breaks = bc_lur_breaks, # Set the breaks for the legend
+    labels = bc_lur_legends)+ # Set the limits to the overall range
   labs(title = expression(paste("(C) BC models")),   
        color = expression(paste("BC" ," (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", size = 16),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -1956,23 +2138,34 @@ BC_LUR_model_plot
 #############################
 ### --- BC DM model --- ###
 ############################
+
+bc_dm_min <-  min(dm_estimates_sf$bc_dm)
+bc_dm_max <- max(dm_estimates_sf$bc_dm)
+
+seq(bc_dm_min, bc_dm_max, length.out = 5)
+
+bc_dm_breaks <- c(bc_dm_min, 1, 2, 2.8, bc_dm_max)
+bc_dm_legends <-  c(0.31, 1, 2, 2.8, 3.7)
+
+view(dm_estimates_sf)
+
 BC_DM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = dm_estimates_sf, aes(color = bc_dm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_bc, max_bc),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(round(min_bc, digit = 1),  "0.8", "1.5", "2.3", "3.0", round(max_bc, digit = 1))
-  ) + # Set the limits to the overall range
+    limits = c(bc_dm_min, bc_dm_max),
+    breaks = bc_dm_breaks, # Set the breaks for the legend
+    labels = bc_dm_legends
+    ) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("BC", " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() +  
   theme(plot.title = element_text(face = "bold"),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -1995,40 +2188,47 @@ BC_DM_model_plot
 #################################
 ### --- BC Hybrid model --- ###
 ################################
+bc_hm_min <-  min(hm_estimates_sf$bc_hm)
+bc_hm_max <- max(hm_estimates_sf$bc_hm)
+
+seq(bc_hm_min, bc_hm_max, length.out = 5)
+
+bc_hm_breaks <- c(0.62, 1, 1.25, 1.57, 1.89)
+bc_hm_legends <-  c("0.62", "1", "1.25"," 1.57", "1.89")
+
+
+
 BC_HM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = bc_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_bc, max_bc),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(round(min_bc, digit = 1),  "0.8", "1.5", "2.3", "3.0", round(max_bc, digit = 1))
-  ) + # Set the limits to the overall range
+    limits = c(bc_hm_min, bc_hm_max),
+    breaks = bc_hm_breaks , # Set the breaks for the legend
+    labels = bc_hm_legends) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("BC", " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(
-    plot.title = element_blank(),  # Remove plot title since it's empty
-    legend.position = "right",
-    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
-    legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
-    strip.background = element_blank(),  # Remove the background from the facet label
-    legend.text = element_text(size = 10), 
-    legend.key.size = unit(1, 'lines'), 
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()
-  ) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "right", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
 
 BC_HM_model_plot 
@@ -2037,8 +2237,13 @@ BC_HM_model_plot
 BC_models_map <-  BC_LUR_model_plot | BC_DM_model_plot | BC_HM_model_plot
 BC_models_map
 
+### --- save object --- ###
+saveRDS(BC_LUR_model_plot, "03.Outputs/figures/objects/BC_LUR_model_plot.rds")
+saveRDS(BC_DM_model_plot, "03.Outputs/figures/objects/BC_DM_model_plot.rds")
+saveRDS(BC_HM_model_plot, "03.Outputs/figures/objects/BC_HM_model_plot.rds")
+
 ### --- save the plot --- ### 
-ggsave(plot = BC_models_map, "03.Outputs/figures/BC_models_map_v2.png",
+ggsave(plot = BC_models_map, "03.Outputs/figures/BC_models_map_v3.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 ### --- Putting all the models together with the fixed scale --- ###
@@ -2047,7 +2252,7 @@ all_maps
 
 
 ### --- save the plot --- ### 
-ggsave(plot = all_maps, "03.Outputs/figures/all_maps.png",
+ggsave(plot = all_maps, "03.Outputs/figures/all_maps_v3.png",
        dpi = 600, width = 10, height = 10, units = "in")
 
 
@@ -2070,23 +2275,33 @@ legend_labels <- c(as.integer(min_fe), "0.20", "0.32", "0.45", "0.60", as.intege
 ##############################
 ### --- Fe LUR model --- ###
 #############################
+fe_lur_min <- min(lur_estimates_sf$fe_lur)
+fe_lur_max <- max(lur_estimates_sf$fe_lur)
+
+seq(fe_lur_min, fe_lur_max, length.out = 5)
+
+fe_lur_breaks <- c(0.07, 0.23, 0.38, 0.54, 0.70)
+fe_lur_legends <-  c("0.07", "0.23", "0.38", "0.54", "0.70")
+
+
+
 FE_LUR_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = fe_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_fe, max_fe),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(round(min_fe, digit = 1),  "0.20", "0.32", "0.45", "0.60", round(max_fe, digit = 1))
+    limits = c(fe_lur_min, fe_lur_max),
+    breaks = fe_lur_breaks, # Set the breaks for the legend
+    labels = fe_lur_legends 
   ) + # Set the limits to the overall range
-  labs(title = expression(paste("(D) Fe models")),   
+  labs(title = expression(paste("(D) PM"[2.5], " - Fe models")),   
        color = expression(paste("Fe" ," (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", size = 16),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -2106,52 +2321,63 @@ FE_LUR_model_plot <- ggplot() +
 
 FE_LUR_model_plot
 
-
 #################################
 ### --- Fe Hybrid model --- ###
 ################################
+fe_hm_min <- min(hm_estimates_sf$fe_hm)
+fe_hm_max <- max(hm_estimates_sf$fe_hm)
+
+seq(fe_hm_min, fe_hm_max, length.out = 5)
+
+fe_hm_breaks <- c(0.12, 0.20, 0.27, 0.35, 0.43)
+fe_hm_legends <-  c("0.12", "0.20", "0.27", "0.35", "0.43")
+
+
+
 FE_HM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = fe_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_fe, max_fe),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(round(min_fe, digit = 1),  "0.20", "0.32", "0.45", "0.60", round(max_fe, digit = 1))
+    limits = c(fe_hm_min, fe_hm_max),
+    breaks = fe_hm_breaks, # Set the breaks for the legend
+    labels = fe_hm_legends 
   ) + # Set the limits to the overall range
   labs(title = "",  
-       color = expression(paste("Fer", " (µg/m"^3*")"))) +
+       color = expression(paste("Fe", " (µg/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(
-    plot.title = element_blank(),  # Remove plot title since it's empty
-    legend.position = "right",
-    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
-    legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
-    strip.background = element_blank(),  # Remove the background from the facet label
-    legend.text = element_text(size = 10), 
-    legend.key.size = unit(1, 'lines'), 
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()
-  ) +
+  theme(plot.title = element_text(face = "bold", size = 16),
+        legend.position = "right", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
 
 ### --- FE models comparison ---- ###
 FE_models_map <-  FE_LUR_model_plot | FE_HM_model_plot | plot_spacer()
 FE_models_map
 
+### --- save objects --- ###
+saveRDS(FE_LUR_model_plot, "03.Outputs/figures/objects/FE_LUR_model_plot.rds")
+saveRDS(FE_HM_model_plot, "03.Outputs/figures/objects/FE_HM_model_plot.rds")
+
 ### --- save the plot --- ### 
-ggsave(plot = FE_models_map, "03.Outputs/figures/FE_models_map.png",
+ggsave(plot = FE_models_map, "03.Outputs/figures/FE_models_map_v3.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
@@ -2175,23 +2401,34 @@ legend_labels <- c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.inte
 ##############################
 ### --- CU LUR model --- ###
 #############################
+cu_lur_min <- min(lur_estimates_sf$cu_lur)
+cu_lur_max <- max(lur_estimates_sf$cu_lur)
+
+seq(cu_lur_min, cu_lur_max, length.out = 5)
+
+cu_lur_breaks <- c(0.97, 5.43, 9.8, 14.3, 18.8)
+cu_lur_legends <-  c(0.97, 5.43, 9.8, 14.3, 18.8)
+
+
+
+
+
 CU_LUR_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = cu_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_cu, max_cu),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.integer(max_cu))
-  ) + # Set the limits to the overall range
-  labs(title = expression(paste("(E) Cu models")),   
+    limits = c(cu_lur_min, cu_lur_max),
+    breaks = cu_lur_breaks, # Set the breaks for the legend
+    labels = cu_lur_legends) + # Set the limits to the overall range
+  labs(title = expression(paste("(E) PM"[2.5], " - Cu models")),   
        color = expression(paste("Cu" ," (ng/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", size = 16),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -2215,53 +2452,69 @@ CU_LUR_model_plot
 #################################
 ### --- CU Hybrid model --- ###
 ################################
+cu_hm_min <- min(hm_estimates_sf$cu_hm)
+cu_hm_max <- max(hm_estimates_sf$cu_hm)
+
+seq(cu_hm_min, cu_hm_max, length.out = 5)
+
+cu_hm_breaks <- c(3.5, 5.5, 7.6, 9.6, 11.6)
+cu_hm_legends <-  c("3.5", "5.5", "7.6", "9.6", "11.6")
+
+
+
+
 CU_HM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = cu_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_cu, max_cu),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_cu), "4.54", "8.11", "11.68", "15.25", as.integer(max_cu))
-  ) + # Set the limits to the overall range
+    limits = c(cu_hm_min, cu_hm_max),
+    breaks = cu_hm_breaks, # Set the breaks for the legend
+    labels = cu_hm_legends) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("Cu", " (ng/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(
-    plot.title = element_blank(),  # Remove plot title since it's empty
-    legend.position = "right",
-    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
-    legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
-    strip.background = element_blank(),  # Remove the background from the facet label
-    legend.text = element_text(size = 10), 
-    legend.key.size = unit(1, 'lines'), 
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()
-  ) +
+  theme(plot.title = element_text(face = "bold", size = 16),
+        legend.position = "right", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") +
   facet_grid(.~'Hybrid model')  # Add the model name as facet label
+
+
+CU_HM_model_plot
 
 ### --- FE models comparison ---- ###
 CU_models_map <-  CU_LUR_model_plot | CU_HM_model_plot | plot_spacer()
 CU_models_map
 
+### --- save objects --- ###
+saveRDS(CU_LUR_model_plot, "03.Outputs/figures/objects/CU_LUR_model_plot.rds")
+saveRDS(CU_HM_model_plot, "03.Outputs/figures/objects/CU_HM_model_plot.rds")
+
 ### --- save the plot --- ### 
-ggsave(plot = CU_models_map, "03.Outputs/figures/CU_models_map.png",
+ggsave(plot = CU_models_map, "03.Outputs/figures/CU_models_map_v3.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 ###########################
 ### --- ZN models --- ###
 #########################
+
 dplyr::glimpse(lur_estimates_sf)
 dplyr::glimpse(hm_estimates_sf)
 
@@ -2278,23 +2531,33 @@ legend_labels <- c(as.integer(min_zn), "32.56", "54.55", "76.53", "98.51", as.in
 ##############################
 ### --- ZN LUR model --- ###
 #############################
+zn_lur_min <- min(lur_estimates_sf$zn_lur)
+zn_lur_max <- max(lur_estimates_sf$zn_lur)
+
+seq(zn_lur_min, zn_lur_max, length.out = 5)
+
+zn_lur_breaks <- c(10.5, 34.3, 58.0, 81.8, 105.5)
+zn_lur_legends <-  c("10.5", "34.3", "58.0", "81.8", "105.5")
+
+
+
+
 ZN_LUR_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = lur_estimates_sf, aes(color = zn_lur), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_zn, max_zn),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_zn), "32.56", "54.55", "76.53", "98.51", as.integer(max_zn))
-  ) + # Set the limits to the overall range
-  labs(title = expression(paste("(F) Zn models")),   
+    limits = c(zn_lur_min, zn_lur_max),
+    breaks = zn_lur_breaks , # Set the breaks for the legend
+    labels = zn_lur_legends) + # Set the limits to the overall range
+  labs(title =  expression(paste("(F) PM"[2.5], " - Zn models")),   
        color = expression(paste("Zn" ," (ng/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", size = 16),
-        legend.position = "none", 
+        legend.position = "right", 
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -2318,94 +2581,174 @@ ZN_LUR_model_plot
 #################################
 ### --- ZN Hybrid model --- ###
 ################################
+zn_hm_min <- min(hm_estimates_sf$zn_hm)
+zn_hm_max <- max(hm_estimates_sf$zn_hm)
+
+seq(zn_hm_min, zn_hm_max, length.out = 5)
+
+zn_hm_breaks <- c(24.5, 48.5, 72.5, 96.5, 120)
+zn_hm_legends <-  c("24.5", "48.5", "72.5", "96.5", "120")
+
+library(ggplot2)
+
 ZN_HM_model_plot <- ggplot() +
   geom_sf(data = amb_bcn, fill = "lightgrey", color = "white") +
   geom_sf(data = hm_estimates_sf, aes(color = zn_hm), size = 1.0, alpha = 1.0) +
   theme_minimal() +
   scale_color_viridis_c(
     option = "viridis", direction = 1, 
-    limits = c(min_zn, max_zn),
-    breaks = legend_breaks, # Set the breaks for the legend
-    labels = c(as.integer(min_zn), "32.56", "54.55", "76.53", "98.51", as.integer(max_zn))
-  ) + # Set the limits to the overall range
+    limits = c(zn_hm_min, zn_hm_max),
+    breaks = zn_hm_breaks, # Set the breaks for the legend
+    labels = zn_hm_legends) + # Set the limits to the overall range
   labs(title = "",  
        color = expression(paste("Zn", " (ng/m"^3*")"))) +
   xlim(c(st_bbox(amb_bcn)[1], st_bbox(amb_bcn)[3])) +
   ylim(c(st_bbox(amb_bcn)[2], st_bbox(amb_bcn)[4])) +
   theme_bw() + 
-  theme(
-    plot.title = element_blank(),  # Remove plot title since it's empty
-    legend.position = "right",
-    legend.title = element_text(margin = margin(b = 5)),  # Push the legend title up
-    legend.title.align = 0.5,
-    strip.text.x = element_text(face = "bold", hjust = 0, size = 12),  # Left align the facet label
-    strip.background = element_blank(),  # Remove the background from the facet label
-    legend.text = element_text(size = 10), 
-    legend.key.size = unit(1, 'lines'), 
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()
-  ) +
-  facet_grid(.~'Hybrid model')  # Add the model name as facet label
+  theme(plot.title = element_text(face = "bold", size = 16),
+        legend.position = "right", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),  
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 9), 
+        legend.key.size = unit(0.5, 'cm'),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        strip.text = element_text(face = "bold", hjust = 0, size = 12), # Make facet labels bold and align to the left
+        strip.background = element_blank(), # Remove background rectangle from facet labels
+        strip.placement = "outside") +
+  facet_grid(.~'Hybrid model')
+
 
 ### --- FE models comparison ---- ###
 ZN_models_map <-  ZN_LUR_model_plot | ZN_HM_model_plot | plot_spacer()
-ZM_models_map
+ZN_models_map
 
 ### --- save the plot --- ### 
-ggsave(plot = ZN_models_map, "03.Outputs/figures/ZN_models_map.png",
+ggsave(plot = ZN_models_map, "03.Outputs/figures/ZN_models_map_.png",
        dpi = 600, width = 10, height = 5, units = "in")
 
 
 ### --- All plots together --- ### 
-PM25_elemenets_map <- FE_models_map / CU_models_map / ZN_models_map
-PM25_elemenets_map 
+PM25_elements_map <- FE_models_map / CU_models_map / ZN_models_map
+PM25_elements_map 
+
+### --- save objects --- ###
+saveRDS(ZN_LUR_model_plot, "03.Outputs/figures/outputs/")
 
 
 
+### --- save the plot --- ### 
+ggsave(plot = PM25_elements_map, "03.Outputs/figures/PM25_elements_map_v3.png",
+       dpi = 600, width = 10, height = 10, units = "in")
 
 
 
+library(ggplot2)
+library(sf)
+
+# Create a blank ggplot object
+blank_plot <- ggplot() +
+  geom_sf(data = amb_bcn, fill = NA, color = NA) +  # NA for no fill and no color
+  theme_void() +  # a theme with nothing displayed
+  theme(plot.background = element_rect(fill = "transparent", colour = NA))  # transparent plot background
+
+# Ensure that this blank plot has the same dimensions as your other plots
+ggsave("blank_plot.png", blank_plot, width = 5, height = 5, bg = "transparent")
 
 
 
+##################################
+### --- All maps together --- ###
+################################
+
+
+apply_standard_theme <- function(plot) {
+  plot + theme(
+    plot.margin = margin(t = 5.5, r = 5.5, b = 5.5, l = 5.5, unit = "points"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10),
+    strip.text = element_text(size = 12)
+  )
+}
+
+# Apply the standard theme to all your plots
+NO2_LUR_model_plot <- apply_standard_theme(NO2_LUR_model_plot)
+NO2_DM_model_plot <- apply_standard_theme(NO2_DM_model_plot)
+NO2_HM_model_plot <- apply_standard_theme(NO2_HM_model_plot)
+PM25_LUR_model_plot <- apply_standard_theme(PM25_LUR_model_plot)
+PM25_DM_model_plot <- apply_standard_theme(PM25_DM_model_plot)
+PM25_HM_model_plot <- apply_standard_theme(PM25_HM_model_plot)
+BC_LUR_model_plot <- apply_standard_theme(BC_LUR_model_plot)
+BC_DM_model_plot <- apply_standard_theme(BC_DM_model_plot)
+BC_HM_model_plot <- apply_standard_theme(BC_HM_model_plot)
+FE_LUR_model_plot <- apply_standard_theme(FE_LUR_model_plot)
+FE_HM_model_plot <- apply_standard_theme(FE_HM_model_plot)
+CU_LUR_model_plot <- apply_standard_theme(CU_LUR_model_plot)
+CU_HM_model_plot <- apply_standard_theme(CU_HM_model_plot)
+ZN_LUR_model_plot <- apply_standard_theme(ZN_LUR_model_plot)
+ZN_HM_model_plot <- apply_standard_theme(ZN_HM_model_plot)
+
+# Combine the plots into a single figure with the specified layout
+combined_figure <- (NO2_LUR_model_plot | NO2_DM_model_plot | NO2_HM_model_plot) /
+                  (PM25_LUR_model_plot | PM25_DM_model_plot | PM25_HM_model_plot) /
+                  (BC_LUR_model_plot | BC_DM_model_plot | BC_HM_model_plot) /
+                  (FE_LUR_model_plot | FE_HM_model_plot | FE_LUR_model_plot) / 
+                  (CU_LUR_model_plot | CU_HM_model_plot | FE_LUR_model_plot) / 
+                  (ZN_LUR_model_plot | ZN_HM_model_plot | FE_LUR_model_plot)
+
+
+# Create a blank ggplot object to use as a spacer
+blank_plot <- ggplot() + theme_void()
+
+# Combine the plots into a single figure, reusing some plots as fillers
+combined_figure1 <- (NO2_LUR_model_plot + NO2_DM_model_plot + NO2_HM_model_plot) /
+                    (PM25_LUR_model_plot + PM25_DM_model_plot + PM25_HM_model_plot) /
+                    (BC_LUR_model_plot + BC_DM_model_plot + BC_HM_model_plot)  + 
+                     plot_layout(heights = c(0.5, 0.5 ,0.5))
+                  
+combined_figure1
+
+combined_figure2 <-  (FE_LUR_model_plot  + FE_HM_model_plot + CU_HM_model_plot) / 
+                     (CU_LUR_model_plot  + CU_HM_model_plot + CU_HM_model_plot) / 
+                     (ZN_LUR_model_plot + ZN_HM_model_plot + ZN_HM_model_plot)
+            
+combined_figure2
 
 
 
+combined_figure2 <- (FE_LUR_model_plot + FE_HM_model_plot + blank_plot) / 
+                    (CU_LUR_model_plot + CU_HM_model_plot + blank_plot) / 
+                    (ZN_LUR_model_plot + ZN_HM_model_plot + blank_plot)
 
 
 
+combined_figure1_v2 <- (NO2_LUR_model_plot + NO2_DM_model_plot + NO2_HM_model_plot) /
+                       (PM25_LUR_model_plot + PM25_DM_model_plot + PM25_HM_model_plot) /
+                       (BC_LUR_model_plot + BC_DM_model_plot + BC_HM_model_plot)  + 
+                       plot_layout(heights = c(0.1, 0.1, 0.1))
 
 
 
+### --- Save figures --- ###
+
+# combined figure 1 
+ggsave(plot = combined_figure1, "03.Outputs/figures/combined_figure1.png",
+       dpi = 600, width = 10, height = 8, units = "in")
+
+# combined figure 2 
+ggsave(plot = combined_figure2, "03.Outputs/figures/combined_figure2.png",
+       dpi = 600, width = 10, height = 8, units = "in")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ggsave(plot = combined_figure1_v2, "03.Outputs/figures/combined_figure1_v2.png",
+       dpi = 600, width = 10, height = 8, units = "in")
 
 
 
@@ -2422,8 +2765,6 @@ dplyr::glimpse(pm25_constituents_measures)
 ##############################################################################################################
 ### Table 1. Outdoor air pollution concentration distribution for the BiSC-home and BiSCAPE campaigns --- ###
 ############################################################################################################
-
-
 no2_measures %>% dplyr::select(NO2.DirectMeasurements) %>% skimr::skim()
 pm25_measures %>% dplyr::select(c_biscape) %>% skimr::skim()
 bc_measures %>% dplyr::select(c_biscape) %>% skimr::skim()
@@ -2440,6 +2781,148 @@ skimr::skim(no2_measures)
 skimr::skim(pm25_measures)
 skimr::skim(bc_measures)
 skimr::skim(pm25_constituents_measures)
+
+
+##########################################################
+
+#######################################################
+### --- Final figures with performance metrics --- ### 
+#####################################################
+
+###########################
+### --- NO2 models --- ### 
+#########################
+
+# this is ok in the ggsave object
+NO2_LUR_model_plot_v2 <- NO2_LUR_model_plot +
+                         annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.62), 
+                                  hjust = 2.45, vjust = 1.96, size = 2.5, colour = "black") +
+                         annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 4.05", 
+                                  hjust = 2.00, vjust = 4.7, size = 2.5, colour = "black")
+
+# this is alligned :)
+NO2_DM_model_plot_v2 <- NO2_DM_model_plot + 
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.39), 
+                                 hjust = 4.60, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE = 16.3", 
+                                 hjust = 3.10, vjust = 4.7, size = 2.5, colour = "black")
+
+NO2_HM_model_plot_v2 <- NO2_HM_model_plot +
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2~(10-CV) == 0.64), 
+                                 hjust = 2.14, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE (10-CV) = 7.48", 
+                                 hjust = 1.92, vjust = 4.7, size = 2.5, colour = "black")
+
+
+plot_prueba <- NO2_LUR_model_plot_v2 + NO2_DM_model_plot_v2 + NO2_HM_model_plot_v2
+plot_prueba
+
+ggsave(plot = plot_prueba, "03.Outputs/figures/plot_prueba.png",
+       dpi = 600, width = 10, height = 8, units = "in")
+
+############################
+### --- PM25 models --- ###
+###########################
+
+# this is ok in the ggsave object
+PM25_LUR_model_plot_v2 <- PM25_LUR_model_plot +
+  annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.9), 
+           hjust = 2.55, vjust = 1.96, size = 2.5, colour = "black") +
+  annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 7.5", 
+           hjust = 2.10, vjust = 4.7, size = 2.5, colour = "black") + 
+  facet_grid(.~'')
+
+# this is alligned :)
+PM25_DM_model_plot_v2 <- PM25_DM_model_plot + 
+  annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.9), 
+           hjust = 5.75, vjust = 1.96, size = 2.5, colour = "black") +
+  annotate("text", x = Inf, y = Inf, label = "RMSE = 7.5", 
+           hjust = 3.85, vjust = 4.7, size = 2.5, colour = "black") + 
+  facet_grid(.~'')
+
+PM25_HM_model_plot_v2 <- PM25_HM_model_plot +
+  annotate("text", x = Inf, y = Inf, label = expression(R^2~(10-CV) == 0.66), 
+           hjust = 2.14, vjust = 1.96, size = 2.5, colour = "black") +
+  annotate("text", x = Inf, y = Inf, label = "RMSE (10-CV) = 3.45", 
+           hjust = 1.92, vjust = 4.7, size = 2.5, colour = "black") + 
+  facet_grid(.~'')
+
+
+plot_prueba_2 <- PM25_LUR_model_plot_v2 + PM25_DM_model_plot_v2 + PM25_HM_model_plot_v2
+plot_prueba_2
+
+ggsave(plot = plot_prueba_2, "03.Outputs/figures/plot_prueba_2.png",
+       dpi = 600, width = 10, height = 8, units = "in")
+
+############################ 
+### --- bc models --- ###
+##########################
+BC_LUR_model_plot_v2 <- BC_LUR_model_plot +
+                          annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.9), 
+                                hjust = 2.21, vjust = 1.96, size = 2.5, colour = "black") +
+                           annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 7.5", 
+                                hjust = 1.94, vjust = 4.7, size = 2.5, colour = "black") + 
+                        facet_grid(.~'')
+
+
+BC_DM_model_plot_v2 <- BC_DM_model_plot +
+                         annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.9), 
+                                  hjust = 2.21, vjust = 1.96, size = 2.5, colour = "black") +
+                         annotate("text", x = Inf, y = Inf, label = "RMSE = 7.5", 
+                                  hjust = 1.94, vjust = 4.7, size = 2.5, colour = "black") + 
+                        facet_grid(.~'')
+
+
+
+BC_HM_model_plot_v2 <- BC_HM_model_plot + 
+                         annotate("text", x = Inf, y = Inf, label = expression(R^2~(10-CV) == 0.86), 
+                                   hjust = 2.14, vjust = 1.96, size = 2.5, colour = "black") +
+                         annotate("text", x = Inf, y = Inf, label = "RMSE (10-CV) = 0.23", 
+                                   hjust = 1.92, vjust = 4.7, size = 2.5, colour = "black")  + 
+                         facet_grid(.~'') 
+
+
+  
+plot_prueba_3 <- BC_LUR_model_plot_v2 + BC_DM_model_plot_v2 + BC_HM_model_plot_v2
+plot_prueba_3
+
+ggsave(plot = plot_prueba_3, "03.Outputs/figures/plot_prueba_3.png",
+       dpi = 600, width = 10, height = 8, units = "in")
+
+  
+  
+
+#######################################
+### --- Combination of figures --- ###
+######################################
+combined_figure1_v2 <- (NO2_LUR_model_plot_v2 + NO2_DM_model_plot_v2 + NO2_HM_model_plot_v2) /
+                       (PM25_LUR_model_plot_v2 + PM25_DM_model_plot_v2 + PM25_HM_model_plot_v2) /
+                       (BC_LUR_model_plot_v2 + BC_DM_model_plot_v2 + BC_HM_model_plot_v2)  + 
+                        plot_layout(heights = c(0.5, 0.5 ,0.5))
+
+
+combined_figure1_v2
+
+ggsave(plot = combined_figure1_v2, "03.Outputs/figures/combined_figure1_v2.png",
+       dpi = 600, width = 10, height = 8, units = "in")
+
+
+# Note: for hibrid models is done :) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
