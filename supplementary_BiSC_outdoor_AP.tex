@@ -190,7 +190,7 @@ Following the ESCAPE guidelines
 \subsection{Model performance}
 The performance of the final models obtained for NO\textsubscript{2}, PM\textsubscript{2.5}, BC and PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, PM\textsubscript{2.5 - Zn} is described in \textbf{\Cref{Table S3}}.  
 
-\subsection{Internal validation}
+\subsection{Validation LUR}
 %%% --- Table with performance metrics for Hybrid models --- %%%
 \begin{table}[ht]
 \centering
@@ -199,7 +199,7 @@ The performance of the final models obtained for NO\textsubscript{2}, PM\textsub
 \label{Table S3}
 \begin{tabular}{llllll}
 \toprule
-\textbf{Pollutant} & \textbf{Year} & \textbf{N}  &  \textbf{R\textsuperscript{2}\textsubscript{10-CV}} & \textbf{RMSE\textsubscript{10-CV}} & \textbf{Predictor variables}\tnote{1} \\
+\textbf{Pollutant} & \textbf{Year} & \textbf{N}  &   \textbf{R\textsuperscript{2}\textsubscript{10-CV}} & \textbf{RMSE\textsubscript{10-CV}} & \textbf{Predictor variables}\tnote{1} \\
 \midrule
 \multirow{2}{*}{NO\textsubscript{2}} & \multirow{2}{*}{2018-2021} & \multirow{2}{*}{489} & \multirow{2}{*}{0.62} & \multirow{2}{*}{4.03} & trafload25 + sqralt + majorroadlength50 + \\ 
  & & & & & roadlength25 + majorroadlength300 \\
@@ -224,7 +224,7 @@ PM\textsubscript{2.5 - Zn} & 2019 & 31  & 0.85 & 6.99 & ZBE + roads50 + ind1000 
 
 The best models were selected based on its better validation performance and on the availability of the sampling campaign that could better represent the study population. 
 
-\subsection{External validation}
+\subsection{Validaiton LUR: Comparison between measurements and predictions}
 
 
 
@@ -387,8 +387,6 @@ The performance metrics of the final HM for NO\textsubscript{2}, PM\textsubscrip
 \end{samepage}
 \clearpage
 
-
-
 \newpage
 \subsection{Variable importance Random Forest}
 
@@ -404,7 +402,7 @@ The performance metrics of the final HM for NO\textsubscript{2}, PM\textsubscrip
 
 \newpage
 
-\subsection{Comparison between observed measurements and predictions}
+\subsection{Validation HM: Comparison between measurements and predictions}
 
 %%% --- Figure. Comparison between measurements and predictions values in the test dataset --- %%%
 % Put the figure text closer to the Figure 3
