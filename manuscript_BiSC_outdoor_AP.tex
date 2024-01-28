@@ -171,6 +171,9 @@ We assessed the performance of each hybrid model by contrasting predictions with
 
 Additionally, we employed a grid search for hyperparameter tuning to select the best configuration to obtain the optimal model based on the \textit{Root Mean Squared Error (R\textsuperscript{2})}. 
 
+\subsection{Comparison between model estimates}
+Exposure estimates obtained from LUR, DM, and HM were compared at the BiSC participant's address level for long- and short-term exposure. We compare the distribution of estimated concentrations between models and pollutants and calculate Spearman (Rho) correlation coefficients. We used scatterplots and Bland-Altmant plots to investigate the level of agreement between the different models.  
+
 All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS predictor variables were computed using X software. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -183,7 +186,7 @@ All statistical analyses were performed in R version 4.3.1 \cite{Rstudio}. GIS p
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Distribution of air pollution measurements}
 
-Distribution of the observed concentration for the BiSC-home and BiSCAPE campaigns for all pollutants is shown in \Cref{table1}. NO\textsubscript{2} concentration levels for the combination of BiSC-home and BiSCAPE campaigns ranged between 6.85 and 97.3 \(\mu \text{g/m}^3\) with a median of  37.5 \(\pm\) 15.8 \( \mu \text{g/m}^3\). PM\textsubscript{2.5} observed levels ranged between 5.01 and 35.8 \( \mu \text{g/m}^3\) with a median of 11.3 \(\pm\) 7.14 \(\mu \text{g/m}^3\), while BC levels showed less variation during the BiSCAPE campaign, ranging from 0.40 to 2.95 \(  \mu \text{g/m}^3\) with a median of 1.22 \(\pm\) 0.64 \( \mu \text{g/m}^3\). For PM\textsubscript{2.5} constituents  observed values during the BiSCAPE campaign varied substantially between elements with medians of 0.21 \(\pm\) 0.17 \(  \mu \text{g/m}^3\)  for  Fe,  6.36 \(\pm\) 4.61 \( \text{ng/m}^3 \) for Cu, and 28.2 \(\pm\) 27.8 \( \text{ng/m}^3 \) for Zn. 
+Distribution of the observed concentration for the BiSC-home and BiSCAPE campaigns for all pollutants are shown in \Cref{table1}. NO\textsubscript{2} concentration levels for the combination of BiSC-home and BiSCAPE campaigns ranged between 6.85 and 97.3 \(\mu \text{g/m}^3\) with a median of  37.5 \(\pm\) 15.8 \( \mu \text{g/m}^3\). PM\textsubscript{2.5} observed levels ranged between 5.01 and 35.8 \( \mu \text{g/m}^3\) with a median of 11.3 \(\pm\) 7.14 \(\mu \text{g/m}^3\), while BC levels showed less variation during the BiSCAPE campaign, ranging from 0.40 to 2.95 \(  \mu \text{g/m}^3\) with a median of 1.22 \(\pm\) 0.64 \( \mu \text{g/m}^3\). For PM\textsubscript{2.5} constituents  observed values during the BiSCAPE campaign varied substantially between elements with medians of 0.21 \(\pm\) 0.17 \(  \mu \text{g/m}^3\)  for  Fe,  6.36 \(\pm\) 4.61 \( \text{ng/m}^3 \) for Cu, and 28.2 \(\pm\) 27.8 \( \text{ng/m}^3 \) for Zn. 
 
 %%% ---------------------------------------------------------------- %%%
 %%% Table 1. Outdoor air pollution concentration BiSC-home, BiSCAPE  %%%
@@ -220,7 +223,7 @@ The spatial distribution of the outdoor air pollution campaigns is illustrated i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model performance: LUR, DM, HM}
 
-\Cref{fig2} and \Cref{fig3} present maps of estimated exposures to NO\textsubscript{2}, PM\textsubscript{2.5}, BC, PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} content  during the entire pregnancy for the BiSC participants using land use (LUR) regression models, dispersion models, and hybrid models. The performance of the models varied substantially across different pollutants as shown in \Cref{fig2} and \Cref{fig3}. In general, LUR and HM models exhibit relatively good performance, while DM shown a more conservative performance evaluated by the $R^{2}$ and $RMSE$. 
+\Cref{fig2} and \Cref{fig3} present maps of estimated exposures to NO\textsubscript{2}, PM\textsubscript{2.5}, BC, PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} content  during the entire pregnancy for the BiSC participants using LUR, HM, and HM. The performance of the models varied substantially across different pollutants as shown in \Cref{fig2} and \Cref{fig3}. In general, LUR and HM models exhibit relatively good performance, while DM shows a more conservative performance evaluated by the $R^{2}$ and $RMSE$.  
 
 The HM demonstrated moderate to good performance for NO\textsubscript{2} ($R^{2}_{\text{ 10-CV}} = 0.64$), PM\textsubscript{2.5} ($R^{2}_{\text{ 10-CV}} = 0.66$), and BC ($R^{2}_{\text{ 10-CV}} = 0.86$), with corresponding $RMSE_{\text{ 10-CV}}$ values of $7.48 \, \mu\text{g/m}^{3}$, $3.45 \, \mu\text{g/m}^{3}$, and $0.23 \, \mu\text{g/m}^{3}$, respectively. However, for PM\textsubscript{2.5} components, the performance was more conservative, with PM\textsubscript{2.5 - Fe} ($R^{2}_{\text{ 10-CV}} = 0.54$), PM\textsubscript{2.5 - Cu} ($R^{2}_{\text{ 10-CV}} = 0.70$), and PM\textsubscript{2.5 - Zn} ($R^{2}_{\text{ 10-CV}} = 0.44$).
 
@@ -235,7 +238,7 @@ The maps reveals distinct patterns of variability in estimated outdoor air pollu
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=0.9\textwidth]{figures/combined_figure1.png}
+\includegraphics[width=0.9\textwidth]{figures/combined_figure1_v2.png}
 \caption{Outdoor air pollution exposure during the entire pregnancy period (\textit{NO$_2$}, \textit{PM$_{2.5}$}, \textit{BC}).}
 \label{fig2}
 \end{figure}
@@ -244,14 +247,14 @@ The maps reveals distinct patterns of variability in estimated outdoor air pollu
 \captionsetup[figure]{skip=6pt}
 % We add the figure with the study domain 
 \begin{figure}[!htb]
-\includegraphics[width=0.9a\textwidth]{figures/combined_figure2.png}
-\caption{Outdoor air pollution exposure during the entire pregnancy period for LUR and hm(\textit{PM$_{2.5}$}, \textit{PM$_{2.5-Fe}$}, \textit{PM$_{2.5-Cu}$}, \textit{PM$_{2.5-Zn}$}.}
+\includegraphics[width=0.9\textwidth]{figures/combined_figure2_v2.png}
+\caption{Outdoor air pollution exposure during the entire pregnancy period for LUR and HM (\textit{PM$_{2.5}$}, \textit{PM$_{2.5-Fe}$}, \textit{PM$_{2.5-Cu}$}, \textit{PM$_{2.5-Zn}$}.}
 \label{fig3}
 \end{figure}
 
 Results from validation of the LUR, DM, and HM models, conducted where information for validated the model was available are shown in \Cref{table2}. The validation of each model has been conducted using different validation datasets. NO\textsubscript{2} LUR model was validated using BiSC - home campaign data. NO\textsubscript{2}, PM\textsubscript{2.5} and BC from DM model were validated using data from BiSCAPE monitoring campaign. While HM models were validated using 20\% of data available initially before model training
 
-%%% --- Table 2. Performance from external validation for LUR, DM, HM --- %%%
+%%% --- Table 2. Performance from validation for LUR, DM, HM --- %%%
 \begin{table}[h!]
 \centering
     \caption{Performance from validation for LUR, DM, and HM models.}
@@ -269,7 +272,7 @@ Results from validation of the LUR, DM, and HM models, conducted where informati
     \end{tabular}
 \end{table}
 
-Due to lack of data availability we only evaluate the performance of NO\textsubscript{2} for LUR models. The performance of the LUR model decreased in the external validation by 16\%. When validated DM against BiSCAPE measurements model performance increase for NO\textsubscript{2} but decrease for PM\textsubscript{2.5} and BC. HM showed consistent results in performance using both approaches to validate the models for NO\textsubscript{2} and PM\textsubscript{2.5} models showed a similar performance that the one obtained using the \textit{10-CV}. While for BC, PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} performance varied between validation approaches by -19.7\%, +20.37\%, -20.0\% , and -18.8\% respectively. 
+Due to lack of data availability we only evaluate the performance of NO\textsubscript{2} for LUR models. The performance of the LUR model decreased in the external validation by 16\%. When validated DM against BiSCAPE measurements model performance increase for NO\textsubscript{2}, but decrease for PM\textsubscript{2.5} and BC. HM showed consistent results in performance using both approaches to validate the models for NO\textsubscript{2} and PM\textsubscript{2.5} models showed a similar performance that the one obtained using the \textit{10-CV}. While for BC, PM\textsubscript{2.5 - Fe}, PM\textsubscript{2.5 - Cu}, and PM\textsubscript{2.5 - Zn} performance varied between validation approaches by -19.7\%, +20.37\%, -20.0\% , and -18.8\% respectively. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% --- Comparison between models --- %%% 
@@ -330,8 +333,9 @@ NO\textsubscript{2}
 %%% --- Discussion --- %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-We successfully developed spatiotemporal models using three different approaches (LUR, ADM, and HM). Models show moderate to good performance 
-evaluated by the defined metrics previously and displayed in more detail in the \textbf{supplementary materials}. As we expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources, and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
+We successfully developed spatiotemporal models using three approaches (LUR, ADM, and HM). Models show moderate to good performance 
+evaluated by previously defined metrics and displayed in more detail in the \textbf{supplementary materials}. As expected, hybrid models outperformed the LUR and DM models for the air pollutants assessed. We believe that by combining multiple data sources and integrating RF algorithm, we were able to capture non-linear and interactions between variables and consequently improve model predictive ability. 
+
 
 \subsection{Comparison between LUR, DM, and Hybrid model}
 
