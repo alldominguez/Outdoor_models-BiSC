@@ -996,8 +996,18 @@ models_estimates$model <- factor(models_estimates$model,
                                 levels = c("LUR", "DM", "HM"),
                                 ordered = TRUE)
 
-dplyr::glimpse(model_estimates)
+dplyr::glimpse(models_estimates)
 view(model_estimates_elements)
+
+dplyr::glimpse(models_estimates_elements)
+
+
+models_estimates %>% dplyr::distinct(subject_id) %>% dplyr::count()
+models_estimates_elem,enmt
+
+models_estimates %>% skimr::skim()
+
+
 
 library(ggplot2)
 library(ggpattern)
@@ -2796,14 +2806,14 @@ skimr::skim(pm25_constituents_measures)
 # this is ok in the ggsave object
 NO2_LUR_model_plot_v2 <- NO2_LUR_model_plot +
                          annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.62), 
-                                  hjust = 2.45, vjust = 1.96, size = 2.5, colour = "black") +
+                                  hjust = 2.10, vjust = 1.96, size = 2.5, colour = "black") +
                          annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 4.05", 
-                                  hjust = 2.00, vjust = 4.7, size = 2.5, colour = "black")
+                                  hjust = 1.76, vjust = 4.7, size = 2.5, colour = "black")
 
 # this is alligned :)
 NO2_DM_model_plot_v2 <- NO2_DM_model_plot + 
                         annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.39), 
-                                 hjust = 4.60, vjust = 1.96, size = 2.5, colour = "black") +
+                                 hjust = 4.42, vjust = 1.96, size = 2.5, colour = "black") +
                         annotate("text", x = Inf, y = Inf, label = "RMSE = 16.3", 
                                  hjust = 3.10, vjust = 4.7, size = 2.5, colour = "black")
 
@@ -2826,18 +2836,18 @@ ggsave(plot = plot_prueba, "03.Outputs/figures/plot_prueba.png",
 
 # this is ok in the ggsave object
 PM25_LUR_model_plot_v2 <- PM25_LUR_model_plot +
-  annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.9), 
-           hjust = 2.55, vjust = 1.96, size = 2.5, colour = "black") +
-  annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 7.5", 
-           hjust = 2.10, vjust = 4.7, size = 2.5, colour = "black") + 
+  annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.45), 
+           hjust = 2.10, vjust = 1.96, size = 2.5, colour = "black") +
+  annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 1.47", 
+           hjust = 1.76, vjust = 4.7, size = 2.5, colour = "black") + 
   facet_grid(.~'')
 
 # this is alligned :)
 PM25_DM_model_plot_v2 <- PM25_DM_model_plot + 
-  annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.9), 
-           hjust = 5.75, vjust = 1.96, size = 2.5, colour = "black") +
-  annotate("text", x = Inf, y = Inf, label = "RMSE = 7.5", 
-           hjust = 3.85, vjust = 4.7, size = 2.5, colour = "black") + 
+  annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.26), 
+           hjust = 4.42, vjust = 1.96, size = 2.5, colour = "black") +
+  annotate("text", x = Inf, y = Inf, label = "RMSE = 5.08", 
+           hjust = 3.10, vjust = 4.7, size = 2.5, colour = "black") + 
   facet_grid(.~'')
 
 PM25_HM_model_plot_v2 <- PM25_HM_model_plot +
@@ -2858,18 +2868,18 @@ ggsave(plot = plot_prueba_2, "03.Outputs/figures/plot_prueba_2.png",
 ### --- bc models --- ###
 ##########################
 BC_LUR_model_plot_v2 <- BC_LUR_model_plot +
-                          annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.9), 
-                                hjust = 2.21, vjust = 1.96, size = 2.5, colour = "black") +
-                           annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 7.5", 
-                                hjust = 1.94, vjust = 4.7, size = 2.5, colour = "black") + 
+                          annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.83), 
+                                hjust = 2.10, vjust = 1.96, size = 2.5, colour = "black") +
+                           annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 0.18", 
+                                hjust = 1.76, vjust = 4.7, size = 2.5, colour = "black") + 
                         facet_grid(.~'')
 
 
 BC_DM_model_plot_v2 <- BC_DM_model_plot +
-                         annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.9), 
-                                  hjust = 2.21, vjust = 1.96, size = 2.5, colour = "black") +
-                         annotate("text", x = Inf, y = Inf, label = "RMSE = 7.5", 
-                                  hjust = 1.94, vjust = 4.7, size = 2.5, colour = "black") + 
+                         annotate("text", x = Inf, y = Inf, label = expression(R^2 == 0.65), 
+                                  hjust = 4.42, vjust = 1.96, size = 2.5, colour = "black") +
+                         annotate("text", x = Inf, y = Inf, label = "RMSE = 0.56", 
+                                  hjust = 3.10, vjust = 4.7, size = 2.5, colour = "black") + 
                         facet_grid(.~'')
 
 
@@ -2890,11 +2900,57 @@ ggsave(plot = plot_prueba_3, "03.Outputs/figures/plot_prueba_3.png",
        dpi = 600, width = 10, height = 8, units = "in")
 
   
-  
 
+
+FE_LUR_model_plot_v2 <- FE_LUR_model_plot+
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.89), 
+                                 hjust = 2.10, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 0.03", 
+                                 hjust = 1.76, vjust = 4.7, size = 2.5, colour = "black")  
+                        
+  
+FE_HM_model_plot_v2 <- FE_HM_model_plot + 
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2~(10-CV) == 0.54), 
+                                 hjust = 2.14, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE (10-CV) = 0.08", 
+                                 hjust = 1.92, vjust = 4.7, size = 2.5, colour = "black")   
+                      
+  
+CU_LUR_model_plot_v2 <- CU_LUR_model_plot+
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.87), 
+                                 hjust = 2.10, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 0.72", 
+                                 hjust = 1.76, vjust = 4.7, size = 2.5, colour = "black") + 
+                        facet_grid(.~'')
+  
+CU_HM_model_plot_v2 <- CU_HM_model_plot + 
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2~(10-CV) == "0.70"), 
+                                 hjust = 2.14, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE (10-CV) = 2.15", 
+                                 hjust = 1.92, vjust = 4.7, size = 2.5, colour = "black")  + 
+                        facet_grid(.~'') 
+  
+ZN_LUR_model_plot_v2 <- ZN_LUR_model_plot + 
+                        annotate("text", x = Inf, y = Inf, label = expression(R^2~(LOOCV) == 0.85), 
+                                 hjust = 2.10, vjust = 1.96, size = 2.5, colour = "black") +
+                        annotate("text", x = Inf, y = Inf, label = "RMSE (LOOCV) = 0.72", 
+                                 hjust = 1.76, vjust = 4.7, size = 2.5, colour = "black") + 
+                        facet_grid(.~'') 
+  
+ZN_HM_model_plot_v2  <- ZN_LUR_model_plot + 
+                      annotate("text", x = Inf, y = Inf, label = expression(R^2~(10-CV) == 0.44), 
+                               hjust = 2.14, vjust = 1.96, size = 2.5, colour = "black") +
+                      annotate("text", x = Inf, y = Inf, label = "RMSE (10-CV) = 27.7", 
+                               hjust = 1.92, vjust = 4.7, size = 2.5, colour = "black")  + 
+                      facet_grid(.~'') 
+  
+  
+  
 #######################################
 ### --- Combination of figures --- ###
 ######################################
+
+### --- combined figure 1 --- ####
 combined_figure1_v2 <- (NO2_LUR_model_plot_v2 + NO2_DM_model_plot_v2 + NO2_HM_model_plot_v2) /
                        (PM25_LUR_model_plot_v2 + PM25_DM_model_plot_v2 + PM25_HM_model_plot_v2) /
                        (BC_LUR_model_plot_v2 + BC_DM_model_plot_v2 + BC_HM_model_plot_v2)  + 
@@ -2912,11 +2968,31 @@ ggsave(plot = combined_figure1_v2, "03.Outputs/figures/combined_figure1_v2.png",
 
 
 
+### --- combined figure 2 --- ###
+combined_figure2_v3 <- (FE_LUR_model_plot_v2 + FE_HM_model_plot_v2 + FE_HM_model_plot_v2) / 
+                       (CU_LUR_model_plot_v2 + CU_HM_model_plot_v2 + CU_HM_model_plot_v2) / 
+                       (ZN_LUR_model_plot_v2 + ZN_HM_model_plot_v2 + ZN_HM_model_plot_v2)
+
+
+combined_figure2_v3
+
+
+ggsave(plot = combined_figure2_v3, "03.Outputs/figures/combined_figure2_v3.png",
+       dpi = 600, width = 10, height = 8, units = "in")
 
 
 
+#################################################################
+### --- Table of estimated concentrations between models --- ###
+###############################################################
+
+estimates_correlation_data <- read.csv("01.Data/estimates_correlation_data.csv")
+dplyr::glimpse(estimates_correlation_data)
+
+estimates
 
 
+skimr::skim(estimates_correlation_data)
 
 
 
