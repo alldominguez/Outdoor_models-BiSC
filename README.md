@@ -1,6 +1,6 @@
 # Outdoor_models-BiSC
 
-<img src="figures/bisc.png" alt="BiSC logo" width="200"/>  
+<img src="BISC.png" alt="BiSC logo" width="200"/>  
 
 This repository contains all the materials for create the figures for the research article **"Development of land use regression, dispersion, and hybrid models for prediction of outdoor air pollution exposure in Barcelona"**. 
 
