@@ -1,4 +1,4 @@
-# Outdoor_models-BiSC
+# Development of land use regression, dispersion, and hybrid models for prediction of outdoor air pollution exposure in Barcelona
 
 <img src="BISC.png" alt="BiSC logo" width="200"/>  
 
