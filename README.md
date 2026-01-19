@@ -8,4 +8,4 @@ In this study, within the framework of the **Barcelona Life Study Cohort (BiSC)*
 
 Article: https://www.sciencedirect.com/science/article/pii/S0048969724067883#ec0005
 
-
+[CURRENTLY UNDER REVIEW - HEALTH EFFECT INSTITUTE (HEI)]
